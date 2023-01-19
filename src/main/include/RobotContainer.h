@@ -16,6 +16,7 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "VisionContainer.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -30,7 +31,11 @@ class RobotContainer {
 
   frc2::Command* GetAutonomousCommand();
 
+  VisionContainer GetVision() { return m_vision; }
  private:
+
+  // Vision and camera thread
+  VisionContainer m_vision;
   // The driver's controller
   frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
 
