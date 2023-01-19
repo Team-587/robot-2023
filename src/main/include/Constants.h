@@ -112,5 +112,20 @@ extern const frc::TrapezoidProfile<units::radians>::Constraints
 }  // namespace AutoConstants
 
 namespace OIConstants {
-constexpr int kDriverControllerPort = 0;
+    constexpr int kDriverControllerPort = 0;
 }  // namespace OIConstants
+
+namespace Camerapos {
+    constexpr auto cam_height_meters = units::meter_t{.3937}; //Value for FreeFall
+    constexpr auto goal_height_meters = units::meter_t{1.5937}; //Value for FreeFall
+    constexpr auto cam_angle_degrees = 100;
+}
+
+namespace Pipelines {
+    constexpr int cone = 0;
+    constexpr int cube = 1;
+    constexpr int tapeGreen = 2;
+    constexpr int apriltag = 3;
+    constexpr int tapeRed = 4;
+
+}
