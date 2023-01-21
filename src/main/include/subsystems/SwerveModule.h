@@ -36,7 +36,8 @@ class SwerveModule {
  public:
   SwerveModule(int driveMotorChannel, int turningMotorChannel,
                const int absoluteEncoderChannel, 
-               bool driveEncoderReversed, bool turningEncoderReversed);
+               bool driveEncoderReversed, bool turningEncoderReversed,
+               std::string name);
 
   frc::SwerveModuleState GetState();
   frc::SwerveModulePosition GetPosition();
@@ -76,8 +77,8 @@ class SwerveModule {
   double driveD = 0; 
 
 
-  double turnP = -0.25;
-  double turnI = 0.001;
+  double turnP = -0.463;
+  double turnI = 0.0; 
   double turnD = 0;
 
 
@@ -86,4 +87,6 @@ class SwerveModule {
 
   frc2::PIDController m_drivePIDController{driveP, driveI, driveD};
   frc2::PIDController m_turningPIDController{turnP, turnI, turnD};
+
+  std::string m_name;
 };
