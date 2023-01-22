@@ -42,7 +42,11 @@ RobotContainer::RobotContainer() {
       {&m_drive}));
 }
 
-void RobotContainer::ConfigureButtonBindings() {}
+void RobotContainer::ConfigureButtonBindings() {
+
+    //frc2::Button{[&] {return m_driverController.GetRawButton(xButtonY);}}.WhenPressed(&m_LowerPortSpeed);
+
+}
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
   // Set up config for trajectory
