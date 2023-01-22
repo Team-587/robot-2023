@@ -36,6 +36,7 @@ class RobotContainer {
 
   // Vision and camera thread
   VisionContainer m_vision;
+  
   // The driver's controller
   frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
 

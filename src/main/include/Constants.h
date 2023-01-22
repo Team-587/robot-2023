@@ -26,6 +26,29 @@
  * they are needed.
  */
 
+enum XBoxJoystickButtonConstants {
+    xButtonA = 1,
+    xButtonB = 2,
+    xButtonX = 3,
+    xButtonY = 4,
+    xLeftBumper = 5,
+    xRightBumper = 6,
+    xButtonView = 7,
+    xButtonMenu = 8,
+    xLeftJoystickButton = 9,
+    xRightJoystickButton = 10
+};
+
+enum XboxJoystickAxesConstants {
+    xLeftJoystickHorizontal = 0,
+    xLeftJoystickVertical = 1,
+    xLeftTrigger = 2,
+    xRightTrigger = 3,
+    xRightJoystickHorizontal = 4,
+    xRightJoystickVertical = 5
+
+};
+
 namespace DriveConstants {
 constexpr int kFrontLeftDriveMotorPort = 11;
 constexpr int kRearLeftDriveMotorPort = 13;
