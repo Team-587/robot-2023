@@ -42,7 +42,12 @@ RobotContainer::RobotContainer() {
       {&m_drive}));
 }
 
-void RobotContainer::ConfigureButtonBindings() {}
+void RobotContainer::ConfigureButtonBindings() {
+    frc2::JoystickButton startButton{&m_driverController, frc::XboxController::Button::kStart};
+    startButton.OnTrue(&m_ZeroHeading);
+    frc2::JoystickButton LeftBumper{&m_driverController, frc::XboxController::Button::kLeftBumper};
+    LeftBumper.OnTrue(&m_limitSpeed).OnFalse(&m_fullSpeed);
+}
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
   // Set up config for trajectory

@@ -87,9 +87,9 @@ void SwerveModule::SetDesiredState(
     speed = -1.0;
   }
 
-  if (speed < 0.1 && speed > -0.1){
+  /*if (speed < 0.1 && speed > -0.1){
     speed = 0.0;
-  }
+  }*/
   // Optimize the reference state to avoid spinning further than 90 degrees
   //const auto state = frc::SwerveModuleState::Optimize(referenceState, units::radian_t(m_absoluteEncoder.GetPosition()));
 
