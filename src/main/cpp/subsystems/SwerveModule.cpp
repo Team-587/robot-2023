@@ -5,20 +5,22 @@
 #include "subsystems/SwerveModule.h"
 
 #include <frc/geometry/Rotation2d.h>
-
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "Constants.h"
 
 SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
                            const int absoluteEncoderChannel,
                            bool driveEncoderReversed,
-                           bool turningEncoderReversed)
+                           bool turningEncoderReversed,
+                           std::string name)
     : m_driveMotor(driveMotorChannel, rev::CANSparkMaxLowLevel::MotorType::kBrushless),
       m_turningMotor(turningMotorChannel, rev::CANSparkMaxLowLevel::MotorType::kBrushless),
       m_absoluteEncoder(absoluteEncoderChannel),
       m_drive_encoder(m_driveMotor.GetEncoder()),
       m_reverseDriveEncoder(driveEncoderReversed),
-      m_reverseTurningEncoder(turningEncoderReversed) {
+      m_reverseTurningEncoder(turningEncoderReversed),
+      m_name(name) {
 
   m_absoluteEncoder.SetPositionToAbsolute();
 
@@ -50,6 +52,9 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   // to be continuous.
   m_turningPIDController.EnableContinuousInput(
       -std::numbers::pi, std::numbers::pi);
+
+  //frc::SmartDashboard::PutNumber(m_name + "P", turnP);
+  //frc::SmartDashboard::PutNumber(m_name + "I", turnI);
 }
 
 frc::SwerveModuleState SwerveModule::GetState() {
@@ -68,20 +73,52 @@ frc::SwerveModulePosition SwerveModule::GetPosition() {
 
 void SwerveModule::SetDesiredState(
     const frc::SwerveModuleState& referenceState) {
+
+  frc::SmartDashboard::PutNumber(m_name + "speed", (double)referenceState.speed);
+  frc::SmartDashboard::PutNumber(m_name + "angle", (double)referenceState.angle.Degrees());
+
+
+
+  double speed = ((double)referenceState.speed) / 4.0;
+  if (speed > 1.0){
+    speed = 1.0;
+  }
+  if (speed < -1.0){
+    speed = -1.0;
+  }
+
+  if (speed < 0.1 && speed > -0.1){
+    speed = 0.0;
+  }
   // Optimize the reference state to avoid spinning further than 90 degrees
-  const auto state = frc::SwerveModuleState::Optimize(
-      referenceState, units::radian_t(m_absoluteEncoder.GetPosition()));
+  //const auto state = frc::SwerveModuleState::Optimize(referenceState, units::radian_t(m_absoluteEncoder.GetPosition()));
 
   // Calculate the drive output from the drive PID controller.
   /*const auto driveOutput = m_drivePIDController.Calculate(
       m_driveEncoder.GetRate(), state.speed.value());*/
+/*
+  double tempP = frc::SmartDashboard::GetNumber(m_name + "P", turnP);
+  double tempI = frc::SmartDashboard::GetNumber(m_name + "I", turnI);
+
+  if (tempP != turnP){
+    m_turningPIDController.SetP(tempP);
+    turnP = tempP;
+  }
+
+  if (tempI != turnI){
+    m_turningPIDController.SetI(tempI);
+    turnI = tempI;
+  }
+  */
+  double m_absoluteEncoderRadians = m_absoluteEncoder.GetPosition() * (std::numbers::pi/180.0);
 
   // Calculate the turning motor output from the turning PID controller.
   auto turnOutput = m_turningPIDController.Calculate(
-      m_absoluteEncoder.GetPosition(), state.angle.Radians().to<double>());
-
+      m_absoluteEncoderRadians, referenceState.angle.Radians().to<double>());
+      frc::SmartDashboard::PutNumber(m_name + "Encoder", m_absoluteEncoderRadians);
+      frc::SmartDashboard::PutNumber(m_name + "stateAngle", (double)referenceState.angle.Radians());
   // Set the motor outputs.
-  //m_driveMotor.Set(driveOutput);
+  m_driveMotor.Set(speed);
   m_turningMotor.Set(turnOutput);
 }
 
