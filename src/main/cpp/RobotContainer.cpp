@@ -9,12 +9,15 @@
 #include <frc/controller/PIDController.h>
 #include <frc/geometry/Translation2d.h>
 #include <frc/shuffleboard/Shuffleboard.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/SwerveControllerCommand.h>
 #include <frc2/command/button/JoystickButton.h>
+#include <frc2/command/StartEndCommand.h>
+#include <frc2/command/Commands.h>
 #include <units/angle.h>
 #include <units/velocity.h>
 
@@ -34,10 +37,20 @@ RobotContainer::RobotContainer() {
   // Turning is controlled by the X axis of the right stick.
   m_drive.SetDefaultCommand(frc2::RunCommand(
     [this] {
-      m_drive.Drive(
+      if(getVisionAim() && GetVision().getHasTarget()) {
+        frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVision().getYaw(), 0));
+        m_drive.Drive(
         -units::meters_per_second_t(m_driverController.GetLeftY()),
         -units::meters_per_second_t(m_driverController.GetLeftX()),
-        -units::radians_per_second_t(m_driverController.GetRightX()), true);
+        -units::radians_per_second_t(m_turningController.Calculate(GetVision().getYaw(), 0)), 
+        true);
+      } else {
+        m_drive.Drive(
+        -units::meters_per_second_t(m_driverController.GetLeftY()),
+        -units::meters_per_second_t(m_driverController.GetLeftX()),
+        -units::radians_per_second_t(m_driverController.GetRightX()), 
+        true);
+      }
     },
     {&m_drive}));
     
@@ -49,7 +62,17 @@ RobotContainer::RobotContainer() {
 
 void RobotContainer::ConfigureButtonBindings() {
 
-    //frc2::Button{[&] {return m_driverController.GetRawButton(xButtonY);}}.WhenPressed(&m_LowerPortSpeed);
+  frc2::JoystickButton rightBumper(&m_driverController, frc::XboxController::Button::kRightBumper);
+  rightBumper.ToggleOnTrue(frc2::cmd::StartEnd(
+    [&] { 
+      setVisionAim(true); 
+      frc::SmartDashboard::PutBoolean("Vision Aim", getVisionAim());
+    }, 
+    [&] { 
+      setVisionAim(false);
+      frc::SmartDashboard::PutBoolean("Vision Aim", getVisionAim()); 
+    }
+    ));
 
 }
 

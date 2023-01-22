@@ -15,6 +15,7 @@ class VisionContainer {
 
         std::mutex *cameraLock = new std::mutex();
 
+        volatile bool hasTarget;
         volatile double yaw;
         volatile double pitch;
         volatile double area;
@@ -40,6 +41,8 @@ class VisionContainer {
 
             photonlib::PhotonPipelineResult result = camera->GetLatestResult();
 
+            hasTarget = result.HasTargets();
+
             if(result.HasTargets()){
 
                 photonlib::PhotonTrackedTarget target = result.GetBestTarget();
@@ -62,6 +65,10 @@ class VisionContainer {
         void setPipeline(int pipeline) {
             std::lock_guard<std::mutex> guard(*cameraLock);
             camera->SetPipelineIndex(pipeline);
+        }
+
+        bool getHasTarget() {
+            return hasTarget;
         }
 
         double getYaw() {
