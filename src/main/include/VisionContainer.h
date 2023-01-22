@@ -45,6 +45,11 @@ class VisionContainer {
                 photonlib::PhotonTrackedTarget target = result.GetBestTarget();
                 
                 //set volatile variables here
+                
+                yaw = target.GetYaw();
+                pitch = target.GetPitch();
+                area = target.GetArea();
+                skew = target.GetSkew();
 
             }
         }
