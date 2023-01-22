@@ -37,7 +37,7 @@ class VisionContainer {
         void ProcessCamera() {
 
             std::lock_guard<std::mutex> guard(*cameraLock);
-        
+
             photonlib::PhotonPipelineResult result = camera->GetLatestResult();
 
             if(result.HasTargets()){

@@ -29,6 +29,7 @@
 
 #include "Constants.h"
 #include "SwerveModule.h"
+#include "VisionContainer.h"
 
 class DriveSubsystem : public frc2::SubsystemBase
 {
@@ -111,6 +112,14 @@ public:
         frc::Translation2d(-kWheelBase / 2, kTrackWidth / 2),
         frc::Translation2d(-kWheelBase / 2, -kTrackWidth / 2)};
 
+    void setVision(VisionContainer *pVisionContainer) {
+        m_pVisionContainer = pVisionContainer;
+    }
+
+    VisionContainer *getVision() {
+        return m_pVisionContainer;
+    }
+
 private:
     // Components (e.g. motor controllers and sensors) should generally be
     // declared private and exposed only through public methods.
@@ -126,4 +135,6 @@ private:
     // Odometry class for tracking robot pose
     // 4 defines the number of modules
     frc::SwerveDriveOdometry<4> m_odometry;
+
+    VisionContainer *m_pVisionContainer;
 };
