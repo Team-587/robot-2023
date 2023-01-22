@@ -8,6 +8,8 @@
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 #include <units/velocity.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+
 
 #include "Constants.h"
 
@@ -18,22 +20,23 @@ DriveSubsystem::DriveSubsystem()
                   kFrontLeftTurningMotorPort,
                   kFrontLeftAbsoluteEncoderPort,
                   kFrontLeftDriveEncoderReversed,
-                  kFrontLeftTurningEncoderReversed},
+                  kFrontLeftTurningEncoderReversed,
+                  "fl_"},
 
       m_rearLeft{
           kRearLeftDriveMotorPort,       kRearLeftTurningMotorPort,
           kRearLeftAbsoluteEncoderPort,
-          kRearLeftDriveEncoderReversed, kRearLeftTurningEncoderReversed},
+          kRearLeftDriveEncoderReversed, kRearLeftTurningEncoderReversed, "rl_"},
 
       m_frontRight{
           kFrontRightDriveMotorPort,       kFrontRightTurningMotorPort,
           kFrontRightAbsoluteEncoderPort,
-          kFrontRightDriveEncoderReversed, kFrontRightTurningEncoderReversed},
+          kFrontRightDriveEncoderReversed, kFrontRightTurningEncoderReversed, "fr_"},
 
       m_rearRight{
           kRearRightDriveMotorPort,       kRearRightTurningMotorPort,
           kRearRightAbsoluteEncoderPort,
-          kRearRightDriveEncoderReversed, kRearRightTurningEncoderReversed},
+          kRearRightDriveEncoderReversed, kRearRightTurningEncoderReversed, "rr_"},
 
       m_odometry{kDriveKinematics, 
                 m_NavX.GetRotation2d(), 
@@ -51,6 +54,10 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            units::meters_per_second_t ySpeed,
                            units::radians_per_second_t rot,
                            bool fieldRelative) {
+
+  frc::SmartDashboard::PutNumber("xSpeed", (double)xSpeed);  
+  frc::SmartDashboard::PutNumber("ySpeed", (double)ySpeed);
+  frc::SmartDashboard::PutNumber("Rotation", (double)rot);                        
   auto states = kDriveKinematics.ToSwerveModuleStates(
       fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
                           xSpeed, ySpeed, rot, m_NavX.GetRotation2d())
@@ -59,7 +66,7 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   kDriveKinematics.DesaturateWheelSpeeds(&states, AutoConstants::kMaxSpeed);
 
   auto [fl, fr, bl, br] = states;
-
+  
   m_frontLeft.SetDesiredState(fl);
   m_frontRight.SetDesiredState(fr);
   m_rearLeft.SetDesiredState(bl);
