@@ -86,7 +86,10 @@ public:
      * @return The turn rate of the robot, in degrees per second
      */
     double GetTurnRate();
+    
+    void limitSpeed();
 
+    void fullSpeed();
     /**
      * Returns the currently-estimated pose of the robot.
      *
@@ -128,6 +131,8 @@ private:
     SwerveModule m_rearLeft;
     SwerveModule m_frontRight;
     SwerveModule m_rearRight;
+
+    double m_fullSpeed = 1.0;
 
     // The gyro sensor
     //frc::ADXRS450_Gyro m_gyro;
