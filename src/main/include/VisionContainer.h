@@ -1,89 +1,100 @@
 #pragma once
 
 #include <thread>
-#include "Constants.h"
 #include <photonLib/PhotonUtils.h>
 #include <photonLib/PhotonCamera.h>
+#include <mutex>
+
+#include "Constants.h"
 
 class VisionContainer {
 
     private:
 
-    volatile double yaw;
-    volatile double pitch;
-    volatile double area;
-    volatile double skew;
-    volatile double pose;
+        photonlib::PhotonCamera *camera;
 
+        std::mutex *cameraLock = new std::mutex();
 
+        volatile double yaw;
+        volatile double pitch;
+        volatile double area;
+        volatile double skew;
+        //volatile double *pose;
 
-    void VisionThread() {
-        photonlib::PhotonCamera m_camera{"PhotonVision"};
-        while(true){
+        void VisionThread() {
             
-            photonlib::PhotonPipelineResult result = m_camera.GetLatestResult();
+            camera = new photonlib::PhotonCamera("PhotonVision");
+
+            while(true){
+                
+                ProcessCamera();
+                
+                sleep(100);
+
+            }
+        }
+
+        void ProcessCamera() {
+
+            std::lock_guard<std::mutex> guard(*cameraLock);
+        
+            photonlib::PhotonPipelineResult result = camera->GetLatestResult();
 
             if(result.HasTargets()){
 
-                photonlib::PhotonTrackingTarget target = result.GetBestTarget();
-
+                photonlib::PhotonTrackedTarget target = result.GetBestTarget();
+                
+                //set volatile variables here
 
             }
-
-            sleep(100);
         }
-    }
 
     public:
 
+        VisionContainer() {
+        }
 
+        void setPipeline(int pipeline) {
+            std::lock_guard<std::mutex> guard(*cameraLock);
+            camera->SetPipelineIndex(pipeline);
+        }
 
-    VisionContainer() {
+        double getYaw() {
+            return yaw;
+        }
 
+        double getPitch() {
+            return pitch;
+        }
 
+        double getArea() {
+            return area;
+        }
 
-    }
+        double getSkew() {
+            return skew;
+        }
 
-    void setPipeline(int pipeline) {
-        m_camera.pipelineIndex(pipeline);
-    }
+        //double* getPose() {
+        //    return pose;
+        //}
+        
+        double getDistance() {
+            return photonlib::PhotonUtils::CalculateDistanceToTarget(
+                Camerapos::cam_height_meters, 
+                Camerapos::goal_height_meters, 
+                units::degree_t(Camerapos::cam_angle_degrees), 
+                units::degree_t(pitch)
+                ).value();
+        }
 
-    double getYaw() {
-        return yaw;
-    }
+        
 
-    double getPitch() {
-        return pitch;
-    }
-
-    double getArea() {
-        return area;
-    }
-
-    double getSkew() {
-        return skew;
-    }
-
-    double getPose() {
-        return pose;
-    }
-    
-    double getDistance() {
-        return photonlib::PhotonUtils::CalculateDistanceToTarget(
-            Camerapos::cam_height_meters, 
-            Camerapos::goal_height_meters, 
-            units::degree_t(Camerapos::cam_angle_degrees), 
-            units::degree_t(pitch)
-            ).value();
-    }
-
-    
-
-    void start() {
-        std::thread m_thread(&VisionContainer::VisionThread, this);
-        m_thread.detach();
-    }
+        void start() {
+            std::thread m_thread(&VisionContainer::VisionThread, this);
+            m_thread.detach();
+        }
 
 
 
-}
+};
