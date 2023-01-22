@@ -65,4 +65,5 @@ class RobotContainer {
   frc2::InstantCommand m_ZeroHeading{[this] {m_drive.ZeroHeading(); }, {&m_drive}};
   frc2::InstantCommand m_limitSpeed{[this] {m_drive.limitSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
+  //frc2::InstantCommand m_visionAimOn{[this] {setVisionAim(true); }, {}};
 };
