@@ -33,19 +33,13 @@ class RobotContainer {
 
   VisionContainer GetVision() { return m_vision; }
 
-  void setVisionAim(bool visionAim) {
-    m_visionAim = visionAim;
-  }
-
-  bool getVisionAim() {
-    return m_visionAim;
-  }
+  
 
  private:
 
   frc2::PIDController m_turningController{.1, 0, 0};
 
-  bool m_visionAim;
+  
 
   // Vision and camera thread
   VisionContainer m_vision;

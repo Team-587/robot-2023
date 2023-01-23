@@ -37,7 +37,7 @@ RobotContainer::RobotContainer() {
   // Turning is controlled by the X axis of the right stick.
   m_drive.SetDefaultCommand(frc2::RunCommand(
     [this] {
-      if(getVisionAim() && GetVision().getHasTarget()) {
+      if(m_drive.getVisionAim() && GetVision().getHasTarget()) {
         frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVision().getYaw(), 0));
         m_drive.Drive(
         -units::meters_per_second_t(m_driverController.GetLeftY()),
@@ -52,7 +52,8 @@ RobotContainer::RobotContainer() {
         true);
       }
     },
-    {&m_drive}));
+    {&m_drive}
+  ));
     
     GetVision().start();
     GetVision().setPipeline(0);
@@ -65,14 +66,15 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton rightBumper(&m_driverController, frc::XboxController::Button::kRightBumper);
   rightBumper.ToggleOnTrue(frc2::cmd::StartEnd(
     [&] { 
-      setVisionAim(true); 
-      frc::SmartDashboard::PutBoolean("Vision Aim", getVisionAim());
+      m_drive.setVisionAim(true); 
+      frc::SmartDashboard::PutBoolean("Vision Aim", m_drive.getVisionAim());
     }, 
     [&] { 
-      setVisionAim(false);
-      frc::SmartDashboard::PutBoolean("Vision Aim", getVisionAim()); 
-    }
-    ));
+      m_drive.setVisionAim(false);
+      frc::SmartDashboard::PutBoolean("Vision Aim", m_drive.getVisionAim()); 
+    },
+    { &m_drive }
+  ));
 
     frc2::JoystickButton startButton{&m_driverController, frc::XboxController::Button::kStart};
     startButton.OnTrue(&m_ZeroHeading);

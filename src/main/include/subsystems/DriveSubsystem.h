@@ -123,6 +123,14 @@ public:
         return m_pVisionContainer;
     }
 
+     void setVisionAim(bool visionAim) {
+        m_visionAim = visionAim;
+    }
+
+    bool getVisionAim() {
+        return m_visionAim;
+    }
+
 private:
     // Components (e.g. motor controllers and sensors) should generally be
     // declared private and exposed only through public methods.
@@ -142,4 +150,7 @@ private:
     frc::SwerveDriveOdometry<4> m_odometry;
 
     VisionContainer *m_pVisionContainer;
+
+    bool m_visionAim;
+    
 };
