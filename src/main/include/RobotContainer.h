@@ -13,6 +13,14 @@
 #include <frc2/command/PIDCommand.h>
 #include <frc2/command/ParallelRaceGroup.h>
 #include <frc2/command/RunCommand.h>
+#include <pathplanner/lib/PathPlanner.h>
+#include <pathplanner/lib/PathConstraints.h>
+#include <pathplanner/lib/PathPlannerTrajectory.h>
+#include <pathplanner/lib/PathPoint.h>
+#include <pathplanner/lib/GeometryUtil.h>
+#include <pathplanner/lib/auto/SwerveAutoBuilder.h>
+#include <pathplanner/lib/commands/FollowPathWithEvents.h>
+#include <frc2/command/CommandPtr.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
@@ -46,4 +54,15 @@ class RobotContainer {
   frc2::InstantCommand m_ZeroHeading{[this] {m_drive.ZeroHeading(); }, {&m_drive}};
   frc2::InstantCommand m_limitSpeed{[this] {m_drive.limitSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
+  //start of auto commands
+  std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
+  pathplanner::SwerveAutoBuilder autoBuilder;
+  static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
+
+  frc2::CommandPtr autoNum1;
+
+//auto path 2
+  static std::vector<pathplanner::PathPlannerTrajectory> autoPath2;
+
+  frc2::CommandPtr autoNum2;
 };

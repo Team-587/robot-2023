@@ -49,7 +49,10 @@ void DriveSubsystem::Periodic() {
                     {m_frontLeft.GetPosition(),m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
                       m_rearRight.GetPosition()});
 frc::SmartDashboard::PutNumber("Speed", m_fullSpeed); 
-frc::SmartDashboard::PutNumber("Heading", (double)GetHeading()); 
+frc::SmartDashboard::PutNumber("Heading", (double)GetHeading());
+frc::SmartDashboard::PutNumber("Pitch", m_NavX.GetPitch()); 
+frc::SmartDashboard::PutNumber("Yaw", m_NavX.GetYaw());
+frc::SmartDashboard::PutNumber("Roll", m_NavX.GetRoll());
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
