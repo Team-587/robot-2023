@@ -57,7 +57,7 @@ RobotContainer::RobotContainer() {
     
     GetVision().start();
     //GetVision().setPipeline(0);
-    //m_drive.setVision(&m_vision);
+    m_drive.setVision(&m_vision);
 
 }
 
