@@ -13,7 +13,7 @@ class VisionContainer {
 
         photonlib::PhotonCamera *camera;
 
-        std::mutex *cameraLock = new std::mutex();
+        std::mutex cameraLock;
 
         volatile bool hasTarget;
         volatile double yaw;
@@ -22,9 +22,10 @@ class VisionContainer {
         volatile double skew;
         //volatile double *pose;
 
+
         void VisionThread() {
             
-            camera = new photonlib::PhotonCamera("PhotonVision");
+            camera = new photonlib::PhotonCamera("PhotonVisionCam1");
 
             while(true){
                 
@@ -37,7 +38,7 @@ class VisionContainer {
 
         void ProcessCamera() {
 
-            std::lock_guard<std::mutex> guard(*cameraLock);
+            std::lock_guard<std::mutex> guard(cameraLock);
 
             photonlib::PhotonPipelineResult result = camera->GetLatestResult();
 
@@ -59,11 +60,12 @@ class VisionContainer {
 
     public:
 
-        VisionContainer() {
-        }
+        VisionContainer() { }
+
+        VisionContainer(const VisionContainer&) { }
 
         void setPipeline(int pipeline) {
-            std::lock_guard<std::mutex> guard(*cameraLock);
+            std::lock_guard<std::mutex> guard(cameraLock);
             camera->SetPipelineIndex(pipeline);
         }
 

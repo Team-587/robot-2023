@@ -56,8 +56,10 @@ class RobotContainer {
   frc::SendableChooser<frc2::Command*> m_chooser;
 
   void ConfigureButtonBindings();
-  frc2::InstantCommand m_ZeroHeading{[this] {m_drive.ZeroHeading(); }, {&m_drive}};
-  frc2::InstantCommand m_limitSpeed{[this] {m_drive.limitSpeed(); }, {&m_drive}};
-  frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
-  //frc2::InstantCommand m_visionAimOn{[this] {setVisionAim(true); }, {}};
+  frc2::InstantCommand m_ZeroHeading{ [this] { m_drive.ZeroHeading(); }, { &m_drive }};
+  frc2::InstantCommand m_limitSpeed{ [this] { m_drive.limitSpeed(); }, { &m_drive }};
+  frc2::InstantCommand m_fullSpeed{ [this] { m_drive.fullSpeed(); }, { &m_drive }};
+  frc2::InstantCommand m_visionAimOn{ [this] { m_drive.setVisionAim(true); }, { &m_drive }};
+  frc2::InstantCommand m_visionAimOff{ [this] { m_drive.setVisionAim(false); }, { &m_drive }};
+
 };

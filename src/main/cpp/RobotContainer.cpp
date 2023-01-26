@@ -56,30 +56,20 @@ RobotContainer::RobotContainer() {
   ));
     
     GetVision().start();
-    GetVision().setPipeline(0);
-    m_drive.setVision(&m_vision);
+    //GetVision().setPipeline(0);
+    //m_drive.setVision(&m_vision);
 
 }
 
 void RobotContainer::ConfigureButtonBindings() {
 
-  frc2::JoystickButton rightBumper(&m_driverController, frc::XboxController::Button::kRightBumper);
-  rightBumper.ToggleOnTrue(frc2::cmd::StartEnd(
-    [&] { 
-      m_drive.setVisionAim(true); 
-      frc::SmartDashboard::PutBoolean("Vision Aim", m_drive.getVisionAim());
-    }, 
-    [&] { 
-      m_drive.setVisionAim(false);
-      frc::SmartDashboard::PutBoolean("Vision Aim", m_drive.getVisionAim()); 
-    },
-    { &m_drive }
-  ));
-
     frc2::JoystickButton startButton{&m_driverController, frc::XboxController::Button::kStart};
     startButton.OnTrue(&m_ZeroHeading);
-    frc2::JoystickButton LeftBumper{&m_driverController, frc::XboxController::Button::kLeftBumper};
-    LeftBumper.OnTrue(&m_limitSpeed).OnFalse(&m_fullSpeed);
+    frc2::JoystickButton leftBumper{&m_driverController, frc::XboxController::Button::kLeftBumper};
+    leftBumper.OnTrue(&m_limitSpeed).OnFalse(&m_fullSpeed);
+    frc2::JoystickButton rightBumper(&m_driverController, frc::XboxController::Button::kRightBumper);
+    rightBumper.OnTrue(&m_visionAimOn).OnFalse(&m_visionAimOff);
+
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
