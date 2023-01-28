@@ -27,7 +27,7 @@ using namespace DriveConstants;
 using namespace pathplanner;
 
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath1 = PathPlanner::loadPathGroup("auto1", {PathConstraints(1.0_mps, 1.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", {PathConstraints(1.0_mps, 1.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 
 RobotContainer::RobotContainer(): 
   // Initialize all of your commands and subsystems here
@@ -35,8 +35,8 @@ RobotContainer::RobotContainer():
     [this]() { return m_drive.GetPose(); }, // Function to supply current robot pose
     [this](auto initPose) { m_drive.ResetOdometry(initPose); }, // Function used to reset odometry at the beginning of auto
     m_drive.kDriveKinematics,
-    PIDConstants(1.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-      PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+    PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
       [this](auto speeds) { m_drive.SetModuleStates(speeds); }, // Output function that accepts field relative ChassisSpeeds
       eventMap, // Our event map
       {&m_drive }, // Drive requirements, usually just a single drive subsystem

@@ -58,7 +58,7 @@ constexpr int kRearLeftDriveEncoderPorts[2]{10, 11};
 constexpr int kFrontRightDriveEncoderPorts[2]{12, 13};
 constexpr int kRearRightDriveEncoderPorts[2]{14, 15};
 
-constexpr bool kFrontLeftDriveEncoderReversed = true;
+constexpr bool kFrontLeftDriveEncoderReversed = false;
 constexpr bool kRearLeftDriveEncoderReversed = true;
 constexpr bool kFrontRightDriveEncoderReversed = true;
 constexpr bool kRearRightDriveEncoderReversed = true;

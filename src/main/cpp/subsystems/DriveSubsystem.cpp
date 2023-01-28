@@ -56,7 +56,14 @@ void DriveSubsystem::Periodic() {
   //          << "," << (double)m_rearRight.GetPosition().distance << ")";
   m_odometry.Update(frc::Rotation2d(GetHeading()), 
                     {m_frontLeft.GetPosition(),m_frontRight.GetPosition(), m_rearLeft.GetPosition(), m_rearRight.GetPosition()});
-
+static int skip = 0;
+skip++;
+if (skip >= 50)
+{
+   skip = 0;
+   frc::Pose2d tmpPose = GetPose();
+   std::cout << "Periodic Odometry X:" << (double)tmpPose.X() << " Y:" << (double)tmpPose.Y() << " Rot:" << (double)tmpPose.Rotation().Degrees() << "\n";
+}
 frc::SmartDashboard::PutNumber("Speed", m_fullSpeed); 
 frc::SmartDashboard::PutNumber("Heading", (double)GetHeading());
 frc::SmartDashboard::PutNumber("Pitch", m_NavX.GetPitch()); 
