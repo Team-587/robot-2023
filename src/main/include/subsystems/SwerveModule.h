@@ -29,9 +29,9 @@
 #include "Constants.h"
 
 class SwerveModule {
-  using radians_per_second_squared_t =
+  /*using radians_per_second_squared_t =
       units::compound_unit<units::radians,
-                           units::inverse<units::squared<units::second>>>;
+                           units::inverse<units::squared<units::second>>>;*/
 
  public:
   SwerveModule(int driveMotorChannel, int turningMotorChannel,
@@ -54,9 +54,13 @@ class SwerveModule {
   // ProfiledPIDController's constraints only take in meters per second and
   // meters per second squared.
 
-  static constexpr auto kModuleMaxAngularVelocity{std::numbers::pi * 1_rad_per_s};  // radians per second
+  static constexpr auto kModuleMaxAngularVelocity =
+      units::radians_per_second_t{std::numbers::pi};
   static constexpr auto kModuleMaxAngularAcceleration =
-          units::unit_t<radians_per_second_squared_t>{std::numbers::pi * 2.0};  // radians per second squared
+      units::radians_per_second_squared_t{std::numbers::pi * 2.0};
+  //static constexpr auto kModuleMaxAngularVelocity{std::numbers::pi * 1_rad_per_s};  // radians per second
+  //static constexpr auto kModuleMaxAngularAcceleration =
+  //        units::unit_t<radians_per_second_squared_t>{std::numbers::pi * 2.0};  // radians per second squared
 
   rev::CANSparkMax m_driveMotor;
   rev::CANSparkMax m_turningMotor;

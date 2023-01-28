@@ -62,13 +62,15 @@ frc::SwerveModuleState SwerveModule::GetState() {
   //Subject to change
           //frc::Rotation2d(units::radian_t(m_turningEncoder.Get()))};
           //Sketchy potentially error filled code!!!!!
-          frc::Rotation2d(units::radian_t(m_absoluteEncoder.GetPosition()))};
+          //frc::Rotation2d(units::radian_t(m_absoluteEncoder.GetPosition()))};
+          frc::Rotation2d(units::degree_t(m_absoluteEncoder.GetPosition()))};
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition() {
   //double encPos{m_absoluteEncoder.GetPosition()};
   return {units::meter_t{m_drive_encoder.GetPosition()},
-        units::radian_t{m_absoluteEncoder.GetPosition()}};
+        //units::radian_t{m_absoluteEncoder.GetPosition()}};
+        frc::Rotation2d(units::degree_t(m_absoluteEncoder.GetPosition()))};
 }
 
 void SwerveModule::SetDesiredState(
@@ -79,7 +81,7 @@ void SwerveModule::SetDesiredState(
 
 
 
-  double speed = ((double)referenceState.speed) / 4.0;
+  double speed = ((double)referenceState.speed); // / 4.0;
   if (speed > 1.0){
     speed = 1.0;
   }
@@ -167,6 +169,6 @@ void SwerveModule::Stop()
 }
 
 void SwerveModule::ResetEncoders() {
-  //m_drive_encoder.SetPosition(0);
-  m_absoluteEncoder.SetPosition(0);
+  m_drive_encoder.SetPosition(0);
+  //m_absoluteEncoder.SetPosition(0);
 }
