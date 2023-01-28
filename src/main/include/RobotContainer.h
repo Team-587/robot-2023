@@ -33,16 +33,13 @@ class RobotContainer {
 
   VisionContainer GetVision() { return m_vision; }
 
-  
-
  private:
 
   frc2::PIDController m_turningController{.1, 0, 0};
 
-  
 
   // Vision and camera thread
-  VisionContainer m_vision;
+  VisionContainer m_vision { VisionPipelineIndex::CONE };
   
   // The driver's controller
   frc::XboxController m_driverController{OIConstants::kDriverControllerPort};

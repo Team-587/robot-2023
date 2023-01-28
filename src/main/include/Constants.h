@@ -26,6 +26,7 @@
  * they are needed.
  */
 
+/*
 enum XBoxJoystickButtonConstants {
     xButtonA = 1,
     xButtonB = 2,
@@ -47,6 +48,15 @@ enum XboxJoystickAxesConstants {
     xRightJoystickHorizontal = 4,
     xRightJoystickVertical = 5
 
+};
+*/
+
+enum VisionPipelineIndex {
+    CONE = 0,
+    CUBE = 1,
+    REFLECTIVE_GREEN = 2,
+    APRILTAG = 3,
+    REFLECTIVE_RED = 4
 };
 
 namespace DriveConstants {

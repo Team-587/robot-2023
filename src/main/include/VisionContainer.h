@@ -15,6 +15,7 @@ class VisionContainer {
 
         std::mutex cameraLock;
 
+        volatile int pipelineIndex;
         volatile bool hasTarget;
         volatile double yaw;
         volatile double pitch;
@@ -26,6 +27,7 @@ class VisionContainer {
         void VisionThread() {
             
             camera = new photonlib::PhotonCamera("PhotonVisionCam1");
+            camera->SetPipelineIndex(pipelineIndex);
 
             while(true){
                 
@@ -49,7 +51,6 @@ class VisionContainer {
                 photonlib::PhotonTrackedTarget target = result.GetBestTarget();
                 
                 //set volatile variables here
-                
                 yaw = target.GetYaw();
                 pitch = target.GetPitch();
                 area = target.GetArea();
@@ -60,14 +61,17 @@ class VisionContainer {
 
     public:
 
-        VisionContainer() { }
+        VisionContainer(int pipelineIndex = 0) {
+            this->pipelineIndex = pipelineIndex;
+        }
 
         VisionContainer(const VisionContainer&) { }
 
-        void setPipeline(int pipeline) {
-            std::lock_guard<std::mutex> guard(cameraLock);
-            camera->SetPipelineIndex(pipeline);
-        }
+        //void setPipeline(int pipeline) {
+        //    std::lock_guard<std::mutex> guard(cameraLock);
+        //    pipelineIndex = pipeline;
+        //    camera->SetPipelineIndex(pipeline);
+        //}
 
         bool getHasTarget() {
             return hasTarget;
