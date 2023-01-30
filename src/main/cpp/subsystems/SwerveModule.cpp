@@ -76,8 +76,8 @@ frc::SwerveModulePosition SwerveModule::GetPosition() {
 void SwerveModule::SetDesiredState(
     const frc::SwerveModuleState& referenceState) {
 
-  frc::SmartDashboard::PutNumber(m_name + "speed", (double)referenceState.speed);
-  frc::SmartDashboard::PutNumber(m_name + "angle", (double)referenceState.angle.Degrees());
+  //frc::SmartDashboard::PutNumber(m_name + "speed", (double)referenceState.speed);
+  //frc::SmartDashboard::PutNumber(m_name + "angle", (double)referenceState.angle.Degrees());
 
 
 
@@ -117,8 +117,8 @@ void SwerveModule::SetDesiredState(
   // Calculate the turning motor output from the turning PID controller.
   auto turnOutput = m_turningPIDController.Calculate(
       m_absoluteEncoderRadians, referenceState.angle.Radians().to<double>());
-      frc::SmartDashboard::PutNumber(m_name + "Encoder", m_absoluteEncoderRadians);
-      frc::SmartDashboard::PutNumber(m_name + "stateAngle", (double)referenceState.angle.Radians());
+      //frc::SmartDashboard::PutNumber(m_name + "Encoder", m_absoluteEncoderRadians);
+      //frc::SmartDashboard::PutNumber(m_name + "stateAngle", (double)referenceState.angle.Radians());
   // Set the motor outputs.
   m_driveMotor.Set(speed);
   m_turningMotor.Set(turnOutput);

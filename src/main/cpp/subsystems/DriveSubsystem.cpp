@@ -54,16 +54,23 @@ void DriveSubsystem::Periodic() {
   //std::cout << "Drive Periodic positions (" << (double)m_frontLeft.GetPosition().distance << "," 
   //          << (double)m_frontRight.GetPosition().distance << "," << (double)m_rearLeft.GetPosition().distance 
   //          << "," << (double)m_rearRight.GetPosition().distance << ")";
-  m_odometry.Update(frc::Rotation2d(GetHeading()), 
+  m_odometry.Update(m_NavX.GetRotation2d(), //frc::Rotation2d(GetHeading()), 
                     {m_frontLeft.GetPosition(),m_frontRight.GetPosition(), m_rearLeft.GetPosition(), m_rearRight.GetPosition()});
-static int skip = 0;
+
+/*static int skip = 0;
 skip++;
 if (skip >= 50)
 {
    skip = 0;
    frc::Pose2d tmpPose = GetPose();
    std::cout << "Periodic Odometry X:" << (double)tmpPose.X() << " Y:" << (double)tmpPose.Y() << " Rot:" << (double)tmpPose.Rotation().Degrees() << "\n";
+   std::cout << "Drive Periodic " << (double)GetHeading() << " positions (" << (double)m_frontLeft.GetPosition().distance << "," 
+            << (double)m_frontRight.GetPosition().distance << "," << (double)m_rearLeft.GetPosition().distance 
+            << "," << (double)m_rearRight.GetPosition().distance << ") ";
+    std::cout << "angles(" << (double)m_frontLeft.GetPosition().angle.Degrees() << "," << (double)m_frontRight.GetPosition().angle.Degrees() << ","
+            << (double)m_rearLeft.GetPosition().angle.Degrees() << "," << (double)m_rearRight.GetPosition().angle.Degrees() << ")\n";
 }
+*/
 frc::SmartDashboard::PutNumber("Speed", m_fullSpeed); 
 frc::SmartDashboard::PutNumber("Heading", (double)GetHeading());
 frc::SmartDashboard::PutNumber("Pitch", m_NavX.GetPitch()); 
@@ -101,7 +108,18 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   kDriveKinematics.DesaturateWheelSpeeds(&states, AutoConstants::kMaxSpeed);
 
   auto [fl, fr, bl, br] = states;
-  
+  /*
+  std::cout << "Angles (" << (double)states[0].angle.Degrees() << "," 
+          << (double)states[1].angle.Degrees() << "," 
+          << (double)states[2].angle.Degrees() << ","
+          << (double)states[3].angle.Degrees() 
+          << ") Speeds (" << (double)states[0].speed << ","
+          << (double)states[1].speed << ","
+          << (double)states[2].speed << ","
+          << (double)states[3].speed << ")\n";
+          */
+
+
   m_frontLeft.SetDesiredState(fl);
   m_frontRight.SetDesiredState(fr);
   m_rearLeft.SetDesiredState(bl);
