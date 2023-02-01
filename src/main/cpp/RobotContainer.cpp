@@ -28,6 +28,9 @@ using namespace pathplanner;
 
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath1 = PathPlanner::loadPathGroup("auto1", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", {PathConstraints(3.0_mps, 3.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::loadPathGroup("auto3", {PathConstraints(3.0_mps, 3.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath4 = PathPlanner::loadPathGroup("auto4", {PathConstraints(3.0_mps, 3.0_mps_sq)});
+
 
 RobotContainer::RobotContainer(): 
   // Initialize all of your commands and subsystems here
@@ -43,11 +46,15 @@ RobotContainer::RobotContainer():
       true // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
    ),
    autoNum1(autoBuilder.fullAuto(autoPath1)), 
-   autoNum2(autoBuilder.fullAuto(autoPath2))
+   autoNum2(autoBuilder.fullAuto(autoPath2)),
+   autoNum3(autoBuilder.fullAuto(autoPath3)),
+   autoNum4(autoBuilder.fullAuto(autoPath4))
   {
     eventMap.emplace("marker1", std::make_shared<frc2::PrintCommand>("Passed Marker 1"));
     m_chooser.SetDefaultOption("Slot 2", autoNum2.get());
     m_chooser.AddOption("Slot 1", autoNum1.get());
+    m_chooser.AddOption("Slot 3", autoNum3.get());
+    m_chooser.AddOption("Slot 4", autoNum4.get());
    frc::SmartDashboard::PutData(&m_chooser);
   // Configure the button bindings
   ConfigureButtonBindings();

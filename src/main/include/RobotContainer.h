@@ -65,4 +65,12 @@ class RobotContainer {
   static std::vector<pathplanner::PathPlannerTrajectory> autoPath2;
 
   frc2::CommandPtr autoNum2;
+
+  static std::vector<pathplanner::PathPlannerTrajectory> autoPath3;
+
+  frc2::CommandPtr autoNum3;
+
+  static std::vector<pathplanner::PathPlannerTrajectory> autoPath4;
+
+  frc2::CommandPtr autoNum4;
 };
