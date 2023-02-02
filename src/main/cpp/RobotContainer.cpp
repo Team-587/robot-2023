@@ -70,9 +70,20 @@ RobotContainer::RobotContainer():
             -units::radians_per_second_t(m_driverController.GetRightX()), true);
       },
       {&m_drive}));
+
+
+  m_intake.SetDefaultCommand(frc2::RunCommand(
+    [this] {
+      m_intake.checkControl(m_coDriverController.GetLeftY());
+    },{&m_intake}));
+
 }
 
 void RobotContainer::ConfigureButtonBindings() {
+    frc2::JoystickButton extendIntakeButton{&m_coDriverController, frc::XboxController::Button::kA};
+    extendIntakeButton.OnTrue(&m_extendIntake);
+    frc2::JoystickButton retractIntakeButton{&m_coDriverController, frc::XboxController::Button::kB};
+    retractIntakeButton.OnTrue(&m_retractIntake);
     frc2::JoystickButton startButton{&m_driverController, frc::XboxController::Button::kStart};
     startButton.OnTrue(&m_ZeroHeading);
     frc2::JoystickButton LeftBumper{&m_driverController, frc::XboxController::Button::kLeftBumper};

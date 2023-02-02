@@ -24,6 +24,7 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "subsystems/Intake.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -41,11 +42,12 @@ class RobotContainer {
  private:
   // The driver's controller
   frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
-
+  frc::XboxController m_coDriverController{OIConstants::kCoDriverControllerPort};
   // The robot's subsystems and commands are defined here...
 
   // The robot's subsystems
   DriveSubsystem m_drive;
+  Intake m_intake;
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
@@ -54,6 +56,9 @@ class RobotContainer {
   frc2::InstantCommand m_ZeroHeading{[this] {m_drive.ZeroHeading(); }, {&m_drive}};
   frc2::InstantCommand m_limitSpeed{[this] {m_drive.limitSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
+  frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(true); }, {&m_intake}};
+  frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(false); }, {&m_intake}};
+
   //start of auto commands
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
   pathplanner::SwerveAutoBuilder autoBuilder;

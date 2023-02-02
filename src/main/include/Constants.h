@@ -26,6 +26,10 @@
  * they are needed.
  */
 
+constexpr int kIntakeSolenoid = 0;
+constexpr int kIntakeSolenoid1 = 1;
+
+
 namespace DriveConstants {
 constexpr int kFrontLeftDriveMotorPort = 11;
 constexpr int kRearLeftDriveMotorPort = 43;
@@ -42,6 +46,7 @@ constexpr int kFrontRightAbsoluteEncoderPort = 23;
 constexpr int kRearLeftAbsoluteEncoderPort = 22;
 constexpr int kRearRightAbsoluteEncoderPort = 24;
 
+constexpr int kIntakeMotor = 30;
 
 constexpr int kFrontLeftTurningEncoderPorts[2]{0, 1};
 constexpr int kRearLeftTurningEncoderPorts[2]{2, 3};
@@ -113,4 +118,5 @@ extern const frc::TrapezoidProfile<units::radians>::Constraints
 
 namespace OIConstants {
 constexpr int kDriverControllerPort = 0;
+constexpr int kCoDriverControllerPort = 1;
 }  // namespace OIConstants
