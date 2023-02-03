@@ -13,10 +13,19 @@
 #include <frc2/command/PIDCommand.h>
 #include <frc2/command/ParallelRaceGroup.h>
 #include <frc2/command/RunCommand.h>
+#include <pathplanner/lib/PathPlanner.h>
+#include <pathplanner/lib/PathConstraints.h>
+#include <pathplanner/lib/PathPlannerTrajectory.h>
+#include <pathplanner/lib/PathPoint.h>
+#include <pathplanner/lib/GeometryUtil.h>
+#include <pathplanner/lib/auto/SwerveAutoBuilder.h>
+#include <pathplanner/lib/commands/FollowPathWithEvents.h>
+#include <frc2/command/CommandPtr.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
 #include "VisionContainer.h"
+#include "subsystems/Intake.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -26,41 +35,61 @@
  * commands, and button mappings) should be declared here.
  */
 class RobotContainer {
- public:
-  RobotContainer();
+  public:
+    RobotContainer();
 
-  frc2::Command* GetAutonomousCommand();
+    frc2::Command* GetAutonomousCommand();
 
-  VisionContainer *GetVision() { return m_pVision; }
-  void SetVision(VisionContainer *pVision) { m_pVision = pVision; }
+    VisionContainer *GetVision() { return m_pVision; }
+    void SetVision(VisionContainer *pVision) { m_pVision = pVision; }
 
- private:
-public:
-  
+  private:
 
+    // Vision and camera thread
+    VisionContainer *m_pVision;
 
-  // Vision and camera thread
-  VisionContainer *m_pVision;
+    //turning pid for vision aim
+    frc2::PIDController m_turningController{.1, 0, 0};
+    
+    // The driver's controller
+    frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
+    frc::XboxController m_coDriverController{OIConstants::kCoDriverControllerPort};
+    // The robot's subsystems and commands are defined here...
 
-  //turning pid for vision aim
-  frc2::PIDController m_turningController{.1, 0, 0};
-  
-  // The driver's controller
-  frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
+    // The robot's subsystems
+    DriveSubsystem m_drive;
+    Intake m_intake;
 
-  // The robot's subsystems and commands are defined here...
+    // The chooser for the autonomous routines
+    frc::SendableChooser<frc2::Command*> m_chooser;
 
-  // The robot's subsystems
-  DriveSubsystem m_drive;
+    void ConfigureButtonBindings();
 
-  // The chooser for the autonomous routines
-  frc::SendableChooser<frc2::Command*> m_chooser;
+    frc2::InstantCommand m_ZeroHeading{ [this] { m_drive.ZeroHeading(); }, { &m_drive }};
+    frc2::InstantCommand m_limitSpeed{ [this] { m_drive.limitSpeed(); }, { &m_drive }};
+    frc2::InstantCommand m_fullSpeed{ [this] { m_drive.fullSpeed(); }, { &m_drive }};
+    frc2::InstantCommand m_visionAimOn{ [this] { m_drive.setVisionAim(true); }, { &m_drive }};
+    frc2::InstantCommand m_visionAimOff{ [this] { m_drive.setVisionAim(false); }, { &m_drive }};
+    frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(true); }, {&m_intake}};
+    frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(false); }, {&m_intake}};
 
-  void ConfigureButtonBindings();
-  frc2::InstantCommand m_ZeroHeading{ [this] { m_drive.ZeroHeading(); }, { &m_drive }};
-  frc2::InstantCommand m_limitSpeed{ [this] { m_drive.limitSpeed(); }, { &m_drive }};
-  frc2::InstantCommand m_fullSpeed{ [this] { m_drive.fullSpeed(); }, { &m_drive }};
-  frc2::InstantCommand m_visionAimOn{ [this] { m_drive.setVisionAim(true); }, { &m_drive }};
-  frc2::InstantCommand m_visionAimOff{ [this] { m_drive.setVisionAim(false); }, { &m_drive }};
+    //start of auto commands
+    std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
+    pathplanner::SwerveAutoBuilder autoBuilder;
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
 
+    frc2::CommandPtr autoNum1;
+
+  //auto path 2
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath2;
+
+    frc2::CommandPtr autoNum2;
+
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath3;
+
+    frc2::CommandPtr autoNum3;
+
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath4;
+
+    frc2::CommandPtr autoNum4;
 };

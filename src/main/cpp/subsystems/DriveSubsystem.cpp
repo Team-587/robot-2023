@@ -9,6 +9,7 @@
 #include <units/angular_velocity.h>
 #include <units/velocity.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <iostream>
 
 
 #include "Constants.h"
@@ -37,21 +38,44 @@ DriveSubsystem::DriveSubsystem()
           kRearRightDriveMotorPort,       kRearRightTurningMotorPort,
           kRearRightAbsoluteEncoderPort,
           kRearRightDriveEncoderReversed, kRearRightTurningEncoderReversed, "rr_"},
-
+      //m_NavX{frc::SPI::Port::kMXP},
       m_odometry{kDriveKinematics, 
-                m_NavX.GetRotation2d(), 
+                 m_NavX.GetRotation2d(), 
                  {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),m_rearLeft.GetPosition(), m_rearRight.GetPosition()},
-                 frc::Pose2d()} {
-
+                 frc::Pose2d()} 
+{
+   //std::cout << "Drive constuctor positions (" << (double)m_frontLeft.GetPosition().distance << "," 
+   //          << (double)m_frontRight.GetPosition().distance << "," << (double)m_rearLeft.GetPosition().distance 
+   //          << "," << (double)m_rearRight.GetPosition().distance << ")";
 }
 
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
-  m_odometry.Update(m_NavX.GetRotation2d(), 
-                    {m_frontLeft.GetPosition(),m_rearLeft.GetPosition(), m_frontRight.GetPosition(),
-                      m_rearRight.GetPosition()});
+  //std::cout << "Drive Periodic positions (" << (double)m_frontLeft.GetPosition().distance << "," 
+  //          << (double)m_frontRight.GetPosition().distance << "," << (double)m_rearLeft.GetPosition().distance 
+  //          << "," << (double)m_rearRight.GetPosition().distance << ")";
+  m_odometry.Update(m_NavX.GetRotation2d(), //frc::Rotation2d(GetHeading()), 
+                    {m_frontLeft.GetPosition(),m_frontRight.GetPosition(), m_rearLeft.GetPosition(), m_rearRight.GetPosition()});
+
+/*static int skip = 0;
+skip++;
+if (skip >= 50)
+{
+   skip = 0;
+   frc::Pose2d tmpPose = GetPose();
+   std::cout << "Periodic Odometry X:" << (double)tmpPose.X() << " Y:" << (double)tmpPose.Y() << " Rot:" << (double)tmpPose.Rotation().Degrees() << "\n";
+   std::cout << "Drive Periodic " << (double)GetHeading() << " positions (" << (double)m_frontLeft.GetPosition().distance << "," 
+            << (double)m_frontRight.GetPosition().distance << "," << (double)m_rearLeft.GetPosition().distance 
+            << "," << (double)m_rearRight.GetPosition().distance << ") ";
+    std::cout << "angles(" << (double)m_frontLeft.GetPosition().angle.Degrees() << "," << (double)m_frontRight.GetPosition().angle.Degrees() << ","
+            << (double)m_rearLeft.GetPosition().angle.Degrees() << "," << (double)m_rearRight.GetPosition().angle.Degrees() << ")\n";
+}
+*/
 frc::SmartDashboard::PutNumber("Speed", m_fullSpeed); 
-frc::SmartDashboard::PutNumber("Heading", (double)GetHeading()); 
+frc::SmartDashboard::PutNumber("Heading", (double)GetHeading());
+frc::SmartDashboard::PutNumber("Pitch", m_NavX.GetPitch()); 
+frc::SmartDashboard::PutNumber("Yaw", m_NavX.GetYaw());
+frc::SmartDashboard::PutNumber("Roll", m_NavX.GetRoll());
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -84,7 +108,18 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   kDriveKinematics.DesaturateWheelSpeeds(&states, AutoConstants::kMaxSpeed);
 
   auto [fl, fr, bl, br] = states;
-  
+  /*
+  std::cout << "Angles (" << (double)states[0].angle.Degrees() << "," 
+          << (double)states[1].angle.Degrees() << "," 
+          << (double)states[2].angle.Degrees() << ","
+          << (double)states[3].angle.Degrees() 
+          << ") Speeds (" << (double)states[0].speed << ","
+          << (double)states[1].speed << ","
+          << (double)states[2].speed << ","
+          << (double)states[3].speed << ")\n";
+          */
+
+
   m_frontLeft.SetDesiredState(fl);
   m_frontRight.SetDesiredState(fr);
   m_rearLeft.SetDesiredState(bl);
@@ -93,8 +128,32 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
 
 void DriveSubsystem::SetModuleStates(
     wpi::array<frc::SwerveModuleState, 4> desiredStates) {
-  kDriveKinematics.DesaturateWheelSpeeds(&desiredStates,
-                                         AutoConstants::kMaxSpeed);
+
+/*std::cout << "Angles (" << (double)desiredStates[0].angle.Degrees() << "," 
+          << (double)desiredStates[1].angle.Degrees() << "," 
+          << (double)desiredStates[2].angle.Degrees() << ","
+          << (double)desiredStates[3].angle.Degrees() 
+          << ") Speeds (" << (double)desiredStates[0].speed << ","
+          << (double)desiredStates[0].speed << ","
+          << (double)desiredStates[0].speed << ","
+          << (double)desiredStates[0].speed << ")";*/
+
+  kDriveKinematics.DesaturateWheelSpeeds(&desiredStates,  AutoConstants::kMaxSpeed);
+  double kmaxspeed = (double)AutoConstants::kMaxSpeed;
+  desiredStates[0].speed = desiredStates[0].speed / kmaxspeed;
+  desiredStates[1].speed = desiredStates[1].speed / kmaxspeed;
+  desiredStates[2].speed = desiredStates[2].speed / kmaxspeed;
+  desiredStates[3].speed = desiredStates[3].speed / kmaxspeed;
+
+  /*std::cout << "Angles (" << (double)desiredStates[0].angle.Degrees() << "," 
+          << (double)desiredStates[1].angle.Degrees() << "," 
+          << (double)desiredStates[2].angle.Degrees() << ","
+          << (double)desiredStates[3].angle.Degrees() 
+          << ") Speeds (" << (double)desiredStates[0].speed << ","
+          << (double)desiredStates[0].speed << ","
+          << (double)desiredStates[0].speed << ","
+          << (double)desiredStates[0].speed << ")\n";*/
+
   m_frontLeft.SetDesiredState(desiredStates[0]);
   m_frontRight.SetDesiredState(desiredStates[1]);
   m_rearLeft.SetDesiredState(desiredStates[2]);
@@ -102,6 +161,7 @@ void DriveSubsystem::SetModuleStates(
 }
 
 void DriveSubsystem::ResetEncoders() {
+  std::cout << "Reset Encoders \n";
   m_frontLeft.ResetEncoders();
   m_rearLeft.ResetEncoders();
   m_frontRight.ResetEncoders();
@@ -113,7 +173,10 @@ units::degree_t DriveSubsystem::GetHeading() const {
 }
 
 void DriveSubsystem::ZeroHeading() {
+    std::cout << "Zero Heading\n";
   m_NavX.Reset();
+  //ResetEncoders();
+  //m_NavX.ZeroYaw();
 }
 
 double DriveSubsystem::GetTurnRate() {
@@ -121,7 +184,10 @@ double DriveSubsystem::GetTurnRate() {
 }
 
 frc::Pose2d DriveSubsystem::GetPose() {
-  return m_odometry.GetPose();
+  frc::Pose2d tmpPose = m_odometry.GetPose();
+  std::cout << "Drive getPose X:" << (double)tmpPose.X() << " Y:" << (double)tmpPose.Y() << " Rot:" << (double)tmpPose.Rotation().Degrees() << "\n";
+
+  return tmpPose;
 }
 
 void DriveSubsystem::limitSpeed() {
@@ -132,9 +198,17 @@ void DriveSubsystem::fullSpeed() {
   m_fullSpeed = 1.0;
 }
 void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
+
+    frc::Pose2d tmpPose = GetPose();
+    std::cout << "Reset Odometry start X:" << (double)tmpPose.X() << " Y:" << (double)tmpPose.Y() << " Rot:" << (double)tmpPose.Rotation().Degrees() << "\n";
+    std::cout << "Reset Odometry set   X:" << (double)pose.X() << " Y:" << (double)pose.Y() << " Rot:" << (double)pose.Rotation().Degrees() << "\n";
     m_odometry.ResetPosition(
-      GetHeading(),
+      frc::Rotation2d(GetHeading()),
       {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
        m_rearLeft.GetPosition(), m_rearRight.GetPosition()},
       pose);
+
+    tmpPose = GetPose();
+    std::cout << "Reset Odometry after X:" << (double)tmpPose.X() << " Y:" << (double)tmpPose.Y() << " Rot:" << (double)tmpPose.Rotation().Degrees() << "\n";
+ 
 }
