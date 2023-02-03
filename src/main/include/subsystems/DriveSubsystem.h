@@ -115,14 +115,6 @@ public:
         frc::Translation2d(-kWheelBase / 2, kTrackWidth / 2),
         frc::Translation2d(-kWheelBase / 2, -kTrackWidth / 2)};
 
-    void setVision(VisionContainer *pVisionContainer) {
-        m_pVisionContainer = pVisionContainer;
-    }
-
-    VisionContainer *getVision() {
-        return m_pVisionContainer;
-    }
-
      void setVisionAim(bool visionAim) {
         m_visionAim = visionAim;
     }
@@ -148,8 +140,6 @@ private:
     // Odometry class for tracking robot pose
     // 4 defines the number of modules
     frc::SwerveDriveOdometry<4> m_odometry;
-
-    VisionContainer *m_pVisionContainer;
 
     bool m_visionAim;
     

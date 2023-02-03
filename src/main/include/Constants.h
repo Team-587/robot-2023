@@ -26,31 +26,6 @@
  * they are needed.
  */
 
-/*
-enum XBoxJoystickButtonConstants {
-    xButtonA = 1,
-    xButtonB = 2,
-    xButtonX = 3,
-    xButtonY = 4,
-    xLeftBumper = 5,
-    xRightBumper = 6,
-    xButtonView = 7,
-    xButtonMenu = 8,
-    xLeftJoystickButton = 9,
-    xRightJoystickButton = 10
-};
-
-enum XboxJoystickAxesConstants {
-    xLeftJoystickHorizontal = 0,
-    xLeftJoystickVertical = 1,
-    xLeftTrigger = 2,
-    xRightTrigger = 3,
-    xRightJoystickHorizontal = 4,
-    xRightJoystickVertical = 5
-
-};
-*/
-
 enum VisionPipelineIndex {
     CONE = 0,
     CUBE = 1,
@@ -61,7 +36,7 @@ enum VisionPipelineIndex {
 
 namespace DriveConstants {
 constexpr int kFrontLeftDriveMotorPort = 11;
-constexpr int kRearLeftDriveMotorPort = 13;
+constexpr int kRearLeftDriveMotorPort = 43;
 constexpr int kFrontRightDriveMotorPort = 15;
 constexpr int kRearRightDriveMotorPort = 17;
 

@@ -31,15 +31,19 @@ class RobotContainer {
 
   frc2::Command* GetAutonomousCommand();
 
-  VisionContainer GetVision() { return m_vision; }
+  VisionContainer *GetVision() { return m_pVision; }
+  void SetVision(VisionContainer *pVision) { m_pVision = pVision; }
 
  private:
-
-  frc2::PIDController m_turningController{.1, 0, 0};
+public:
+  
 
 
   // Vision and camera thread
-  VisionContainer m_vision { VisionPipelineIndex::CONE };
+  VisionContainer *m_pVision;
+
+  //turning pid for vision aim
+  frc2::PIDController m_turningController{.1, 0, 0};
   
   // The driver's controller
   frc::XboxController m_driverController{OIConstants::kDriverControllerPort};

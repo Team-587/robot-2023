@@ -37,12 +37,36 @@ RobotContainer::RobotContainer() {
   // Turning is controlled by the X axis of the right stick.
   m_drive.SetDefaultCommand(frc2::RunCommand(
     [this] {
-      if(m_drive.getVisionAim() && GetVision().getHasTarget()) {
-        frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVision().getYaw(), 0));
-        m_drive.Drive(
+      frc::SmartDashboard::PutBoolean("VisionAim", m_drive.getVisionAim());
+      
+      if(m_drive.getVisionAim() && GetVision()->getHasTarget()) {
+        
+        frc::SmartDashboard::PutData("TurningPID", &m_turningController);
+        frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVision()->getYaw(), 0));
+        
+        /*m_drive.Drive(  
         -units::meters_per_second_t(m_driverController.GetLeftY()),
         -units::meters_per_second_t(m_driverController.GetLeftX()),
         -units::radians_per_second_t(m_turningController.Calculate(GetVision().getYaw(), 0)), 
+        true);*/
+        frc::SmartDashboard::PutNumber("RcYaw", GetVision()->getYaw());
+        double rotate = 0;
+        if (abs(GetVision()->getYaw()) > 1) {
+          //std::cout<<"phase1" << "\n";
+          if (GetVision()->getYaw() > 0) {
+          //std::cout<<"phase2Neg" << "\n";
+            rotate = 0.1;
+
+          } else {
+          std::cout<<"phase2Pos" << "\n";
+
+            rotate = -0.1;
+          }
+        }
+        m_drive.Drive(
+        -units::meters_per_second_t(m_driverController.GetLeftY()),
+        -units::meters_per_second_t(m_driverController.GetLeftX()),
+        -units::radians_per_second_t(rotate), 
         true);
       } else {
         m_drive.Drive(
@@ -55,9 +79,7 @@ RobotContainer::RobotContainer() {
     {&m_drive}
   ));
     
-    GetVision().start();
-    //GetVision().setPipeline(0);
-    m_drive.setVision(&m_vision);
+    
 
 }
 
