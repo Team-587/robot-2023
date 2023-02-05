@@ -73,7 +73,10 @@ public:
      * @return the robot's heading in degrees, from 180 to 180
      */
     units::degree_t GetHeading() const;
+    
+    double getPitch();
 
+    double getInitialPitch();
     /**
      * Zeroes the heading of the robot.
      */
@@ -133,4 +136,12 @@ private:
     // Odometry class for tracking robot pose
     // 4 defines the number of modules
     frc::SwerveDriveOdometry<4> m_odometry;
+
+    double initialPitch;
+    double initialRoll;
+    double currentPitch;
+    double currentRoll;
+    bool imuValid;
+
+
 };

@@ -42,7 +42,12 @@ DriveSubsystem::DriveSubsystem()
       m_odometry{kDriveKinematics, 
                  m_NavX.GetRotation2d(), 
                  {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),m_rearLeft.GetPosition(), m_rearRight.GetPosition()},
-                 frc::Pose2d()} 
+                 frc::Pose2d()}, 
+      initialPitch{0},
+      initialRoll{0},
+      currentPitch{0},
+      currentRoll{0},
+      imuValid{false}
 {
    //std::cout << "Drive constuctor positions (" << (double)m_frontLeft.GetPosition().distance << "," 
    //          << (double)m_frontRight.GetPosition().distance << "," << (double)m_rearLeft.GetPosition().distance 
@@ -56,7 +61,15 @@ void DriveSubsystem::Periodic() {
   //          << "," << (double)m_rearRight.GetPosition().distance << ")";
   m_odometry.Update(m_NavX.GetRotation2d(), //frc::Rotation2d(GetHeading()), 
                     {m_frontLeft.GetPosition(),m_frontRight.GetPosition(), m_rearLeft.GetPosition(), m_rearRight.GetPosition()});
-
+  if (imuValid == false) {
+    if (m_NavX.IsCalibrating() == false) {
+      initialPitch = m_NavX.GetPitch();
+      initialRoll = m_NavX.GetRoll();
+      imuValid = true;
+      frc::SmartDashboard::PutNumber("InitialPitch", initialPitch);
+      frc::SmartDashboard::PutNumber("InitialRoll", initialRoll);
+    }
+  }
 /*static int skip = 0;
 skip++;
 if (skip >= 50)
@@ -71,11 +84,14 @@ if (skip >= 50)
             << (double)m_rearLeft.GetPosition().angle.Degrees() << "," << (double)m_rearRight.GetPosition().angle.Degrees() << ")\n";
 }
 */
+currentPitch = m_NavX.GetPitch();
+currentRoll = m_NavX.GetRoll();
+
 frc::SmartDashboard::PutNumber("Speed", m_fullSpeed); 
 frc::SmartDashboard::PutNumber("Heading", (double)GetHeading());
-frc::SmartDashboard::PutNumber("Pitch", m_NavX.GetPitch()); 
+frc::SmartDashboard::PutNumber("Pitch", currentPitch); 
 frc::SmartDashboard::PutNumber("Yaw", m_NavX.GetYaw());
-frc::SmartDashboard::PutNumber("Roll", m_NavX.GetRoll());
+frc::SmartDashboard::PutNumber("Roll", currentRoll);
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -170,6 +186,13 @@ void DriveSubsystem::ResetEncoders() {
 
 units::degree_t DriveSubsystem::GetHeading() const {
   return m_NavX.GetRotation2d().Degrees();
+}
+
+double DriveSubsystem::getPitch() {
+  return currentPitch;
+}
+double DriveSubsystem::getInitialPitch() {
+  return initialPitch;
 }
 
 void DriveSubsystem::ZeroHeading() {

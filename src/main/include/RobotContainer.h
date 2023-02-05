@@ -25,6 +25,7 @@
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/Intake.h"
+#include "commands/autoBalance.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -58,6 +59,9 @@ class RobotContainer {
   frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(true); }, {&m_intake}};
   frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(false); }, {&m_intake}};
+
+
+  autoBalance m_balancing{&m_drive};
 
   //start of auto commands
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
