@@ -47,6 +47,7 @@ DriveSubsystem::DriveSubsystem()
       initialRoll{0},
       currentPitch{0},
       currentRoll{0},
+      currentYaw{0},
       imuValid{false}
 {
    //std::cout << "Drive constuctor positions (" << (double)m_frontLeft.GetPosition().distance << "," 
@@ -86,11 +87,12 @@ if (skip >= 50)
 */
 currentPitch = m_NavX.GetPitch();
 currentRoll = m_NavX.GetRoll();
+currentYaw = -m_NavX.GetYaw();
 
 frc::SmartDashboard::PutNumber("Speed", m_fullSpeed); 
 frc::SmartDashboard::PutNumber("Heading", (double)GetHeading());
 frc::SmartDashboard::PutNumber("Pitch", currentPitch); 
-frc::SmartDashboard::PutNumber("Yaw", m_NavX.GetYaw());
+frc::SmartDashboard::PutNumber("Yaw", currentYaw);
 frc::SmartDashboard::PutNumber("Roll", currentRoll);
 }
 
@@ -98,6 +100,8 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            units::meters_per_second_t ySpeed,
                            units::radians_per_second_t rot,
                            bool fieldRelative) {
+  
+  
   if ((double)xSpeed < 0.1 && (double)xSpeed > -0.1){
     xSpeed = (units::meters_per_second_t)0.0;
   }
@@ -195,12 +199,16 @@ double DriveSubsystem::getInitialPitch() {
   return initialPitch;
 }
 
+double DriveSubsystem::getCurrentYaw() {
+  return currentYaw;
+}
 void DriveSubsystem::ZeroHeading() {
     std::cout << "Zero Heading\n";
   m_NavX.Reset();
   //ResetEncoders();
   //m_NavX.ZeroYaw();
 }
+
 
 double DriveSubsystem::GetTurnRate() {
   return -m_NavX.GetRate();

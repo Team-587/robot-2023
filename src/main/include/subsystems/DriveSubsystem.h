@@ -74,9 +74,13 @@ public:
      */
     units::degree_t GetHeading() const;
     
+    double getCurrentYaw();
+
     double getPitch();
 
     double getInitialPitch();
+
+
     /**
      * Zeroes the heading of the robot.
      */
@@ -141,6 +145,7 @@ private:
     double initialRoll;
     double currentPitch;
     double currentRoll;
+    double currentYaw;
     bool imuValid;
 
 

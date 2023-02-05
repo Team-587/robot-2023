@@ -30,6 +30,7 @@ class autoBalance
   bool IsFinished() override;
 
   DriveSubsystem *p_driveSubsystem;
-  frc2::PIDController pitchPID{.022, 0, 0.004};
+  frc2::PIDController pitchPID{.017, 0.0, 0.0};
+  frc2::PIDController headerPID{.02, 0.0, 0.0};
 
 };
