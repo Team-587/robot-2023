@@ -128,8 +128,14 @@ namespace OIConstants {
   constexpr int kCoDriverControllerPort = 1;
 }  // namespace OIConstants
 
+//Camera Constants
 namespace Camerapos {
     constexpr auto cam_height_meters = units::meter_t{.3937}; //Value for FreeFall
     constexpr auto goal_height_meters = units::meter_t{1.5937}; //Value for FreeFall
     constexpr auto cam_angle_degrees = 100;
+}
+
+namespace CameraNames {
+  const std::string CAMERA_1 = "HD_Pro_Webcam_C920";
+  const std::string CAMERA_2 = "OV5647";
 }

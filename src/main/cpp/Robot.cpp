@@ -27,12 +27,7 @@ void Robot::RobotPeriodic() {
  * robot is disabled.
  */
 void Robot::DisabledInit() {
-  if(m_container.GetVision()) {
-    m_container.GetVision()->stop();
-    delete m_container.GetVision();
-    m_container.SetVision(NULL);
-  }
-  
+  m_container.StopVision();
 }
 
 void Robot::DisabledPeriodic() {}
@@ -61,9 +56,7 @@ void Robot::TeleopInit() {
     m_autonomousCommand = nullptr;
   }
 
-  VisionContainer *pVision = new VisionContainer(VisionPipelineIndex::CONE);
-  pVision->start();
-  m_container.SetVision(pVision);
+  m_container.StartVision();
 }
 
 /**

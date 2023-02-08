@@ -68,35 +68,26 @@ RobotContainer::RobotContainer():
     [this] {
       frc::SmartDashboard::PutBoolean("VisionAim", m_drive.getVisionAim());
       
-      if(m_drive.getVisionAim() && GetVision()->getHasTarget()) {
-        
-        frc::SmartDashboard::PutData("TurningPID", &m_turningController);
-        frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVision()->getYaw(), 0));
-        
-        /*m_drive.Drive(  
-        -units::meters_per_second_t(m_driverController.GetLeftY()),
-        -units::meters_per_second_t(m_driverController.GetLeftX()),
-        -units::radians_per_second_t(m_turningController.Calculate(GetVision().getYaw(), 0)), 
-        true);*/
-        frc::SmartDashboard::PutNumber("RcYaw", GetVision()->getYaw());
-        double rotate = 0;
-        if (abs(GetVision()->getYaw()) > 1) {
-          //std::cout<<"phase1" << "\n";
-          if (GetVision()->getYaw() > 0) {
-          //std::cout<<"phase2Neg" << "\n";
-            rotate = 0.1;
-
-          } else {
-          std::cout<<"phase2Pos" << "\n";
-
-            rotate = -0.1;
-          }
+      if(m_drive.getVisionAim()) {
+        if(GetVisionCone()->getHasTarget()) {
+          frc::SmartDashboard::PutData("TurningPID", &m_turningController);
+          frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVisionCone()->getYaw(), 0));
+          
+          m_drive.Drive(  
+          -units::meters_per_second_t(m_driverController.GetLeftY()),
+          -units::meters_per_second_t(m_driverController.GetLeftX()),
+          units::radians_per_second_t(m_turningController.Calculate(GetVisionCone()->getYaw(), 0)), 
+          true);
+        } else if (GetVisionCube()->getHasTarget()) {
+          frc::SmartDashboard::PutData("TurningPID", &m_turningController);
+          frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVisionCube()->getYaw(), 0));
+          
+          m_drive.Drive(  
+          -units::meters_per_second_t(m_driverController.GetLeftY()),
+          -units::meters_per_second_t(m_driverController.GetLeftX()),
+          units::radians_per_second_t(m_turningController.Calculate(GetVisionCube()->getYaw(), 0)), 
+          true);
         }
-        m_drive.Drive(
-        -units::meters_per_second_t(m_driverController.GetLeftY()),
-        -units::meters_per_second_t(m_driverController.GetLeftX()),
-        -units::radians_per_second_t(rotate), 
-        true);
       } else {
         m_drive.Drive(
         -units::meters_per_second_t(m_driverController.GetLeftY()),
@@ -134,3 +125,27 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
 
  return m_chooser.GetSelected();
 }
+
+void RobotContainer::StartVision() {
+  SetVisionCone(new VisionContainer(CameraNames::CAMERA_1, VisionPipelineIndex::CONE));
+  SetVisionCube(new VisionContainer(CameraNames::CAMERA_2, VisionPipelineIndex::CUBE));
+  GetVisionCone()->start();
+  GetVisionCube()->start();
+}
+
+void RobotContainer::StopVision() {
+  
+  if(GetVisionCone() != NULL) {
+    GetVisionCone()->stop();
+    usleep(100000);
+    delete GetVisionCone();
+    SetVisionCone(NULL);
+  }
+  if(GetVisionCube() != NULL) {
+    GetVisionCube()->stop();
+    usleep(100000);
+    delete GetVisionCube();
+    SetVisionCube(NULL);
+  }
+}
+

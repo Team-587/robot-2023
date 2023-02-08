@@ -40,16 +40,22 @@ class RobotContainer {
 
     frc2::Command* GetAutonomousCommand();
 
-    VisionContainer *GetVision() { return m_pVision; }
-    void SetVision(VisionContainer *pVision) { m_pVision = pVision; }
+    VisionContainer *GetVisionCone() { return m_pVisionCone; }
+    void SetVisionCone(VisionContainer *pVisionCone) { m_pVisionCone = pVisionCone; }
+    VisionContainer *GetVisionCube() { return m_pVisionCube; }
+    void SetVisionCube(VisionContainer *pVisionCube) { m_pVisionCube = pVisionCube; }
+
+    void StartVision();
+    void StopVision();
 
   private:
 
     // Vision and camera thread
-    VisionContainer *m_pVision;
+    VisionContainer *m_pVisionCone;
+    VisionContainer *m_pVisionCube;
 
     //turning pid for vision aim
-    frc2::PIDController m_turningController{.1, 0, 0};
+    frc2::PIDController m_turningController{.01, 0, .01};
     
     // The driver's controller
     frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
