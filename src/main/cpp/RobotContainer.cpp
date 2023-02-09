@@ -80,17 +80,29 @@ RobotContainer::RobotContainer():
 }
 
 void RobotContainer::ConfigureButtonBindings() {
-    frc2::JoystickButton extendIntakeButton{&m_coDriverController, frc::XboxController::Button::kA};
+//Co driver buttons
+    frc2::JoystickButton extendIntakeButton{&m_coDriverController, frc::XboxController::Button::kLeftBumper};
     extendIntakeButton.OnTrue(&m_extendIntake);
-    frc2::JoystickButton retractIntakeButton{&m_coDriverController, frc::XboxController::Button::kB};
+    frc2::JoystickButton retractIntakeButton{&m_coDriverController, frc::XboxController::Button::kRightBumper};
     retractIntakeButton.OnTrue(&m_retractIntake);
+    frc2::JoystickButton elevatorDownButton{&m_coDriverController, frc::XboxController::Button::kA};
+    elevatorDownButton.OnTrue(&m_elevatorDown);
+    frc2::JoystickButton elevatorMidButton{&m_coDriverController, frc::XboxController::Button::kB};
+    elevatorMidButton.OnTrue(&m_elevatorMid);
+    frc2::JoystickButton elevatorHighButton{&m_coDriverController, frc::XboxController::Button::kY};
+    elevatorHighButton.OnTrue(&m_elevatorHigh);
+
+
+
+
+//Driver buttons
     frc2::JoystickButton startButton{&m_driverController, frc::XboxController::Button::kStart};
     startButton.OnTrue(&m_ZeroHeading);
     frc2::JoystickButton LeftBumper{&m_driverController, frc::XboxController::Button::kLeftBumper};
     LeftBumper.OnTrue(&m_limitSpeed).OnFalse(&m_fullSpeed);
     frc2::JoystickButton balancingButton{&m_driverController, frc::XboxController::Button::kY};
-    balancingButton.ToggleOnTrue(&m_balancing);
-    
+    //balancingButton.ToggleOnTrue(&m_balancing);
+    balancingButton.WhileTrue(&m_balancing);
     
 }
 

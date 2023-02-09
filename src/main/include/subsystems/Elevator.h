@@ -15,15 +15,13 @@ class Elevator : public frc2::SubsystemBase {
  public:
   Elevator();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
+ void setElevatorPosition(double position);
 
   void Periodic() override;
 
 
  private:
-  double position = 0;
+  //double position = 0;
   double destination = 0;
   #ifdef ELEVATOR_VALID
   rev::CANSparkMax m_elevatorMotor1 {DriveConstants::kElevatorMotor1, rev::CANSparkMaxLowLevel::MotorType::kBrushless};

@@ -26,6 +26,7 @@
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/Intake.h"
 #include "commands/autoBalance.h"
+#include "subsystems/Elevator.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -49,6 +50,7 @@ class RobotContainer {
   // The robot's subsystems
   DriveSubsystem m_drive;
   Intake m_intake;
+  Elevator m_elevator;
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
@@ -60,6 +62,9 @@ class RobotContainer {
   frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(true); }, {&m_intake}};
   frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(false); }, {&m_intake}};
 
+  frc2::InstantCommand m_elevatorDown{[this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator}};
+  frc2::InstantCommand m_elevatorMid{[this] {m_elevator.setElevatorPosition(kElevatorMid); }, {&m_elevator}};
+  frc2::InstantCommand m_elevatorHigh{[this] {m_elevator.setElevatorPosition(kElevatorHigh); }, {&m_elevator}};
 
   autoBalance m_balancing{&m_drive};
 
