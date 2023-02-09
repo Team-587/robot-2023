@@ -139,3 +139,8 @@ namespace CameraNames {
   const std::string CAMERA_1 = "HD_Pro_Webcam_C920";
   const std::string CAMERA_2 = "OV5647";
 }
+namespace FieldElementsMeasurement {
+  const std::string cone_height_centimeters = units::centimeter_t(33);
+  const std::string cone_width_centimeters = units::centimeter_t(21);
+  const std::string cube_width_centimeters = units::centimeter_t(24); /*"may not be actual dimensions - Game Manual"*/ 
+}
