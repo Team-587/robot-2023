@@ -133,9 +133,16 @@ namespace Camerapos {
     constexpr auto cam_height_meters = units::meter_t{.3937}; //Value for FreeFall
     constexpr auto goal_height_meters = units::meter_t{1.5937}; //Value for FreeFall
     constexpr auto cam_angle_degrees = 100;
+
+    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_X = -12.5_in; 
+    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_Y = 0_in; 
+    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_Z = 24_in; 
+
 }
 
 namespace CameraNames {
   const std::string CAMERA_1 = "HD_Pro_Webcam_C920";
   const std::string CAMERA_2 = "OV5647";
+  const std::string CAMERA_APRILTAG_FORWARD = "???";
 }
+

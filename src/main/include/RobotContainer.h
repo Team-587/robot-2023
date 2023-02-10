@@ -26,6 +26,7 @@
 #include "subsystems/DriveSubsystem.h"
 #include "VisionContainer.h"
 #include "subsystems/Intake.h"
+#include "subsystems/TagVision.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -49,7 +50,7 @@ class RobotContainer {
     void StopVision();
 
   private:
-
+    TagVision m_tagVision;
     // Vision and camera thread
     VisionContainer *m_pVisionCone;
     VisionContainer *m_pVisionCube;
