@@ -50,13 +50,6 @@ class RobotContainer {
     void StopVision();
 
   private:
-    TagVision m_tagVision;
-    // Vision and camera thread
-    VisionContainer *m_pVisionCone;
-    VisionContainer *m_pVisionCube;
-
-    //turning pid for vision aim
-    frc2::PIDController m_turningController{.01, 0, .01};
     
     // The driver's controller
     frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
@@ -99,4 +92,14 @@ class RobotContainer {
     static std::vector<pathplanner::PathPlannerTrajectory> autoPath4;
 
     frc2::CommandPtr autoNum4;
+
+    //april tag vision pose estimator
+    TagVision m_tagVision;
+
+    // Vision and camera thread
+    VisionContainer *m_pVisionCone;
+    VisionContainer *m_pVisionCube;
+
+    //turning pid for vision aim
+    frc2::PIDController m_turningController{.01, 0, .01};
 };
