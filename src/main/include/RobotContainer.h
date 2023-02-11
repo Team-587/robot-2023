@@ -28,6 +28,8 @@
 #include "VisionContainer.h"
 #include "subsystems/Intake.h"
 #include "subsystems/TagVision.h"
+#include "commands/autoBalance.h"
+#include "subsystems/Elevator.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -37,46 +39,66 @@
  * commands, and button mappings) should be declared here.
  */
 class RobotContainer {
-  public:
+public:
     RobotContainer();
 
     frc2::Command* GetAutonomousCommand();
 
-    VisionContainer *GetVisionCone() { return m_pVisionCone; }
-    void SetVisionCone(VisionContainer *pVisionCone) { m_pVisionCone = pVisionCone; }
-    VisionContainer *GetVisionCube() { return m_pVisionCube; }
-    void SetVisionCube(VisionContainer *pVisionCube) { m_pVisionCube = pVisionCube; }
+    VisionContainer* GetVisionCone() { return m_pVisionCone; }
+    void SetVisionCone(VisionContainer* pVisionCone) { m_pVisionCone = pVisionCone; }
+    VisionContainer* GetVisionCube() { return m_pVisionCube; }
+    void SetVisionCube(VisionContainer* pVisionCube) { m_pVisionCube = pVisionCube; }
 
-    void StartVision();
+    <<<<<< < HEAD
+        void StartVision();
     void StopVision();
+    ====== =
+        // The robot's subsystems
+        DriveSubsystem m_drive;
+    Intake m_intake;
+    Elevator m_elevator;
+    >>>>>> > main
 
-  private:
-    
+private:
+
     // The driver's controller
-    frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
-    frc::XboxController m_coDriverController{OIConstants::kCoDriverControllerPort};
+    frc::XboxController m_driverController{ OIConstants::kDriverControllerPort };
+    frc::XboxController m_coDriverController{ OIConstants::kCoDriverControllerPort };
     // The robot's subsystems and commands are defined here...
 
     // The robot's subsystems
     DriveSubsystem m_drive;
     Intake m_intake;
 
-    // The chooser for the autonomous routines
-    frc::SendableChooser<frc2::Command*> m_chooser;
+    <<<<<< < HEAD
+        // The chooser for the autonomous routines
+        frc::SendableChooser<frc2::Command*> m_chooser;
+    ====== =
+        frc2::InstantCommand m_elevatorDown{ [this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator} };
+    frc2::InstantCommand m_elevatorMid{ [this] {m_elevator.setElevatorPosition(kElevatorMid); }, {&m_elevator} };
+    frc2::InstantCommand m_elevatorHigh{ [this] {m_elevator.setElevatorPosition(kElevatorHigh); }, {&m_elevator} };
 
-    void ConfigureButtonBindings();
+    autoBalance m_balancing{ &m_drive };
 
-    frc2::InstantCommand m_ZeroHeading{ [this] { m_drive.ZeroHeading(); }, { &m_drive }};
-    frc2::InstantCommand m_limitSpeed{ [this] { m_drive.limitSpeed(); }, { &m_drive }};
-    frc2::InstantCommand m_fullSpeed{ [this] { m_drive.fullSpeed(); }, { &m_drive }};
-    frc2::InstantCommand m_visionAimOn{ [this] { m_drive.setVisionAim(true); }, { &m_drive }};
-    frc2::InstantCommand m_visionAimOff{ [this] { m_drive.setVisionAim(false); }, { &m_drive }};
-    frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(true); }, {&m_intake}};
-    frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(false); }, {&m_intake}};
+    //start of auto commands
+    std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
+    pathplanner::SwerveAutoBuilder autoBuilder;
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
+    >>>>>> > main
 
-    frc2::Trigger alignCenter { [this] {return m_coDriverController.GetAButton(); }};
-    frc2::Trigger alignLeft { [this] {return m_coDriverController.GetLeftBumper(); }};
-    frc2::Trigger alignRight { [this] {return m_coDriverController.GetRightBumper(); }};
+        void ConfigureButtonBindings();
+
+    frc2::InstantCommand m_ZeroHeading{ [this] { m_drive.ZeroHeading(); }, { &m_drive } };
+    frc2::InstantCommand m_limitSpeed{ [this] { m_drive.limitSpeed(); }, { &m_drive } };
+    frc2::InstantCommand m_fullSpeed{ [this] { m_drive.fullSpeed(); }, { &m_drive } };
+    frc2::InstantCommand m_visionAimOn{ [this] { m_drive.setVisionAim(true); }, { &m_drive } };
+    frc2::InstantCommand m_visionAimOff{ [this] { m_drive.setVisionAim(false); }, { &m_drive } };
+    frc2::InstantCommand m_extendIntake{ [this] {m_intake.extended(true); }, {&m_intake} };
+    frc2::InstantCommand m_retractIntake{ [this] {m_intake.extended(false); }, {&m_intake} };
+
+    frc2::Trigger alignCenter{ [this] {return m_coDriverController.GetAButton(); } };
+    frc2::Trigger alignLeft{ [this] {return m_coDriverController.GetLeftBumper(); } };
+    frc2::Trigger alignRight{ [this] {return m_coDriverController.GetRightBumper(); } };
 
     //start of auto commands
     std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
@@ -85,7 +107,7 @@ class RobotContainer {
 
     frc2::CommandPtr autoNum1;
 
-  //auto path 2
+    //auto path 2
     static std::vector<pathplanner::PathPlannerTrajectory> autoPath2;
 
     frc2::CommandPtr autoNum2;
@@ -102,9 +124,9 @@ class RobotContainer {
     TagVision m_tagVision;
 
     // Vision and camera thread
-    VisionContainer *m_pVisionCone;
-    VisionContainer *m_pVisionCube;
+    VisionContainer* m_pVisionCone;
+    VisionContainer* m_pVisionCube;
 
     //turning pid for vision aim
-    frc2::PIDController m_turningController{.01, 0, .01};
+    frc2::PIDController m_turningController{ .01, 0, .01 };
 };

@@ -25,6 +25,9 @@
  * command-specific namespaces within this header, which can then be used where
  * they are needed.
  */
+constexpr double kElevatorDown = 0.0;
+constexpr double kElevatorMid = 12.0;
+constexpr double kElevatorHigh = 24.0;
 
 enum VisionPipelineIndex {
     CONE = 0,
@@ -54,6 +57,9 @@ namespace DriveConstants {
     constexpr int kRearRightAbsoluteEncoderPort = 24;
 
     constexpr int kIntakeMotor = 30;
+
+    constexpr int kElevatorMotor1 = 31;
+    constexpr int kElevatorMotor2 = 32;
 
     constexpr int kFrontLeftTurningEncoderPorts[2]{ 0, 1 };
     constexpr int kRearLeftTurningEncoderPorts[2]{ 2, 3 };

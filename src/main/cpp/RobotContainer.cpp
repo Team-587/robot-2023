@@ -29,106 +29,118 @@
 using namespace DriveConstants;
 using namespace pathplanner;
 
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath1 = PathPlanner::loadPathGroup("auto1", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::loadPathGroup("auto3", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath4 = PathPlanner::loadPathGroup("auto4", {PathConstraints(3.0_mps, 3.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath1 = PathPlanner::loadPathGroup("auto1", { PathConstraints(3.0_mps, 3.0_mps_sq) });
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", { PathConstraints(3.0_mps, 3.0_mps_sq) });
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::loadPathGroup("auto3", { PathConstraints(3.0_mps, 3.0_mps_sq) });
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath4 = PathPlanner::loadPathGroup("auto4", { PathConstraints(3.0_mps, 3.0_mps_sq) });
 
 
-RobotContainer::RobotContainer(): 
-  // Initialize all of your commands and subsystems here
+RobotContainer::RobotContainer():
+    // Initialize all of your commands and subsystems here
     autoBuilder(
-    [this]() { return m_drive.GetPose(); }, // Function to supply current robot pose
-    [this](auto initPose) { m_drive.ResetOdometry(initPose); }, // Function used to reset odometry at the beginning of auto
-    m_drive.kDriveKinematics,
-    PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-      PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-      [this](auto speeds) { m_drive.SetModuleStates(speeds); }, // Output function that accepts field relative ChassisSpeeds
-      eventMap, // Our event map
-      {&m_drive }, // Drive requirements, usually just a single drive subsystem
-      true // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-   ),
-   autoNum1(autoBuilder.fullAuto(autoPath1)), 
-   autoNum2(autoBuilder.fullAuto(autoPath2)),
-   autoNum3(autoBuilder.fullAuto(autoPath3)),
-   autoNum4(autoBuilder.fullAuto(autoPath4)),
-   m_tagVision(&m_drive)
-  {
+        [this]() { return m_drive.GetPose(); }, // Function to supply current robot pose
+        [this](auto initPose) { m_drive.ResetOdometry(initPose); }, // Function used to reset odometry at the beginning of auto
+        m_drive.kDriveKinematics,
+        PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+        [this](auto speeds) { m_drive.SetModuleStates(speeds); }, // Output function that accepts field relative ChassisSpeeds
+        eventMap, // Our event map
+        { &m_drive }, // Drive requirements, usually just a single drive subsystem
+        true // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+    ),
+    autoNum1(autoBuilder.fullAuto(autoPath1)),
+    autoNum2(autoBuilder.fullAuto(autoPath2)),
+    autoNum3(autoBuilder.fullAuto(autoPath3)),
+    autoNum4(autoBuilder.fullAuto(autoPath4)),
+    m_tagVision(&m_drive) {
     eventMap.emplace("marker1", std::make_shared<frc2::PrintCommand>("Passed Marker 1"));
     m_chooser.SetDefaultOption("Slot 2", autoNum2.get());
     m_chooser.AddOption("Slot 1", autoNum1.get());
     m_chooser.AddOption("Slot 3", autoNum3.get());
     m_chooser.AddOption("Slot 4", autoNum4.get());
-   frc::SmartDashboard::PutData(&m_chooser);
-  // Configure the button bindings
-  ConfigureButtonBindings();
+    frc::SmartDashboard::PutData(&m_chooser);
+    // Configure the button bindings
+    ConfigureButtonBindings();
 
-  //set the alliance color and origin
-  m_tagVision.setAllianceColor();
+    //set the alliance color and origin
+    m_tagVision.setAllianceColor();
 
-  // Set up default drive command
-  // The left stick controls translation of the robot.
-  // Turning is controlled by the X axis of the right stick.
-  m_drive.SetDefaultCommand(frc2::RunCommand(
-    [this] {
-      frc::SmartDashboard::PutBoolean("VisionAim", m_drive.getVisionAim());
-      
-      if(m_drive.getVisionAim()) {
-        if(GetVisionCone()->getHasTarget()) {
-          frc::SmartDashboard::PutData("TurningPID", &m_turningController);
-          frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVisionCone()->getYaw(), 0));
-          
-          m_drive.Drive(  
-          -units::meters_per_second_t(m_driverController.GetLeftY()),
-          -units::meters_per_second_t(m_driverController.GetLeftX()),
-          units::radians_per_second_t(m_turningController.Calculate(GetVisionCone()->getYaw(), 0)), 
-          true);
+    // Set up default drive command
+    // The left stick controls translation of the robot.
+    // Turning is controlled by the X axis of the right stick.
+    m_drive.SetDefaultCommand(frc2::RunCommand(
+        [this] {
+            frc::SmartDashboard::PutBoolean("VisionAim", m_drive.getVisionAim());
+
+    if (m_drive.getVisionAim()) {
+        if (GetVisionCone()->getHasTarget()) {
+            frc::SmartDashboard::PutData("TurningPID", &m_turningController);
+            frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVisionCone()->getYaw(), 0));
+
+            m_drive.Drive(
+                -units::meters_per_second_t(m_driverController.GetLeftY()),
+                -units::meters_per_second_t(m_driverController.GetLeftX()),
+                units::radians_per_second_t(m_turningController.Calculate(GetVisionCone()->getYaw(), 0)),
+                true);
         } else if (GetVisionCube()->getHasTarget()) {
-          frc::SmartDashboard::PutData("TurningPID", &m_turningController);
-          frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVisionCube()->getYaw(), 0));
-          
-          m_drive.Drive(  
-          -units::meters_per_second_t(m_driverController.GetLeftY()),
-          -units::meters_per_second_t(m_driverController.GetLeftX()),
-          units::radians_per_second_t(m_turningController.Calculate(GetVisionCube()->getYaw(), 0)), 
-          true);
+            frc::SmartDashboard::PutData("TurningPID", &m_turningController);
+            frc::SmartDashboard::PutNumber("Vision Turning Speed", -m_turningController.Calculate(GetVisionCube()->getYaw(), 0));
+
+            m_drive.Drive(
+                -units::meters_per_second_t(m_driverController.GetLeftY()),
+                -units::meters_per_second_t(m_driverController.GetLeftX()),
+                units::radians_per_second_t(m_turningController.Calculate(GetVisionCube()->getYaw(), 0)),
+                true);
         }
-      } else {
+    } else {
         m_drive.Drive(
-        -units::meters_per_second_t(m_driverController.GetLeftY()),
-        -units::meters_per_second_t(m_driverController.GetLeftX()),
-        -units::radians_per_second_t(m_driverController.GetRightX()), 
-        true);
-      }
-    },
-    {&m_drive}
-  ));
+            -units::meters_per_second_t(m_driverController.GetLeftY()),
+            -units::meters_per_second_t(m_driverController.GetLeftX()),
+            -units::radians_per_second_t(m_driverController.GetRightX()),
+            true);
+    }
+        },
+        { &m_drive }
+        ));
 
-  m_intake.SetDefaultCommand(frc2::RunCommand(
-    [this] {
-      m_intake.checkControl(m_coDriverController.GetLeftY());
-    },{&m_intake}));
+    m_intake.SetDefaultCommand(frc2::RunCommand(
+        [this] {
+            m_intake.checkControl(m_coDriverController.GetLeftY());
+        }, { &m_intake }));
 
-  m_tagVision.SetDefaultCommand(frc2::RunCommand(
-    [this] {
-      m_tagVision.updateOdometry();
-    },{&m_tagVision}));
+    m_tagVision.SetDefaultCommand(frc2::RunCommand(
+        [this] {
+            m_tagVision.updateOdometry();
+        }, { &m_tagVision }));
 
 }
 
 
 
 void RobotContainer::ConfigureButtonBindings() {
-  
-    frc2::JoystickButton extendIntakeButton{&m_coDriverController, frc::XboxController::Button::kA};
+    //Co driver buttons
+    frc2::JoystickButton extendIntakeButton{ &m_coDriverController, frc::XboxController::Button::kLeftBumper };
     extendIntakeButton.OnTrue(&m_extendIntake);
-    frc2::JoystickButton retractIntakeButton{&m_coDriverController, frc::XboxController::Button::kB};
+    frc2::JoystickButton retractIntakeButton{ &m_coDriverController, frc::XboxController::Button::kRightBumper };
     retractIntakeButton.OnTrue(&m_retractIntake);
-    frc2::JoystickButton startButton{&m_driverController, frc::XboxController::Button::kStart};
+    frc2::JoystickButton elevatorDownButton{ &m_coDriverController, frc::XboxController::Button::kA };
+    elevatorDownButton.OnTrue(&m_elevatorDown);
+    frc2::JoystickButton elevatorMidButton{ &m_coDriverController, frc::XboxController::Button::kB };
+    elevatorMidButton.OnTrue(&m_elevatorMid);
+    frc2::JoystickButton elevatorHighButton{ &m_coDriverController, frc::XboxController::Button::kY };
+    elevatorHighButton.OnTrue(&m_elevatorHigh);
+
+
+
+
+    //Driver buttons
+    frc2::JoystickButton startButton{ &m_driverController, frc::XboxController::Button::kStart };
     startButton.OnTrue(&m_ZeroHeading);
-    frc2::JoystickButton leftBumper{&m_driverController, frc::XboxController::Button::kLeftBumper};
-    leftBumper.OnTrue(&m_limitSpeed).OnFalse(&m_fullSpeed);
-    frc2::JoystickButton rightBumper(&m_driverController, frc::XboxController::Button::kRightBumper);
+    frc2::JoystickButton LeftBumper{ &m_driverController, frc::XboxController::Button::kLeftBumper };
+    LeftBumper.OnTrue(&m_limitSpeed).OnFalse(&m_fullSpeed);
+    frc2::JoystickButton balancingButton{ &m_driverController, frc::XboxController::Button::kY };
+    //balancingButton.ToggleOnTrue(&m_balancing);
+    balancingButton.WhileTrue(&m_balancing);
     rightBumper.OnTrue(&m_visionAimOn).OnFalse(&m_visionAimOff);
 
     alignCenter.WhileTrue(AlignToTarget(&m_drive, &m_tagVision, "Center").ToPtr());
@@ -139,30 +151,30 @@ void RobotContainer::ConfigureButtonBindings() {
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
 
- return m_chooser.GetSelected();
+    return m_chooser.GetSelected();
 }
 
 void RobotContainer::StartVision() {
-  SetVisionCone(new VisionContainer(CameraNames::CAMERA_1, VisionPipelineIndex::CONE));
-  SetVisionCube(new VisionContainer(CameraNames::CAMERA_2, VisionPipelineIndex::CUBE));
-  GetVisionCone()->start();
-  GetVisionCube()->start();
+    SetVisionCone(new VisionContainer(CameraNames::CAMERA_1, VisionPipelineIndex::CONE));
+    SetVisionCube(new VisionContainer(CameraNames::CAMERA_2, VisionPipelineIndex::CUBE));
+    GetVisionCone()->start();
+    GetVisionCube()->start();
 }
 
 void RobotContainer::StopVision() {
-  
-  if(GetVisionCone() != NULL) {
-    GetVisionCone()->stop();
-    usleep(100000);
-    delete GetVisionCone();
-    SetVisionCone(NULL);
-  }
-  if(GetVisionCube() != NULL) {
-    GetVisionCube()->stop();
-    usleep(100000);
-    delete GetVisionCube();
-    SetVisionCube(NULL);
-  }
+
+    if (GetVisionCone() != NULL) {
+        GetVisionCone()->stop();
+        usleep(100000);
+        delete GetVisionCone();
+        SetVisionCone(NULL);
+    }
+    if (GetVisionCube() != NULL) {
+        GetVisionCube()->stop();
+        usleep(100000);
+        delete GetVisionCube();
+        SetVisionCube(NULL);
+    }
 }
 
 

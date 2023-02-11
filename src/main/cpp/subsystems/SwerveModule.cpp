@@ -80,7 +80,6 @@ void SwerveModule::SetDesiredState(
   //frc::SmartDashboard::PutNumber(m_name + "angle", (double)referenceState.angle.Degrees());
 
 
-
   double speed = ((double)referenceState.speed); // / 4.0;
   if (speed > 1.0){
     speed = 1.0;
