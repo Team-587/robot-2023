@@ -24,6 +24,7 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "commands/AlignToTarget.h"
 
 using namespace DriveConstants;
 using namespace pathplanner;
@@ -118,6 +119,10 @@ void RobotContainer::ConfigureButtonBindings() {
     leftBumper.OnTrue(&m_limitSpeed).OnFalse(&m_fullSpeed);
     frc2::JoystickButton rightBumper(&m_driverController, frc::XboxController::Button::kRightBumper);
     rightBumper.OnTrue(&m_visionAimOn).OnFalse(&m_visionAimOff);
+
+    alignCenter.WhileTrue(AlignToTarget(&m_drive, &m_tagVision, "Center").ToPtr());
+    alignRight.WhileTrue(AlignToTarget(&m_drive, &m_tagVision, "Right").ToPtr());
+    alignLeft.WhileTrue(AlignToTarget(&m_drive, &m_tagVision, "Left").ToPtr());
 
 }
 

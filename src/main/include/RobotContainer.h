@@ -21,6 +21,7 @@
 #include <pathplanner/lib/auto/SwerveAutoBuilder.h>
 #include <pathplanner/lib/commands/FollowPathWithEvents.h>
 #include <frc2/command/CommandPtr.h>
+#include <frc2/command/button/Trigger.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
@@ -78,6 +79,10 @@ class RobotContainer {
     frc2::InstantCommand m_visionAimOff{ [this] { m_drive.setVisionAim(false); }, { &m_drive }};
     frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(true); }, {&m_intake}};
     frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(false); }, {&m_intake}};
+
+    frc2::Trigger alignCenter { [this] {return m_coDriverController.GetAButton(); }};
+    frc2::Trigger alignLeft { [this] {return m_coDriverController.GetLeftBumper(); }};
+    frc2::Trigger alignRight { [this] {return m_coDriverController.GetRightBumper(); }};
 
     //start of auto commands
     std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
