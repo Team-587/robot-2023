@@ -214,7 +214,8 @@ double DriveSubsystem::GetTurnRate() {
 }
 
 frc::Pose2d DriveSubsystem::GetPose() {
-    frc::Pose2d tmpPose = m_odometry.GetPose();
+    //frc::Pose2d tmpPose = m_odometry.GetPose();
+    frc::Pose2d tmpPose = m_odometry.GetEstimatedPosition();
     std::cout << "Drive getPose X:" << (double)tmpPose.X() << " Y:" << (double)tmpPose.Y() << " Rot:" << (double)tmpPose.Rotation().Degrees() << "\n";
 
     return tmpPose;
@@ -243,5 +244,5 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
 
 }
 void DriveSubsystem::visionMeasurements(frc::Pose2d pose, units::second_t timestamp) {
-    m_poseEstimator.AddVisionMeasurement(pose, timestamp);
+    m_odometry.AddVisionMeasurement(pose, timestamp);
 }

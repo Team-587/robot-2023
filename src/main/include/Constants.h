@@ -153,7 +153,7 @@ namespace CameraNames {
 }
 
 namespace FieldElementsMeasurement {
-    const std::string cone_height_centimeters = units::centimeter_t(33);
-    const std::string cone_width_centimeters = units::centimeter_t(21);
-    const std::string cube_width_centimeters = units::centimeter_t(24); /*"may not be actual dimensions - Game Manual"*/
+    const units::meter_t cone_height_centimeters = 33_cm;
+    const units::meter_t cone_width_centimeters = 21_cm;
+    const units::meter_t cube_width_centimeters = 24_cm; /*"may not be actual dimensions - Game Manual"*/
 }
