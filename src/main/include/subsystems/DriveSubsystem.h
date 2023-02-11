@@ -33,8 +33,7 @@
 //#include "VisionContainer.h"
 //#include "subsystems/TagVision.h"
 
-class DriveSubsystem : public frc2::SubsystemBase
-{
+class DriveSubsystem: public frc2::SubsystemBase {
 public:
     DriveSubsystem();
 
@@ -62,8 +61,8 @@ public:
      *                      the field.
      */
     void Drive(units::meters_per_second_t xSpeed,
-               units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
-               bool fieldRelative);
+        units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
+        bool fieldRelative);
 
     /**
      * Resets the drive encoders to currently read a position of 0.
@@ -82,6 +81,13 @@ public:
      */
     units::degree_t GetHeading() const;
 
+    double getCurrentYaw();
+
+    double getPitch();
+
+    double getInitialPitch();
+
+
     /**
      * Zeroes the heading of the robot.
      */
@@ -93,7 +99,7 @@ public:
      * @return The turn rate of the robot, in degrees per second
      */
     double GetTurnRate();
-    
+
     void limitSpeed();
 
     void fullSpeed();
@@ -123,9 +129,9 @@ public:
         frc::Translation2d(kWheelBase / 2, kTrackWidth / 2),
         frc::Translation2d(kWheelBase / 2, -kTrackWidth / 2),
         frc::Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-        frc::Translation2d(-kWheelBase / 2, -kTrackWidth / 2)};
+        frc::Translation2d(-kWheelBase / 2, -kTrackWidth / 2) };
 
-     void setVisionAim(bool visionAim) {
+    void setVisionAim(bool visionAim) {
         m_visionAim = visionAim;
     }
 
@@ -144,7 +150,7 @@ private:
 
     double m_fullSpeed = 1.0;
 
-    std::array<frc::SwerveModulePosition, 4> odometryPos {
+    std::array<frc::SwerveModulePosition, 4> odometryPos{
         m_frontLeft.GetPosition(),
         m_rearLeft.GetPosition(),
         m_frontRight.GetPosition(),
@@ -154,17 +160,26 @@ private:
     // The gyro sensor
     //frc::ADXRS450_Gyro m_gyro;
     //AHRS m_NavX;
-    AHRS m_NavX{frc::SPI::Port::kMXP};
-    
+    AHRS m_NavX{ frc::SPI::Port::kMXP };
+
     // Odometry class for tracking robot pose
     // 4 defines the number of modules
-    frc::SwerveDriveOdometry<4> m_odometry;
-    frc::SwerveDrivePoseEstimator<4> m_poseEstimator {
+    //frc::SwerveDriveOdometry<4> m_odometry;
+    frc::SwerveDrivePoseEstimator<4> m_odometry{
         kDriveKinematics,
         frc::Rotation2d(),
         odometryPos,
         frc::Pose2d()
     };
     bool m_visionAim;
-    
+
+
+    double initialPitch;
+    double initialRoll;
+    double currentPitch;
+    double currentRoll;
+    double currentYaw;
+    bool imuValid;
+
+
 };
