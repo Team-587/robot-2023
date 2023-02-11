@@ -35,7 +35,7 @@ constexpr int kIntakeSolenoid1 = 1;
 
 namespace DriveConstants {
 constexpr int kFrontLeftDriveMotorPort = 11;
-constexpr int kRearLeftDriveMotorPort = 43;
+constexpr int kRearLeftDriveMotorPort = 13;
 constexpr int kFrontRightDriveMotorPort = 15;
 constexpr int kRearRightDriveMotorPort = 17;
 
