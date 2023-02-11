@@ -57,6 +57,14 @@ void DriveSubsystem::Periodic() {
   m_odometry.Update(m_NavX.GetRotation2d(), //frc::Rotation2d(GetHeading()), 
                     {m_frontLeft.GetPosition(),m_frontRight.GetPosition(), m_rearLeft.GetPosition(), m_rearRight.GetPosition()});
 
+  /*frc::EstimatedRobotPose globalPositon = m_tagVision.getEstimatedGlobalPose(m_odometry.getEstimatedPosition());
+  
+  if(globalPosition.isPresent()) {
+      EstimatedRobotPose camPose = result.get();
+      m_odometry.addVisionMeasurment(
+        camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+  }*/
+
 /*static int skip = 0;
 skip++;
 if (skip >= 50)
@@ -211,4 +219,7 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
     tmpPose = GetPose();
     std::cout << "Reset Odometry after X:" << (double)tmpPose.X() << " Y:" << (double)tmpPose.Y() << " Rot:" << (double)tmpPose.Rotation().Degrees() << "\n";
  
+}
+void DriveSubsystem::visionMeasurements(frc::Pose2d pose, units::second_t timestamp) {
+  m_poseEstimator.AddVisionMeasurement(pose, timestamp);
 }

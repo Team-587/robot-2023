@@ -51,7 +51,8 @@ RobotContainer::RobotContainer():
    autoNum1(autoBuilder.fullAuto(autoPath1)), 
    autoNum2(autoBuilder.fullAuto(autoPath2)),
    autoNum3(autoBuilder.fullAuto(autoPath3)),
-   autoNum4(autoBuilder.fullAuto(autoPath4))
+   autoNum4(autoBuilder.fullAuto(autoPath4)),
+   m_tagVision(&m_drive)
   {
     eventMap.emplace("marker1", std::make_shared<frc2::PrintCommand>("Passed Marker 1"));
     m_chooser.SetDefaultOption("Slot 2", autoNum2.get());
@@ -61,6 +62,9 @@ RobotContainer::RobotContainer():
    frc::SmartDashboard::PutData(&m_chooser);
   // Configure the button bindings
   ConfigureButtonBindings();
+
+  //set the alliance color and origin
+  m_tagVision.setAllianceColor();
 
   // Set up default drive command
   // The left stick controls translation of the robot.
@@ -105,7 +109,14 @@ RobotContainer::RobotContainer():
       m_intake.checkControl(m_coDriverController.GetLeftY());
     },{&m_intake}));
 
+  m_tagVision.SetDefaultCommand(frc2::RunCommand(
+    [this] {
+      m_tagVision.updateOdometry();
+    },{&m_tagVision}));
+
 }
+
+
 
 void RobotContainer::ConfigureButtonBindings() {
   
@@ -153,4 +164,5 @@ void RobotContainer::StopVision() {
     SetVisionCube(NULL);
   }
 }
+
 

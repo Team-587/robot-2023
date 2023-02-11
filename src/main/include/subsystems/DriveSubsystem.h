@@ -26,15 +26,19 @@
 #include <units/angular_acceleration.h>
 #include <units/acceleration.h>
 #include <AHRS.h>
+#include <frc/estimator/SwerveDrivePoseEstimator.h>
 
 #include "Constants.h"
 #include "SwerveModule.h"
-#include "VisionContainer.h"
+//#include "VisionContainer.h"
+//#include "subsystems/TagVision.h"
 
 class DriveSubsystem : public frc2::SubsystemBase
 {
 public:
     DriveSubsystem();
+
+    //TagVision m_tagVision;
 
     /**
      * Will be called periodically whenever the CommandScheduler runs.
@@ -97,6 +101,9 @@ public:
      */
     frc::Pose2d GetPose();
 
+    //sets vision measurements
+    void visionMeasurements(frc::Pose2d pose, units::second_t timestamp);
+
     /**
      * Resets the odometry to the specified pose.
      *
@@ -134,6 +141,13 @@ private:
 
     double m_fullSpeed = 1.0;
 
+    std::array<frc::SwerveModulePosition, 4> odometryPos {
+        m_frontLeft.GetPosition(),
+        m_rearLeft.GetPosition(),
+        m_frontRight.GetPosition(),
+        m_rearRight.GetPosition()
+    };
+
     // The gyro sensor
     //frc::ADXRS450_Gyro m_gyro;
     //AHRS m_NavX;
@@ -142,7 +156,12 @@ private:
     // Odometry class for tracking robot pose
     // 4 defines the number of modules
     frc::SwerveDriveOdometry<4> m_odometry;
-
+    frc::SwerveDrivePoseEstimator<4> m_poseEstimator {
+        kDriveKinematics,
+        frc::Rotation2d(),
+        odometryPos,
+        frc::Pose2d()
+    };
     bool m_visionAim;
     
 };
