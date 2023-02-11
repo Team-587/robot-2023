@@ -62,6 +62,9 @@ RobotContainer::RobotContainer():
   // Configure the button bindings
   ConfigureButtonBindings();
 
+  //set the alliance color and origin
+  m_tagVision.setAllianceColor();
+
   // Set up default drive command
   // The left stick controls translation of the robot.
   // Turning is controlled by the X axis of the right stick.

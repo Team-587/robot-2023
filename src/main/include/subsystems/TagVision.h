@@ -42,18 +42,27 @@ class TagVision : public frc2::SubsystemBase {
 
   //photonlib::EstimatedRobotPose getEstimatedGlobalPose(frc::Pose2d prevEstimatedRobotPose);
 
+  //
+  //AK use the vision container for this???
+  //
   photonlib::PhotonCamera camera{ CameraNames::CAMERA_APRILTAG_FORWARD }; // Camera ID Number
 
  private:
 
+  //Camera for the pose estimator
   photonlib::PhotonCamera cameraEstimate{ CameraNames::CAMERA_APRILTAG_FORWARD }; // Camera ID Number
-  //photonlib::PhotonPipelineResult cameraResult;
+  
+  //Camera location on the robot
   frc::Transform3d robotToCamera = 
     frc::Transform3d(frc::Translation3d(Camerapos::CAMERA_APRILTAG_FORWARD_X, Camerapos::CAMERA_APRILTAG_FORWARD_Y, Camerapos::CAMERA_APRILTAG_FORWARD_Z), 
       frc::Rotation3d(0_rad, 0_rad, 0_rad));
+
+  //The april tag layout for 2023
   frc::AprilTagFieldLayout tagLayout{ frc::LoadAprilTagLayoutField(frc::AprilTagField::k2023ChargedUp) };
-  photonlib::PhotonPoseEstimator* poseEstimator;//{ tagLayout, photonlib::PoseStrategy::CLOSEST_TO_REFERENCE_POSE, std::move(camera), robotToCamera };
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
+
+  //This is the pose estimator
+  photonlib::PhotonPoseEstimator* poseEstimator;
+  
+  //the drive subsystem to update the odometry
   DriveSubsystem* driveSubsystem; 
 };

@@ -24,19 +24,21 @@ TagVision::TagVision(DriveSubsystem* driveSubsystem): driveSubsystem(driveSubsys
 }
 
 // This method will be called once per scheduler run
-void TagVision::Periodic() {
+void TagVision::Periodic() {}
 
-    
-
-}
+//sets the tag layout origin based on alliance color
 void TagVision::setAllianceColor () {
+
+        //get the alliance color
         frc::DriverStation::Alliance allianceColor = frc::DriverStation::GetAlliance();
+
+        //set the origin
         if (allianceColor == frc::DriverStation::Alliance::kBlue) {
                 tagLayout.SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kBlueAllianceWallRightSide);
         } else {
                 tagLayout.SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kRedAllianceWallRightSide);
         }
-
+        //init the pose estimator
         poseEstimator = new photonlib::PhotonPoseEstimator {
                 tagLayout,
                 photonlib::PoseStrategy::LOWEST_AMBIGUITY,
@@ -45,10 +47,15 @@ void TagVision::setAllianceColor () {
         };
 }
 
+//update the odometry on the drive subsystem
 void TagVision::updateOdometry() {
+
+        //update estimate and get the result
         std::optional<photonlib::EstimatedRobotPose> poseResult = poseEstimator->Update();
 
-        if (poseResult.has_value()) {
+        //do we have a valid pose
+        if (poseResult && poseResult.has_value()) {
+                //update the odometry
                 driveSubsystem->visionMeasurements(poseResult.value().estimatedPose.ToPose2d(), poseResult.value().timestamp);
         }
 }
