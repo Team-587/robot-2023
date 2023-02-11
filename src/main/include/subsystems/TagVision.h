@@ -27,7 +27,7 @@ class TagVision : public frc2::SubsystemBase {
 
   TagVision(DriveSubsystem* driveSubsystem);
 
-
+  frc::AprilTagFieldLayout getTagLayout();
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */

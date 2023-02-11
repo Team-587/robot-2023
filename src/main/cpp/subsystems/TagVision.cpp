@@ -60,6 +60,10 @@ void TagVision::updateOdometry() {
         }
 }
 
+frc::AprilTagFieldLayout TagVision::getTagLayout() {
+        return tagLayout;
+}
+
 /*photonlib::EstimatedRobotPose TagVision::getEstimatedGlobalPose(frc::Pose2d prevEstimatedRobotPose) {
         poseEstimator.setReferencePose(prevEstimatedRobotPose);
         return poseEstimator.update();

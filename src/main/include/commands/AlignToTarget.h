@@ -20,12 +20,11 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class AlignToTarget
-    : public frc2::CommandHelper<frc2::CommandBase, AlignToTarget> {
+class AlignToTarget : public frc2::CommandHelper<frc2::CommandBase, AlignToTarget> {
 
 	public:
 
-	void AlignToTarget(DriveSubsystem* driveSubsystem, TagVision* tagVision, std::string position);
+	AlignToTarget(DriveSubsystem* driveSubsystem, TagVision* tagVision, std::string position);
 
 	void calculateAlignment();
 
@@ -43,11 +42,11 @@ class AlignToTarget
 	DriveSubsystem* driveSubsystem;
 	TagVision* tagVision;
 	std::string position;
-	std::unordered_map<std::string, frc::Pose2d positionMap> {
-		("Center", (1.5_m, 0_m,(180_deg))),
-		("Right", (1_m, 1_m,(180_deg))),
-		("Left", (1_m, -1_m,(180_deg))),
-		("Loading", (1_m, 1_m,(180_deg)))
+	std::unordered_map<std::string, frc::Pose2d> positionMap {
+		{"Center", {1.5_m, 0_m, {180_deg}}},
+		{"Right", {1_m, 1_m, {180_deg}}},
+		{"Left", {1_m, -1_m, {180_deg}}},
+		{"Loading", {1_m, 1_m, {180_deg}}}
 	};
 	pathplanner::PPSwerveControllerCommand* alignCommand;
 	pathplanner::PathConstraints constraints = { 1_mps, 1_mps_sq };

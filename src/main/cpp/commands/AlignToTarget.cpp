@@ -18,7 +18,7 @@ AlignToTarget::AlignToTarget( DriveSubsystem* driveSubsystem, TagVision* tagVisi
     
 }
 
-pathplanner::PathPlannerTrajectory AlignToTarget::calculateAlignment() {
+void AlignToTarget::calculateAlignment() {
     //Gets the latest apriltag result from the photonlib pipeline
     photonlib::PhotonPipelineResult result = tagVision->camera.GetLatestResult();
 
@@ -28,13 +28,13 @@ pathplanner::PathPlannerTrajectory AlignToTarget::calculateAlignment() {
         int tagID = result.GetBestTarget().GetFiducialId();
 
         //Sets the variable targetPose equal to the position of the detected tag
-        frc::Pose2d targetPose = tagVision->tagLayout.GetTagPose( tagID ).value().ToPose2d();
+        frc::Pose2d targetPose = tagVision->getTagLayout().GetTagPose( tagID ).value().ToPose2d();
 
         //Sets the variable visionPose equal to the transformed position of targetPose
         frc::Pose2d visionPose = targetPose.TransformBy( {positionMap[position].Translation(), positionMap[position].Rotation() } );
 
         //Sets the variable robotPose equal to the position on the field detected by the navX
-        frc::Pose2d robotPose = DriveSubsystem->getOdometry();
+        frc::Pose2d robotPose = driveSubsystem->GetPose();
 
         // frc::SmartDashboard::PutNumber( "Objective X", visionPose.X().value() );
         // frc::SmartDashboard::PutNumber( "Objective Y", visionPose.Y().value() );
@@ -46,8 +46,8 @@ pathplanner::PathPlannerTrajectory AlignToTarget::calculateAlignment() {
         };
 
         //Creates a new path called trajectory from the position of the robot to the detected apriltag
-        trajectory = pathplanner::PathPlanner::generatePath( constraints, pathpoints );
-    } else if (!result.HasTargets){
+        trajectory = pathplanner::PathPlanner::generatePath( constraints, pathPoints );
+    } else if (!result.HasTargets()){
         End( true );
     }
 }
@@ -58,12 +58,12 @@ void AlignToTarget::Initialize() {
 
     alignCommand = new pathplanner::PPSwerveControllerCommand(
         trajectory,
-        [this]() { return driveSubsystem->getOdometry(); },
+        [this]() { return driveSubsystem->GetPose(); },
         driveSubsystem->getKinematics(),
         { 0,0,0 },
         { 0,0,0 },
         { 0,0,0 },
-        [this]( auto speeds ) { driveSubsystem->setModuleStates( speeds ); },
+        [this]( auto speeds ) { driveSubsystem->SetModuleStates( speeds ); },
         { driveSubsystem },
         false
     );

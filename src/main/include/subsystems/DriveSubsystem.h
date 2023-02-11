@@ -45,6 +45,9 @@ public:
      */
     void Periodic() override;
 
+
+    frc::SwerveDriveKinematics<4> getKinematics() { return kDriveKinematics; };
+
     // Subsystem methods go here.
 
     /**
