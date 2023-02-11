@@ -141,6 +141,8 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton balancingButton{ &m_driverController, frc::XboxController::Button::kY };
     //balancingButton.ToggleOnTrue(&m_balancing);
     balancingButton.WhileTrue(&m_balancing);
+
+    frc2::JoystickButton rightBumper{ &m_driverController, frc::XboxController::Button::kRightBumper };
     rightBumper.OnTrue(&m_visionAimOn).OnFalse(&m_visionAimOff);
 
     alignCenter.WhileTrue(AlignToTarget(&m_drive, &m_tagVision, "Center").ToPtr());

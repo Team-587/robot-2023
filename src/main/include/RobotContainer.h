@@ -49,16 +49,14 @@ public:
     VisionContainer* GetVisionCube() { return m_pVisionCube; }
     void SetVisionCube(VisionContainer* pVisionCube) { m_pVisionCube = pVisionCube; }
 
-    <<<<<< < HEAD
-        void StartVision();
+    void StartVision();
     void StopVision();
-    ====== =
-        // The robot's subsystems
-        DriveSubsystem m_drive;
+    
+    // The robot's subsystems
+    DriveSubsystem m_drive;
     Intake m_intake;
     Elevator m_elevator;
-    >>>>>> > main
-
+    
 private:
 
     // The driver's controller
@@ -67,14 +65,12 @@ private:
     // The robot's subsystems and commands are defined here...
 
     // The robot's subsystems
-    DriveSubsystem m_drive;
-    Intake m_intake;
+    //DriveSubsystem m_drive;
+    //Intake m_intake;
 
-    <<<<<< < HEAD
-        // The chooser for the autonomous routines
-        frc::SendableChooser<frc2::Command*> m_chooser;
-    ====== =
-        frc2::InstantCommand m_elevatorDown{ [this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator} };
+    // The chooser for the autonomous routines
+    frc::SendableChooser<frc2::Command*> m_chooser;
+    frc2::InstantCommand m_elevatorDown{ [this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator} };
     frc2::InstantCommand m_elevatorMid{ [this] {m_elevator.setElevatorPosition(kElevatorMid); }, {&m_elevator} };
     frc2::InstantCommand m_elevatorHigh{ [this] {m_elevator.setElevatorPosition(kElevatorHigh); }, {&m_elevator} };
 
@@ -84,9 +80,8 @@ private:
     std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
     pathplanner::SwerveAutoBuilder autoBuilder;
     static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
-    >>>>>> > main
-
-        void ConfigureButtonBindings();
+    
+    void ConfigureButtonBindings();
 
     frc2::InstantCommand m_ZeroHeading{ [this] { m_drive.ZeroHeading(); }, { &m_drive } };
     frc2::InstantCommand m_limitSpeed{ [this] { m_drive.limitSpeed(); }, { &m_drive } };
@@ -101,9 +96,9 @@ private:
     frc2::Trigger alignRight{ [this] {return m_coDriverController.GetRightBumper(); } };
 
     //start of auto commands
-    std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
-    pathplanner::SwerveAutoBuilder autoBuilder;
-    static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
+    //std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
+    //pathplanner::SwerveAutoBuilder autoBuilder;
+    //static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
 
     frc2::CommandPtr autoNum1;
 
