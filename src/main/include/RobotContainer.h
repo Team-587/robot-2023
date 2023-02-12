@@ -13,6 +13,9 @@
 #include <frc2/command/PIDCommand.h>
 #include <frc2/command/ParallelRaceGroup.h>
 #include <frc2/command/RunCommand.h>
+#include <frc2/command/SequentialCommandGroup.h>
+#include <frc2/command/WaitCommand.h>
+#include <frc2/command/PrintCommand.h>
 #include <pathplanner/lib/PathPlanner.h>
 #include <pathplanner/lib/PathConstraints.h>
 #include <pathplanner/lib/PathPlannerTrajectory.h>
@@ -69,7 +72,13 @@ class RobotContainer {
   autoBalance m_balancing{&m_drive};
 
   //start of auto commands
-  std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
+  std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap = {
+    {"marker1", std::make_shared<frc2::PrintCommand>("Passed BAlance1")},
+    {"balance", std::make_shared<autoBalance>(&m_drive)},
+    {"wait_1sec", std::make_shared<frc2::WaitCommand>(1.0_s)},
+    {"extend_intake", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, m_extendIntake)}
+  };
+
   pathplanner::SwerveAutoBuilder autoBuilder;
   static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
 
@@ -87,4 +96,8 @@ class RobotContainer {
   static std::vector<pathplanner::PathPlannerTrajectory> autoPath4;
 
   frc2::CommandPtr autoNum4;
+
+  static std::vector<pathplanner::PathPlannerTrajectory> autoPath5;
+
+  frc2::CommandPtr autoNum5;
 };
