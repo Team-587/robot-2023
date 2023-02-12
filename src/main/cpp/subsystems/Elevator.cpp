@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/Elevator.h"
+#include <iostream>
 
 Elevator::Elevator()
 #ifdef ELEVATOR_VALID
@@ -24,6 +25,7 @@ Elevator::Elevator()
 };
 
 void Elevator::setElevatorPosition(double position) {
+    std::cout << "Set elevator to " << position << "\n";
     destination = position;
 }
 // This method will be called once per scheduler run

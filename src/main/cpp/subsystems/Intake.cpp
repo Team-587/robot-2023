@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/Intake.h"
+#include <iostream>
 
 Intake::Intake() = default;
 
@@ -13,6 +14,7 @@ void Intake::checkControl(double wheelSpeed) {
 }
 
 void Intake::extended(bool extend) {
+    std::cout << "Intake out : " << extend << "\n";
     #ifdef INTAKE_VALID
     if (extend == true){
         m_intakeSolenoid.Set(frc::DoubleSolenoid::kForward);
