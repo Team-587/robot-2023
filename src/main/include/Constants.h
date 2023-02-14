@@ -54,6 +54,8 @@ constexpr int kIntakeMotor = 30;
 constexpr int kElevatorMotor1 = 31;
 constexpr int kElevatorMotor2 = 32;
 
+constexpr int kSpareMotor = 33;
+
 constexpr int kFrontLeftTurningEncoderPorts[2]{0, 1};
 constexpr int kRearLeftTurningEncoderPorts[2]{2, 3};
 constexpr int kFrontRightTurningEncoderPorts[2]{4, 5};
