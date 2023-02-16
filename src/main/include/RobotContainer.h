@@ -63,11 +63,16 @@ class RobotContainer {
   frc2::InstantCommand m_limitSpeed{[this] {m_drive.limitSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(true); }, {&m_intake}};
+  frc2::InstantCommand m_runIntake{[this] {m_intake.checkControl(0.25); }, {&m_intake}};
+  frc2::InstantCommand m_runIntakeOpposite{[this] {m_intake.checkControl(-0.25); }, {&m_intake}};
+  frc2::InstantCommand m_stopIntake{[this] {m_intake.checkControl(0.0); }, {&m_intake}};
   frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(false); }, {&m_intake}};
 
   frc2::InstantCommand m_elevatorDown{[this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator}};
   frc2::InstantCommand m_elevatorMid{[this] {m_elevator.setElevatorPosition(kElevatorMid); }, {&m_elevator}};
   frc2::InstantCommand m_elevatorHigh{[this] {m_elevator.setElevatorPosition(kElevatorHigh); }, {&m_elevator}};
+
+  frc2::InstantCommand m_stop{[this] {m_drive.Stop(); }, {&m_drive}};
 
   autoBalance m_balancing{&m_drive};
 
@@ -76,7 +81,26 @@ class RobotContainer {
     {"marker1", std::make_shared<frc2::PrintCommand>("Passed BAlance1")},
     {"balance", std::make_shared<autoBalance>(&m_drive)},
     {"wait_1sec", std::make_shared<frc2::WaitCommand>(1.0_s)},
-    {"extend_intake", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, m_extendIntake)}
+    {"intake_piece", std::make_shared<frc2::SequentialCommandGroup>(m_extendIntake,
+                                                                    m_runIntakeOpposite,
+                                                                    frc2::WaitCommand(0.2_s),
+                                                                    m_stopIntake,
+                                                                    m_retractIntake)},
+    {"score_high", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, 
+                                                                  m_extendIntake, 
+                                                                  m_runIntake, 
+                                                                  frc2::WaitCommand(0.2_s),
+                                                                  m_stopIntake,
+                                                                  m_retractIntake,
+                                                                  m_elevatorDown)},
+    {"score_middle", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorMid, 
+                                                                    m_extendIntake,
+                                                                    m_runIntake, 
+                                                                    frc2::WaitCommand(0.2_s),
+                                                                    m_stopIntake,
+                                                                    m_retractIntake,
+                                                                    m_elevatorDown)},
+    {"stop", std::make_shared<frc2::SequentialCommandGroup>(m_stop)}
   };
 
   pathplanner::SwerveAutoBuilder autoBuilder;

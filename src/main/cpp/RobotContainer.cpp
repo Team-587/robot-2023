@@ -60,11 +60,11 @@ RobotContainer::RobotContainer():
   //eventMap.emplace("wait_1sec", std::make_shared<frc2::WaitCommand>(1.0_s));
   //eventMap.emplace("extend_intake", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, m_extendIntake));
 
-    m_chooser.SetDefaultOption("Slot 2", autoNum2.get());
-    m_chooser.AddOption("Slot 1", autoNum1.get());
-    m_chooser.AddOption("Slot 3", autoNum3.get());
-    m_chooser.AddOption("Slot 4", autoNum4.get());
-    m_chooser.AddOption("Slot 5", autoNum5.get());
+    m_chooser.SetDefaultOption("Right Score", autoNum2.get());
+    m_chooser.AddOption("Right Charge Station", autoNum1.get());
+    m_chooser.AddOption("Left Score", autoNum3.get());
+    m_chooser.AddOption("Left Charge Station", autoNum4.get());
+    m_chooser.AddOption("Center Start", autoNum5.get());
 
    frc::SmartDashboard::PutData(&m_chooser);
   // Configure the button bindings

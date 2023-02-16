@@ -209,6 +209,13 @@ void DriveSubsystem::ZeroHeading() {
   //m_NavX.ZeroYaw();
 }
 
+void DriveSubsystem::Stop() {
+  std::cout << "Stop \n";
+  m_frontLeft.Stop();
+  m_rearLeft.Stop();
+  m_frontRight.Stop();
+  m_rearRight.Stop();
+}
 
 double DriveSubsystem::GetTurnRate() {
   return -m_NavX.GetRate();
