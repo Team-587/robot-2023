@@ -25,6 +25,7 @@
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
 #include "commands/AlignToTarget.h"
+#include "commands/AprilTagAlignCommand.h"
 
 using namespace DriveConstants;
 using namespace pathplanner;
@@ -35,8 +36,10 @@ std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::load
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath4 = PathPlanner::loadPathGroup("auto4", { PathConstraints(3.0_mps, 3.0_mps_sq) });
 
 
-RobotContainer::RobotContainer():
+RobotContainer::RobotContainer() :
+    
     // Initialize all of your commands and subsystems here
+    m_poseEstimator(&m_camera, &m_drive),
     autoBuilder(
         [this]() { return m_drive.GetPose(); }, // Function to supply current robot pose
         [this](auto initPose) { m_drive.ResetOdometry(initPose); }, // Function used to reset odometry at the beginning of auto
@@ -51,8 +54,8 @@ RobotContainer::RobotContainer():
     autoNum1(autoBuilder.fullAuto(autoPath1)),
     autoNum2(autoBuilder.fullAuto(autoPath2)),
     autoNum3(autoBuilder.fullAuto(autoPath3)),
-    autoNum4(autoBuilder.fullAuto(autoPath4)),
-    m_tagVision(&m_drive) {
+    autoNum4(autoBuilder.fullAuto(autoPath4))/*,
+    m_tagVision(&m_drive) */{
     eventMap.emplace("marker1", std::make_shared<frc2::PrintCommand>("Passed Marker 1"));
     m_chooser.SetDefaultOption("Slot 2", autoNum2.get());
     m_chooser.AddOption("Slot 1", autoNum1.get());
@@ -63,7 +66,7 @@ RobotContainer::RobotContainer():
     ConfigureButtonBindings();
 
     //set the alliance color and origin
-    m_tagVision.setAllianceColor();
+    //m_tagVision.setAllianceColor();
 
     // Set up default drive command
     // The left stick controls translation of the robot.
@@ -108,11 +111,17 @@ RobotContainer::RobotContainer():
             m_intake.checkControl(m_coDriverController.GetLeftY());
         }, { &m_intake }));
 
-    m_tagVision.SetDefaultCommand(frc2::RunCommand(
-        [this] {
-            m_tagVision.updateOdometry();
-        }, { &m_tagVision }));
+//    m_tagVision.SetDefaultCommand(frc2::RunCommand(
+//        [this] {
+//            m_tagVision.updateOdometry(m_drive.GetPose());
+//        }, { &m_tagVision }));
+//
 
+    m_poseEstimator.SetDefaultCommand(frc2::RunCommand(
+        [this] { m_poseEstimator.Update(); },
+        { &m_poseEstimator }
+    ));
+    //m_camera.SetPipelineIndex(2);
 }
 
 
@@ -145,9 +154,10 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton rightBumper{ &m_driverController, frc::XboxController::Button::kRightBumper };
     rightBumper.OnTrue(&m_visionAimOn).OnFalse(&m_visionAimOff);
 
-    alignCenter.WhileTrue(AlignToTarget(&m_drive, &m_tagVision, "Center").ToPtr());
-    alignRight.WhileTrue(AlignToTarget(&m_drive, &m_tagVision, "Right").ToPtr());
-    alignLeft.WhileTrue(AlignToTarget(&m_drive, &m_tagVision, "Left").ToPtr());
+    //alignCenter.WhileTrue(AprilTagAlignCommand(&m_camera, &m_drive).ToPtr());
+    alignCenter.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Center").ToPtr());
+    alignRight.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Right").ToPtr());
+    alignLeft.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Left").ToPtr());
 
 }
 

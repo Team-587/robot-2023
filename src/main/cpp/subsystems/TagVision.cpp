@@ -7,7 +7,8 @@
 //#include <photonlib/RobotPoseEstimator.h>
 //#include <photonlib/EstimatedRobotPose>
 #include <photonlib/PhotonCamera.h>
-#include <photonlib/PhotonPoseEstimator.h>
+//#include <photonlib/PhotonPoseEstimator.h>
+//#include <photonlib/RobotPoseEstimator.h>
 #include <frc/geometry/Transform2d.h>
 #include <frc/geometry/Transform3d.h>
 #include <frc/geometry/Translation3d.h>
@@ -21,6 +22,9 @@
 
 TagVision::TagVision(DriveSubsystem* driveSubsystem): driveSubsystem(driveSubsystem) {
 
+        camera.SetPipelineIndex(2);
+        cameraEstimate1->SetPipelineIndex(2);
+        cameraEstimate2->SetPipelineIndex(0);
 }
 
 // This method will be called once per scheduler run
@@ -34,33 +38,44 @@ void TagVision::setAllianceColor () {
 
         //set the origin
         if (allianceColor == frc::DriverStation::Alliance::kBlue) {
-                tagLayout.SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kBlueAllianceWallRightSide);
+                tagLayout->SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kBlueAllianceWallRightSide);
         } else {
-                tagLayout.SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kRedAllianceWallRightSide);
+                tagLayout->SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kRedAllianceWallRightSide);
         }
+
+        std::vector<std::pair<std::shared_ptr<photonlib::PhotonCamera>, frc::Transform3d>> cameras;
+        cameras.push_back(std::make_pair(cameraEstimate1, robotToCamera1));
+        cameras.push_back(std::make_pair(cameraEstimate2, robotToCamera2));
         //init the pose estimator
-        poseEstimator = new photonlib::PhotonPoseEstimator {
+        poseEstimator = new photonlib::RobotPoseEstimator  {
                 tagLayout,
-                photonlib::PoseStrategy::LOWEST_AMBIGUITY,
-                std::move(cameraEstimate),
-                robotToCamera
+                //photonlib::PoseStrategy::LOWEST_AMBIGUITY,
+                //photonlib::PoseStrategy::AVERAGE_BEST_TARGETS,
+                photonlib::PoseStrategy::CLOSEST_TO_REFERENCE_POSE,
+                cameras
+
+                
         };
 }
 
 //update the odometry on the drive subsystem
-void TagVision::updateOdometry() {
+void TagVision::updateOdometry(frc::Pose2d prevEstimatedRobotPose) {
 
+        //set the reference pose and last pose
+        poseEstimator->SetReferencePose(frc::Pose3d(prevEstimatedRobotPose));
+        poseEstimator->SetLastPose(frc::Pose3d(prevEstimatedRobotPose));
+        
         //update estimate and get the result
-        std::optional<photonlib::EstimatedRobotPose> poseResult = poseEstimator->Update();
+        std::pair<frc::Pose3d, units::time::second_t> poseResult = poseEstimator->Update();
 
         //do we have a valid pose
-        if (poseResult && poseResult.has_value()) {
+        //if (poseResult) {
                 //update the odometry
-                driveSubsystem->visionMeasurements(poseResult.value().estimatedPose.ToPose2d(), poseResult.value().timestamp);
-        }
+                driveSubsystem->visionMeasurements(poseResult.first.ToPose2d(), poseResult.second);
+        //}
 }
 
-frc::AprilTagFieldLayout TagVision::getTagLayout() {
+std::shared_ptr<frc::AprilTagFieldLayout> TagVision::getTagLayout() {
         return tagLayout;
 }
 

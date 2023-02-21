@@ -27,7 +27,7 @@ void Robot::RobotPeriodic() {
  * robot is disabled.
  */
 void Robot::DisabledInit() {
-  m_container.StopVision();
+  //m_container.StopVision();
 }
 
 void Robot::DisabledPeriodic() {}
@@ -56,7 +56,7 @@ void Robot::TeleopInit() {
     m_autonomousCommand = nullptr;
   }
 
-  m_container.StartVision();
+  //m_container.StartVision();
 }
 
 /**

@@ -25,8 +25,10 @@
 #include <units/angle.h>
 #include <units/angular_acceleration.h>
 #include <units/acceleration.h>
+
 #include <AHRS.h>
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
+#include <frc/filter/SlewRateLimiter.h>
 
 #include "Constants.h"
 #include "SwerveModule.h"
@@ -64,6 +66,8 @@ public:
         units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
         bool fieldRelative);
 
+    void Stop();
+
     /**
      * Resets the drive encoders to currently read a position of 0.
      */
@@ -73,6 +77,9 @@ public:
      * Sets the drive MotorControllers to a power from -1 to 1.
      */
     void SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredStates);
+
+    wpi::array<frc::SwerveModuleState, 4> GetModuleStates();
+    frc::SwerveModuleState GetSwerveModuleState(SwerveModule &module);
 
     /**
      * Returns the heading of the robot.
@@ -120,6 +127,10 @@ public:
      */
     void ResetOdometry(frc::Pose2d pose);
 
+    void ResetGyroAngle();
+
+    frc::Rotation2d GetGyroscopeRotation();
+    
     units::meter_t kTrackWidth =
         0.59_m; // Distance between centers of right and left wheels on robot
     units::meter_t kWheelBase =
@@ -139,21 +150,27 @@ public:
         return m_visionAim;
     }
 
-private:
-    // Components (e.g. motor controllers and sensors) should generally be
-    // declared private and exposed only through public methods.
+    std::array<frc::SwerveModulePosition, 4> GetOdometryPos() { return odometryPos; };
 
     SwerveModule m_frontLeft;
     SwerveModule m_rearLeft;
     SwerveModule m_frontRight;
     SwerveModule m_rearRight;
 
+private:
+    // Components (e.g. motor controllers and sensors) should generally be
+    // declared private and exposed only through public methods.
+
+    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitX{ 0.5 / 1_s };
+    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitY{ 0.5 / 1_s };
+    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitZ{ 0.5 / 1_s };
+
     double m_fullSpeed = 1.0;
 
     std::array<frc::SwerveModulePosition, 4> odometryPos{
         m_frontLeft.GetPosition(),
-        m_rearLeft.GetPosition(),
         m_frontRight.GetPosition(),
+        m_rearLeft.GetPosition(),
         m_rearRight.GetPosition()
     };
 
@@ -164,15 +181,9 @@ private:
 
     // Odometry class for tracking robot pose
     // 4 defines the number of modules
-    //frc::SwerveDriveOdometry<4> m_odometry;
-    frc::SwerveDrivePoseEstimator<4> m_odometry{
-        kDriveKinematics,
-        frc::Rotation2d(),
-        odometryPos,
-        frc::Pose2d()
-    };
+    frc::SwerveDriveOdometry<4> m_odometry;
+    
     bool m_visionAim;
-
 
     double initialPitch;
     double initialRoll;

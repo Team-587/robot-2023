@@ -9,9 +9,11 @@
 #include <pathplanner/lib/commands/PPSwerveControllerCommand.h>
 #include <pathplanner/lib/PathPlannerTrajectory.h>
 #include <pathplanner/lib/PathPlanner.h>
+#include <photonlib/PhotonCamera.h>
 
 #include "subsystems/DriveSubsystem.h"
-#include "subsystems/TagVision.h"
+#include "subsystems/PoseEstimatorSubsystem.h"
+//#include "subsystems/TagVision.h"
 
 /**
  * An example command.
@@ -24,7 +26,7 @@ class AlignToTarget : public frc2::CommandHelper<frc2::CommandBase, AlignToTarge
 
 	public:
 
-	AlignToTarget(DriveSubsystem* driveSubsystem, TagVision* tagVision, std::string position);
+	AlignToTarget(DriveSubsystem* pDriveSubsystem, photonlib::PhotonCamera *pCamera, PoseEstimatorSubsystem *pPoseEstimator, std::string position);
 
 	void calculateAlignment();
 
@@ -36,21 +38,28 @@ class AlignToTarget : public frc2::CommandHelper<frc2::CommandBase, AlignToTarge
 
 	bool IsFinished() override;
 
+	void Start();
+
+	//frc::Pose3d EstimateFieldToRobotAprilTag(frc::Transform3d cameraToTarget, frc::Pose3d fieldRelativeTagPose, frc::Transform3d cameraToRobot);
 
 	private:
 
-	DriveSubsystem* driveSubsystem;
-	TagVision* tagVision;
+	DriveSubsystem *m_pDriveSubsystem;
+	photonlib::PhotonCamera *m_pCamera;
+	PoseEstimatorSubsystem *m_pPoseEstimator;
+	//TagVision* tagVision;
 	std::string position;
 	std::unordered_map<std::string, frc::Pose2d> positionMap {
-		{"Center", {1.5_m, 0_m, {180_deg}}},
-		{"Right", {1_m, 1_m, {180_deg}}},
-		{"Left", {1_m, -1_m, {180_deg}}},
+		{"Center", {1_m, 0_m, {180_deg}}},
+		{"Right", {1_m, 16_in, {180_deg}}},
+		{"Left", {1_m, -16_in, {180_deg}}},
 		{"Loading", {1_m, 1_m, {180_deg}}}
 	};
-	pathplanner::PPSwerveControllerCommand* alignCommand;
+	pathplanner::PPSwerveControllerCommand* alignCommand = NULL;
 	pathplanner::PathConstraints constraints = { 1_mps, 1_mps_sq };
 	pathplanner::PathPlannerTrajectory trajectory;
 
+	int runCount;
+	const int MAX_RUNS = 5;
 
 };

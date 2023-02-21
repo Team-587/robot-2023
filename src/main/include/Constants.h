@@ -30,11 +30,11 @@ constexpr double kElevatorMid = 12.0;
 constexpr double kElevatorHigh = 24.0;
 
 enum VisionPipelineIndex {
-    CONE = 0,
-    CUBE = 1,
-    REFLECTIVE_GREEN = 2,
-    APRILTAG = 3,
-    REFLECTIVE_RED = 4
+    APRILTAG = 0,
+    CONE = 10,
+    CUBE = 11,
+    REFLECTIVE_GREEN = 12,
+    REFLECTIVE_RED = 14
 };
 
 constexpr int kIntakeSolenoid = 0;
@@ -42,7 +42,7 @@ constexpr int kIntakeSolenoid1 = 1;
 
 namespace DriveConstants {
     constexpr int kFrontLeftDriveMotorPort = 11;
-    constexpr int kRearLeftDriveMotorPort = 43;
+    constexpr int kRearLeftDriveMotorPort = 13;
     constexpr int kFrontRightDriveMotorPort = 15;
     constexpr int kRearRightDriveMotorPort = 17;
 
@@ -136,24 +136,25 @@ namespace OIConstants {
 
 //Camera Constants
 namespace Camerapos {
-    constexpr auto cam_height_meters = units::meter_t{ .3937 }; //Value for FreeFall
-    constexpr auto goal_height_meters = units::meter_t{ 1.5937 }; //Value for FreeFall
-    constexpr auto cam_angle_degrees = 100;
+    constexpr units::meter_t cam_height_meters = 11_in; //Value for FreeFall
+    //constexpr auto goal_height_meters = units::meter_t{  }; //Value for FreeFall
+    constexpr units::radian_t cam_angle_degrees = 20_deg;
 
-    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_X = -12.5_in;
+    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_X = 0_in;
     constexpr units::meter_t CAMERA_APRILTAG_FORWARD_Y = 0_in;
-    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_Z = 24_in;
+    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_Z = 11_in;
 
 }
 
 namespace CameraNames {
     const std::string CAMERA_1 = "HD_Pro_Webcam_C920";
     const std::string CAMERA_2 = "OV5647";
-    const std::string CAMERA_APRILTAG_FORWARD = "???";
+    const std::string CAMERA_APRILTAG_FORWARD = "HD_Pro_Webcam_C920";
 }
 
 namespace FieldElementsMeasurement {
     const units::meter_t cone_height_centimeters = 33_cm;
     const units::meter_t cone_width_centimeters = 21_cm;
     const units::meter_t cube_width_centimeters = 24_cm; /*"may not be actual dimensions - Game Manual"*/
+    const units::meter_t april_tag_height = 18_in;
 }

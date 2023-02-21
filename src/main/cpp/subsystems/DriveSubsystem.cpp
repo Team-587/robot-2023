@@ -115,6 +115,10 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
     ySpeed = ySpeed * m_fullSpeed;
     rot = rot * m_fullSpeed;
 
+    xSpeed = units::meters_per_second_t((double)m_SlewRateLimitX.Calculate((double)xSpeed));
+    ySpeed = units::meters_per_second_t((double)m_SlewRateLimitY.Calculate((double)ySpeed));
+    rot = units::radians_per_second_t((double)m_SlewRateLimitZ.Calculate((double)rot));
+    
     frc::SmartDashboard::PutNumber("xSpeed", (double)xSpeed);
     frc::SmartDashboard::PutNumber("ySpeed", (double)ySpeed);
     frc::SmartDashboard::PutNumber("Rotation", (double)rot);
@@ -143,6 +147,14 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
     m_frontRight.SetDesiredState(fr);
     m_rearLeft.SetDesiredState(bl);
     m_rearRight.SetDesiredState(br);
+}
+
+void DriveSubsystem::Stop() {
+    Drive(
+        units::meters_per_second_t(0), 
+        units::meters_per_second_t(0), 
+        units::radians_per_second_t(0), 
+        true);
 }
 
 void DriveSubsystem::SetModuleStates(
@@ -179,6 +191,19 @@ void DriveSubsystem::SetModuleStates(
     m_rearRight.SetDesiredState(desiredStates[3]);
 }
 
+wpi::array<frc::SwerveModuleState, 4> DriveSubsystem::GetModuleStates() {
+    return wpi::array<frc::SwerveModuleState, 4>{
+        GetSwerveModuleState(m_frontLeft),
+        GetSwerveModuleState(m_frontRight),
+        GetSwerveModuleState(m_rearLeft),
+        GetSwerveModuleState(m_rearRight)
+    };
+}
+
+frc::SwerveModuleState DriveSubsystem::GetSwerveModuleState(SwerveModule &module) {
+    return frc::SwerveModuleState(module.GetState().speed, module.GetState().angle);
+  }
+
 void DriveSubsystem::ResetEncoders() {
     std::cout << "Reset Encoders \n";
     m_frontLeft.ResetEncoders();
@@ -208,14 +233,22 @@ void DriveSubsystem::ZeroHeading() {
     //m_NavX.ZeroYaw();
 }
 
+void DriveSubsystem::ResetGyroAngle() {
+    m_NavX.ZeroYaw();
+}
+
+frc::Rotation2d DriveSubsystem::GetGyroscopeRotation() {
+   // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
+   return frc::Rotation2d(360.0_deg - units::degree_t(m_NavX.GetYaw()));
+  }
 
 double DriveSubsystem::GetTurnRate() {
     return -m_NavX.GetRate();
 }
 
 frc::Pose2d DriveSubsystem::GetPose() {
-    //frc::Pose2d tmpPose = m_odometry.GetPose();
-    frc::Pose2d tmpPose = m_odometry.GetEstimatedPosition();
+    frc::Pose2d tmpPose = m_odometry.GetPose();
+    //frc::Pose2d tmpPose = m_odometry.GetEstimatedPosition();
     std::cout << "Drive getPose X:" << (double)tmpPose.X() << " Y:" << (double)tmpPose.Y() << " Rot:" << (double)tmpPose.Rotation().Degrees() << "\n";
 
     return tmpPose;
@@ -244,5 +277,5 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
 
 }
 void DriveSubsystem::visionMeasurements(frc::Pose2d pose, units::second_t timestamp) {
-    m_odometry.AddVisionMeasurement(pose, timestamp);
+    //m_odometry.AddVisionMeasurement(pose, timestamp);
 }

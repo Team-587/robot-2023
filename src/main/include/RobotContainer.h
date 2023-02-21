@@ -30,6 +30,7 @@
 #include "subsystems/TagVision.h"
 #include "commands/autoBalance.h"
 #include "subsystems/Elevator.h"
+#include "subsystems/PoseEstimatorSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -51,11 +52,14 @@ public:
 
     void StartVision();
     void StopVision();
+
+    photonlib::PhotonCamera m_camera {CameraNames::CAMERA_APRILTAG_FORWARD};
     
     // The robot's subsystems
     DriveSubsystem m_drive;
     Intake m_intake;
     Elevator m_elevator;
+    PoseEstimatorSubsystem m_poseEstimator;
     
 private:
 
@@ -92,8 +96,8 @@ private:
     frc2::InstantCommand m_retractIntake{ [this] {m_intake.extended(false); }, {&m_intake} };
 
     frc2::Trigger alignCenter{ [this] {return m_driverController.GetYButton(); } };
-    frc2::Trigger alignLeft{ [this] {return m_driverController.GetXButton(); } };
-    frc2::Trigger alignRight{ [this] {return m_driverController.GetBButton(); } };
+    frc2::Trigger alignLeft{ [this] {return m_driverController.GetBButton(); } };
+    frc2::Trigger alignRight{ [this] {return m_driverController.GetXButton(); } };
 
     //start of auto commands
     //std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
@@ -116,7 +120,7 @@ private:
     frc2::CommandPtr autoNum4;
 
     //april tag vision pose estimator
-    TagVision m_tagVision;
+    //TagVision m_tagVision;
 
     // Vision and camera thread
     VisionContainer* m_pVisionCone;

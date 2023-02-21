@@ -73,14 +73,14 @@ class VisionContainer
 
     //need to tune the distance calc if we are going to use it
     ///////////////////////////////////////////////////////////////
-    double getDistance() {
+    /*double getDistance() {
       return photonlib::PhotonUtils::CalculateDistanceToTarget(
                 Camerapos::cam_height_meters,
                 Camerapos::goal_height_meters,
                 units::degree_t(Camerapos::cam_angle_degrees),
                 units::degree_t(pitch))
           .value();
-    }
+    }*/
 
     void start()
     {
