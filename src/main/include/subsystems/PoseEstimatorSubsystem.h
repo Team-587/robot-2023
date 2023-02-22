@@ -36,6 +36,7 @@ class PoseEstimatorSubsystem : public frc2::SubsystemBase {
   public:
 
     PoseEstimatorSubsystem(photonlib::PhotonCamera *pCamera, DriveSubsystem *pDriveSubsystem);
+    ~PoseEstimatorSubsystem();
 
     void Periodic() override;
 
@@ -67,7 +68,7 @@ class PoseEstimatorSubsystem : public frc2::SubsystemBase {
     //The april tag layout for 2023
     frc::AprilTagFieldLayout tagLayout{ frc::LoadAprilTagLayoutField(frc::AprilTagField::k2023ChargedUp) }; 
     
-    frc::SwerveDrivePoseEstimator<4> *m_pPoseEstimator;
+    frc::SwerveDrivePoseEstimator<4> *m_pPoseEstimator = NULL;
 
     frc::Field2d field2d;
 

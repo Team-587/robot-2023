@@ -27,16 +27,20 @@ PoseEstimatorSubsystem::PoseEstimatorSubsystem(photonlib::PhotonCamera *pCamera,
 
   //set the origin
   if (allianceColor == frc::DriverStation::Alliance::kBlue) {
-          tagLayout.SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kBlueAllianceWallRightSide);
+    tagLayout.SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kBlueAllianceWallRightSide);
   } else {
-          tagLayout.SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kRedAllianceWallRightSide);
+    tagLayout.SetOrigin(frc::AprilTagFieldLayout::OriginPosition::kRedAllianceWallRightSide);
   }
-
+  //setup suffleboard
   frc::ShuffleboardTab &tab = frc::Shuffleboard::GetTab("Drivetrain");
   tab.AddString("PES (X, Y)", [this]() { return GetFomattedPose(); });
   tab.AddNumber("PES Degrees", [this]() { return (double)GetCurrentPose().Rotation().Degrees(); });
   tab.Add("PES::Field2d", field2d);
 }
+
+  PoseEstimatorSubsystem::~PoseEstimatorSubsystem() {
+    if(m_pPoseEstimator) delete m_pPoseEstimator;
+  }
 
 // This method will be called once per scheduler run
 void PoseEstimatorSubsystem::Periodic() { }
@@ -50,41 +54,44 @@ void PoseEstimatorSubsystem::Update() {
   // Update pose estimator with visible targets
   photonlib::PhotonPipelineResult result = m_pCamera->GetLatestResult();
 
-    if (result.HasTargets()) {
+  //check for targets
+  if (result.HasTargets()) {
+    
+    //get the image latency
+    units::time::second_t imageCaptureTime = frc::Timer::GetFPGATimestamp() - result.GetLatency();
 
-      units::time::second_t imageCaptureTime = frc::Timer::GetFPGATimestamp() - result.GetLatency();
+    //parse through all found apriltags
+    for (photonlib::PhotonTrackedTarget target : result.GetTargets()) {
 
-      for (photonlib::PhotonTrackedTarget target : result.GetTargets()) {
+      //get the ID
+      int fiducialId = target.GetFiducialId();
 
-        int fiducialId = target.GetFiducialId();
+      //make sure ID is valid
+      if (fiducialId  >= 0) {
 
-        if (fiducialId  >= 0) {
+        //get the pose of the target
+        std::optional<frc::Pose3d> optionalPose = tagLayout.GetTagPose(fiducialId);
+        if(optionalPose.has_value()) {
+          frc::Pose2d targetPose = optionalPose.value().ToPose2d();
 
-          frc::Pose2d targetPose = tagLayout.GetTagPose(fiducialId).value().ToPose2d();
-
+          //get the camera pose
           frc::Transform3d camToTarget = target.GetBestCameraToTarget();
-
           frc::Transform2d transform = frc::Transform2d(
             camToTarget.Translation().ToTranslation2d(), 
             camToTarget.Rotation().ToRotation2d());// - frc::Rotation2d(90_deg));
-
           frc::Pose2d camPose = targetPose.TransformBy(transform.Inverse());
 
+          //record vision measurement
           frc::Pose2d visionMeasurement = camPose.TransformBy(CAMERA_TO_ROBOT);
           field2d.GetObject("MyRobot:" + fiducialId)->SetPose(visionMeasurement);
-          //.GetObject("MyRobot" + fiducialId).SetPose(visionMeasurement);
-          // SmartDashboard.putString("Vision pose", String.format("(%.2f, %.2f) %.2f",
-          //   visionMeasurement.getTranslation().getX(),
-          //   visionMeasurement.getTranslation().getY(),
-          //   visionMeasurement.getRotation().getDegrees()));
           m_pPoseEstimator->AddVisionMeasurement(visionMeasurement, imageCaptureTime);
         }
       }
-          // Update pose estimator with drivetrain sensors
     }
-    m_pPoseEstimator->UpdateWithTime(frc::Timer::GetFPGATimestamp(), m_pDriveSubsystem->GetGyroscopeRotation(), m_pDriveSubsystem->GetOdometryPos());
-
-    field2d.SetRobotPose(GetCurrentPose());
+  }
+  //update odometry
+  m_pPoseEstimator->UpdateWithTime(frc::Timer::GetFPGATimestamp(), m_pDriveSubsystem->GetGyroscopeRotation(), m_pDriveSubsystem->GetOdometryPos());
+  field2d.SetRobotPose(GetCurrentPose());
 }
 
 std::string PoseEstimatorSubsystem::GetFomattedPose() {
@@ -94,10 +101,6 @@ std::string PoseEstimatorSubsystem::GetFomattedPose() {
       (double)units::inch_t(pose.X()), (double)units::inch_t(pose.Y()));
     std::string buffAsStdStr = buff;
     return buffAsStdStr;
-  //return "test";
-    /*return String.format("(%.2f, %.2f)", 
-        Units.metersToInches(pose.getX()), 
-        Units.metersToInches(pose.getY()));*/
   }
 
   frc::Pose2d PoseEstimatorSubsystem::GetCurrentPose() {
