@@ -71,6 +71,7 @@ class RobotContainer {
   frc2::InstantCommand m_elevatorDown{[this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator}};
   frc2::InstantCommand m_elevatorMid{[this] {m_elevator.setElevatorPosition(kElevatorMid); }, {&m_elevator}};
   frc2::InstantCommand m_elevatorHigh{[this] {m_elevator.setElevatorPosition(kElevatorHigh); }, {&m_elevator}};
+  frc2::InstantCommand m_toggleColor{[this] {m_elevator.ToggleColor(); }, {&m_elevator}};
 
   frc2::InstantCommand m_stop{[this] {m_drive.Stop(); }, {&m_drive}};
 
