@@ -28,6 +28,7 @@
 #include "commands/AprilTagAlignCommand.h"
 #include "commands/CenterCommand.h"
 #include "commands/MoveToTargetCommand.h"
+#include "commands/ApproachCommand.h"
 
 using namespace DriveConstants;
 using namespace pathplanner;
@@ -162,7 +163,8 @@ void RobotContainer::ConfigureButtonBindings() {
     alignLeft.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Left").ToPtr());
     alignCenter.WhileTrue(frc2::SequentialCommandGroup (
          MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
-         CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG)
+         CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG),
+         ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG)
     ).ToPtr()
     );
         

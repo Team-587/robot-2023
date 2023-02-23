@@ -4,12 +4,24 @@
 
 #include "commands/ApproachCommand.h"
 
-ApproachCommand::ApproachCommand() {
+ApproachCommand::ApproachCommand(DriveSubsystem* pDriveSubsystem, photonlib::PhotonCamera *pCamera, PoseEstimatorSubsystem * pPoseEstimator, int pipelineIndex) 
+:
   // Use addRequirements() here to declare subsystem dependencies.
-}
+  m_pDriveSubsystem( pDriveSubsystem ), 
+  m_pCamera(pCamera),
+  m_pPoseEstimator(pPoseEstimator) {
+
+  }
+
 
 // Called when the command is initially scheduled.
-void ApproachCommand::Initialize() {}
+void ApproachCommand::Initialize() {
+  m_pDriveSubsystem->Drive(
+    -units::meters_per_second_t(0.1),
+    -units::meters_per_second_t(0),
+    units::radians_per_second_t(0),
+  true);
+}
 
 // Called repeatedly when this Command is scheduled to run
 void ApproachCommand::Execute() {}
