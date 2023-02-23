@@ -5,6 +5,7 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/WaitCommand.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/apriltag/AprilTagFieldLayout.h>
 #include <frc/apriltag/AprilTagFields.h>
@@ -14,6 +15,7 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/shuffleboard/ShuffleboardTab.h>
 #include <frc/DriverStation.h>
+#include <iostream>
 
 #include <wpi/array.h>
 
@@ -49,6 +51,9 @@ class PoseEstimatorSubsystem : public frc2::SubsystemBase {
     frc::AprilTagFieldLayout* GetLayout() { return &tagLayout; };
 
   private:
+
+    //delay the start
+    frc2::WaitCommand m_WaitCommand{2.0_s};
   
     //camera configured for april tags
     photonlib::PhotonCamera *m_pCamera;

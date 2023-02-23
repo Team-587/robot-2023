@@ -33,9 +33,11 @@ PoseEstimatorSubsystem::PoseEstimatorSubsystem(photonlib::PhotonCamera *pCamera,
   }
   //setup suffleboard
   frc::ShuffleboardTab &tab = frc::Shuffleboard::GetTab("Drivetrain");
-  tab.AddString("PES (X, Y)", [this]() { return GetFomattedPose(); });
-  tab.AddNumber("PES Degrees", [this]() { return (double)GetCurrentPose().Rotation().Degrees(); });
+  //tab.AddString("PES (X, Y)", [this]() { return GetFomattedPose(); });
+  //tab.AddNumber("PES Degrees", [this]() { return (double)GetCurrentPose().Rotation().Degrees(); });
   tab.Add("PES::Field2d", field2d);
+  
+  m_WaitCommand.Initialize();
 }
 
   PoseEstimatorSubsystem::~PoseEstimatorSubsystem() {
@@ -51,44 +53,55 @@ void PoseEstimatorSubsystem::Update() {
   if(m_pCamera->GetPipelineIndex() != VisionPipelineIndex::APRILTAG) {
     m_pCamera->SetPipelineIndex(VisionPipelineIndex::APRILTAG);
   }
+  //delay the start of the PoseEstimator
+  if(!m_WaitCommand.IsFinished()) { return; }
+
   // Update pose estimator with visible targets
   photonlib::PhotonPipelineResult result = m_pCamera->GetLatestResult();
 
   //check for targets
   if (result.HasTargets()) {
-    
+    //std::cout << "Hey I'm here, I didn't crash! 1\n";
     //get the image latency
     units::time::second_t imageCaptureTime = frc::Timer::GetFPGATimestamp() - result.GetLatency();
-
+    //std::cout << "Hey I'm here, I didn't crash! 2\n";
     //parse through all found apriltags
     for (photonlib::PhotonTrackedTarget target : result.GetTargets()) {
-
+    //std::cout << "Hey I'm here, I didn't crash! 3\n";
       //get the ID
       int fiducialId = target.GetFiducialId();
-
+      //std::cout << "Hey I'm here, I didn't crash! 4\n";
       //make sure ID is valid
       if (fiducialId  >= 0) {
-
+//std::cout << "Hey I'm here, I didn't crash! 5\n";
         //get the pose of the target
         std::optional<frc::Pose3d> optionalPose = tagLayout.GetTagPose(fiducialId);
         if(optionalPose.has_value()) {
           frc::Pose2d targetPose = optionalPose.value().ToPose2d();
-
+//std::cout << "Hey I'm here, I didn't crash! 6\n";
           //get the camera pose
           frc::Transform3d camToTarget = target.GetBestCameraToTarget();
+//          std::cout << "Hey I'm here, I didn't crash! 7\n";
           frc::Transform2d transform = frc::Transform2d(
             camToTarget.Translation().ToTranslation2d(), 
             camToTarget.Rotation().ToRotation2d());// - frc::Rotation2d(90_deg));
           frc::Pose2d camPose = targetPose.TransformBy(transform.Inverse());
+//          std::cout << "Hey I'm here, I didn't crash! 8\n";
 
           //record vision measurement
           frc::Pose2d visionMeasurement = camPose.TransformBy(CAMERA_TO_ROBOT);
-          field2d.GetObject("MyRobot:" + fiducialId)->SetPose(visionMeasurement);
+          std::cout << "Hey I'm here, I didn't crash! :" << (double)visionMeasurement.X() << "\n";
+          std::cout << "Hey I'm here, I didn't crash! :" << (double)visionMeasurement.Y() << "\n";
+          std::cout << "Hey I'm here, I didn't crash! :" << (double)visionMeasurement.Rotation().Degrees() << "\n";
+          std::cout << "Hey I'm here, I didn't crash! :" << (uint64_t)imageCaptureTime << "\n";
+          //field2d.GetObject("MyRobot:" + fiducialId)->SetPose(visionMeasurement);
           m_pPoseEstimator->AddVisionMeasurement(visionMeasurement, imageCaptureTime);
+          std::cout << "Hey I'm here, I didn't crash! 9\n";
         }
       }
     }
   }
+  
   //update odometry
   m_pPoseEstimator->UpdateWithTime(frc::Timer::GetFPGATimestamp(), m_pDriveSubsystem->GetGyroscopeRotation(), m_pDriveSubsystem->GetOdometryPos());
   field2d.SetRobotPose(GetCurrentPose());

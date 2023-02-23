@@ -161,9 +161,9 @@ private:
     // Components (e.g. motor controllers and sensors) should generally be
     // declared private and exposed only through public methods.
 
-    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitX{ 0.5 / 1_s };
-    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitY{ 0.5 / 1_s };
-    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitZ{ 0.5 / 1_s };
+    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitX{ 2.0 / 1_s };
+    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitY{ 2.0 / 1_s };
+    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitZ{ 2.0 / 1_s };
 
     double m_fullSpeed = 1.0;
 

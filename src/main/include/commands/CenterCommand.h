@@ -6,6 +6,13 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
+#include <pathplanner/lib/commands/PPSwerveControllerCommand.h>
+#include <pathplanner/lib/PathPlannerTrajectory.h>
+#include <pathplanner/lib/PathPlanner.h>
+#include <photonlib/PhotonCamera.h>
+
+#include "subsystems/DriveSubsystem.h"
+#include "subsystems/PoseEstimatorSubsystem.h"
 
 /**
  * An example command.
@@ -17,7 +24,9 @@
 class CenterCommand
     : public frc2::CommandHelper<frc2::CommandBase, CenterCommand> {
  public:
-  CenterCommand();
+  CenterCommand(DriveSubsystem* pDriveSubsystem,
+  photonlib::PhotonCamera *pCamera, PoseEstimatorSubsystem *pPoseEstimator, int pipelineIndex);
+  
 
   void Initialize() override;
 
@@ -26,4 +35,12 @@ class CenterCommand
   void End(bool interrupted) override;
 
   bool IsFinished() override;
+
+  private:
+  DriveSubsystem *m_pDriveSubsystem;
+    photonlib::PhotonCamera *m_pCamera;
+    PoseEstimatorSubsystem *m_pPoseEstimator;
+    int m_pipelineIndex;
+    double ySpeed;
+    double omegaSpeed;
 };
