@@ -115,9 +115,9 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
     ySpeed = ySpeed * m_fullSpeed;
     rot = rot * m_fullSpeed;
 
-    //xSpeed = units::meters_per_second_t((double)m_SlewRateLimitX.Calculate((double)xSpeed));
-    //ySpeed = units::meters_per_second_t((double)m_SlewRateLimitY.Calculate((double)ySpeed));
-    //rot = units::radians_per_second_t((double)m_SlewRateLimitZ.Calculate((double)rot));
+    xSpeed = units::meters_per_second_t((double)m_SlewRateLimitX.Calculate((double)xSpeed));
+    ySpeed = units::meters_per_second_t((double)m_SlewRateLimitY.Calculate((double)ySpeed));
+    rot = units::radians_per_second_t((double)m_SlewRateLimitZ.Calculate((double)rot));
     
     frc::SmartDashboard::PutNumber("xSpeed", (double)xSpeed);
     frc::SmartDashboard::PutNumber("ySpeed", (double)ySpeed);

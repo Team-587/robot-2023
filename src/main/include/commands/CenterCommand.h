@@ -34,6 +34,8 @@ class CenterCommand
 
   void End(bool interrupted) override;
 
+  uint64_t GetCurrentTime();
+
   bool IsFinished() override;
 
   private:
@@ -42,5 +44,8 @@ class CenterCommand
     PoseEstimatorSubsystem *m_pPoseEstimator;
     int m_pipelineIndex;
     double ySpeed;
+    double xSpeed;
     double omegaSpeed;
+    double lastX, lastY, lastOmega;
+    uint64_t  lastTarget;
 };

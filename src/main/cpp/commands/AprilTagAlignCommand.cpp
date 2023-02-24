@@ -122,7 +122,7 @@ void AprilTagAlignCommand::Execute() {
 //    // Handle rotation using target Yaw/Z rotation
     units::radian_t targetYaw = cameraToTarget.Rotation().Z();
     double omegaSpeed = -pidControllerOmega.Calculate((double)targetYaw);
-    //omegaSpeed = (double)targetYaw > 0 ? -0.1 : 0.1;
+    omegaSpeed = (double)targetYaw > 0 ? -0.1 : 0.1;
 
     frc::SmartDashboard::PutNumber("omegaAlignSpeed", omegaSpeed);
      if (pidControllerOmega.AtSetpoint()) {

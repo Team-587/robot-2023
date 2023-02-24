@@ -161,7 +161,7 @@ void RobotContainer::ConfigureButtonBindings() {
     alignRight.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Right").ToPtr());
     alignLeft.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Left").ToPtr());
     alignCenter.WhileTrue(frc2::SequentialCommandGroup (
-         MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
+        // MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
          CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG)
     ).ToPtr()
     );

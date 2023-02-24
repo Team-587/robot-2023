@@ -38,6 +38,10 @@ PoseEstimatorSubsystem::PoseEstimatorSubsystem(photonlib::PhotonCamera *pCamera,
   tab.Add("PES::Field2d", field2d);
   
   m_WaitCommand.Initialize();
+  
+  //update odometry
+  m_pPoseEstimator->UpdateWithTime(frc::Timer::GetFPGATimestamp(), m_pDriveSubsystem->GetGyroscopeRotation(), m_pDriveSubsystem->GetOdometryPos());
+  field2d.SetRobotPose(GetCurrentPose());
 }
 
   PoseEstimatorSubsystem::~PoseEstimatorSubsystem() {
@@ -53,6 +57,7 @@ void PoseEstimatorSubsystem::Update() {
   if(m_pCamera->GetPipelineIndex() != VisionPipelineIndex::APRILTAG) {
     m_pCamera->SetPipelineIndex(VisionPipelineIndex::APRILTAG);
   }
+  
   //delay the start of the PoseEstimator
   if(!m_WaitCommand.IsFinished()) { return; }
 
@@ -90,13 +95,20 @@ void PoseEstimatorSubsystem::Update() {
 
           //record vision measurement
           frc::Pose2d visionMeasurement = camPose.TransformBy(CAMERA_TO_ROBOT);
-          std::cout << "Hey I'm here, I didn't crash! :" << (double)visionMeasurement.X() << "\n";
-          std::cout << "Hey I'm here, I didn't crash! :" << (double)visionMeasurement.Y() << "\n";
-          std::cout << "Hey I'm here, I didn't crash! :" << (double)visionMeasurement.Rotation().Degrees() << "\n";
-          std::cout << "Hey I'm here, I didn't crash! :" << (uint64_t)imageCaptureTime << "\n";
+          //std::cout << "Hey I'm here, I didn't crash! :" << (double)visionMeasurement.X() << "\n";
+          //std::cout << "Hey I'm here, I didn't crash! :" << (double)visionMeasurement.Y() << "\n";
+          //std::cout << "Hey I'm here, I didn't crash! :" << (double)visionMeasurement.Rotation().Degrees() << "\n";
+          //std::cout << "Hey I'm here, I didn't crash! :" << (uint64_t)imageCaptureTime << "\n";
           //field2d.GetObject("MyRobot:" + fiducialId)->SetPose(visionMeasurement);
-          m_pPoseEstimator->AddVisionMeasurement(visionMeasurement, imageCaptureTime);
-          std::cout << "Hey I'm here, I didn't crash! 9\n";
+          if (m_pPoseEstimator) {
+            //std::cout << "Hey I'm here, I didn't crash!\n";
+          }
+          try{
+            m_pPoseEstimator->AddVisionMeasurement(visionMeasurement, imageCaptureTime);
+          } catch(std::exception& e) {
+            std::cerr << e.what() << "\n";
+          }
+          //std::cout << "Hey I'm here, I didn't crash! 9\n";
         }
       }
     }
