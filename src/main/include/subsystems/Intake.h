@@ -9,7 +9,7 @@
 #include <frc/DoubleSolenoid.h>
 #include <Constants.h>
 
-//#define INTAKE_VALID 
+#define INTAKE_VALID 
 
 class Intake : public frc2::SubsystemBase {
  public:
@@ -25,7 +25,7 @@ class Intake : public frc2::SubsystemBase {
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
   #ifdef INTAKE_VALID
-  rev::CANSparkMax m_intakeMotor {DriveConstants::kIntakeMotor, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+  rev::CANSparkMax m_intakeMotor {DriveConstants::kIntakeMotor, rev::CANSparkMaxLowLevel::MotorType::kBrushed};
   frc::DoubleSolenoid m_intakeSolenoid {frc::PneumaticsModuleType::CTREPCM, kIntakeSolenoid, kIntakeSolenoid1};
   #endif
 

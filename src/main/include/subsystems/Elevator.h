@@ -10,7 +10,7 @@
 #include <Constants.h>
 #include <frc/DigitalOutput.h>
 
-//#define ELEVATOR_VALID 
+#define ELEVATOR_VALID 
 
 class Elevator : public frc2::SubsystemBase {
  public:

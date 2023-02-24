@@ -20,7 +20,7 @@
 #include <frc2/command/button/JoystickButton.h>
 #include <units/angle.h>
 #include <units/velocity.h>
-
+#include <math.h>
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
 
@@ -85,7 +85,11 @@ RobotContainer::RobotContainer():
 
   m_intake.SetDefaultCommand(frc2::RunCommand(
     [this] {
-      m_intake.checkControl(m_coDriverController.GetLeftY());
+      if(abs(m_coDriverController.GetLeftY()) < .1) {
+        m_intake.checkControl(0);
+      } else {
+        m_intake.checkControl(m_coDriverController.GetLeftY());
+      }
     },{&m_intake}));
 
 }
@@ -105,6 +109,12 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton toggleColorButton{&m_coDriverController, frc::XboxController::Button::kX};
     toggleColorButton.OnTrue(&m_toggleColor);
 
+    //frc2::JoystickButton intakeRunButton{&m_driverController, frc::XboxController::Button::kX};
+    //intakeRunButton.OnTrue(&m_runIntake);
+    //frc2::JoystickButton intakeStopButton{&m_driverController, frc::XboxController::Button::kA};
+    //intakeStopButton.OnTrue(&m_stopIntake);
+    //frc2::JoystickButton intakeReverseButton{&m_driverController, frc::XboxController::Button::kB};
+    //intakeReverseButton.OnTrue(&m_runIntakeOpposite);
 
 
 

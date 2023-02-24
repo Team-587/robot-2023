@@ -21,7 +21,7 @@ Elevator::Elevator():
     encoderMotor1.SetPositionConversionFactor((std::numbers::pi * 1.751)/12.0);
     encoderMotor1.SetPosition(0);
 
-    PID_motor1.SetP(0);
+    PID_motor1.SetP(.1);
     PID_motor1.SetI(0);
     PID_motor1.SetD(0);
     PID_motor1.SetFF(0);
