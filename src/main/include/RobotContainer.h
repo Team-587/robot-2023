@@ -13,6 +13,9 @@
 #include <frc2/command/PIDCommand.h>
 #include <frc2/command/ParallelRaceGroup.h>
 #include <frc2/command/RunCommand.h>
+#include <frc2/command/SequentialCommandGroup.h>
+#include <frc2/command/WaitCommand.h>
+#include <frc2/command/PrintCommand.h>
 #include <pathplanner/lib/PathPlanner.h>
 #include <pathplanner/lib/PathConstraints.h>
 #include <pathplanner/lib/PathPlannerTrajectory.h>
@@ -71,14 +74,54 @@ private:
     // The robot's subsystems
     //DriveSubsystem m_drive;
     //Intake m_intake;
+  void ConfigureButtonBindings();
+  frc2::InstantCommand m_ZeroHeading{[this] {m_drive.ZeroHeading(); }, {&m_drive}};
+  frc2::InstantCommand m_limitSpeed{[this] {m_drive.limitSpeed(); }, {&m_drive}};
+  frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
+  frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(true); }, {&m_intake}};
+  frc2::InstantCommand m_runIntake{[this] {m_intake.checkControl(0.25); }, {&m_intake}};
+  frc2::InstantCommand m_runIntakeOpposite{[this] {m_intake.checkControl(-0.25); }, {&m_intake}};
+  frc2::InstantCommand m_stopIntake{[this] {m_intake.checkControl(0.0); }, {&m_intake}};
+  frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(false); }, {&m_intake}};
+
+  frc2::InstantCommand m_elevatorDown{[this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator}};
+  frc2::InstantCommand m_elevatorMid{[this] {m_elevator.setElevatorPosition(kElevatorMid); }, {&m_elevator}};
+  frc2::InstantCommand m_elevatorHigh{[this] {m_elevator.setElevatorPosition(kElevatorHigh); }, {&m_elevator}};
+  frc2::InstantCommand m_toggleColor{[this] {m_elevator.ToggleColor(); }, {&m_elevator}};
+
+  frc2::InstantCommand m_stop{[this] {m_drive.Stop(); }, {&m_drive}};
 
     // The chooser for the autonomous routines
     frc::SendableChooser<frc2::Command*> m_chooser;
-    frc2::InstantCommand m_elevatorDown{ [this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator} };
-    frc2::InstantCommand m_elevatorMid{ [this] {m_elevator.setElevatorPosition(kElevatorMid); }, {&m_elevator} };
-    frc2::InstantCommand m_elevatorHigh{ [this] {m_elevator.setElevatorPosition(kElevatorHigh); }, {&m_elevator} };
 
     autoBalance m_balancing{ &m_drive };
+
+  //start of auto commands
+  std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap = {
+    {"marker1", std::make_shared<frc2::PrintCommand>("Passed BAlance1")},
+    {"balance", std::make_shared<autoBalance>(&m_drive)},
+    {"wait_1sec", std::make_shared<frc2::WaitCommand>(1.0_s)},
+    {"intake_piece", std::make_shared<frc2::SequentialCommandGroup>(m_extendIntake,
+                                                                    m_runIntakeOpposite,
+                                                                    frc2::WaitCommand(0.2_s),
+                                                                    m_stopIntake,
+                                                                    m_retractIntake)},
+    {"score_high", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, 
+                                                                  m_extendIntake, 
+                                                                  m_runIntake, 
+                                                                  frc2::WaitCommand(0.2_s),
+                                                                  m_stopIntake,
+                                                                  m_retractIntake,
+                                                                  m_elevatorDown)},
+    {"score_middle", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorMid, 
+                                                                    m_extendIntake,
+                                                                    m_runIntake, 
+                                                                    frc2::WaitCommand(0.2_s),
+                                                                    m_stopIntake,
+                                                                    m_retractIntake,
+                                                                    m_elevatorDown)},
+    {"stop", std::make_shared<frc2::SequentialCommandGroup>(m_stop)}
+  };
 
     //start of auto commands
     std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
@@ -119,6 +162,10 @@ private:
 
     frc2::CommandPtr autoNum4;
 
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath5;
+
+    frc2::CommandPtr autoNum5;
+
     //april tag vision pose estimator
     //TagVision m_tagVision;
 
@@ -128,4 +175,5 @@ private:
 
     //turning pid for vision aim
     frc2::PIDController m_turningController{ .01, 0, .01 };
+  
 };

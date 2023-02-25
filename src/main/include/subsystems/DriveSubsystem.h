@@ -110,11 +110,14 @@ public:
     void limitSpeed();
 
     void fullSpeed();
+
+    void Stop();
     /**
      * Returns the currently-estimated pose of the robot.
      *
      * @return The pose.
      */
+
     frc::Pose2d GetPose();
 
     //sets vision measurements

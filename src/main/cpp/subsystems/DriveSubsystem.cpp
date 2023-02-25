@@ -240,7 +240,15 @@ void DriveSubsystem::ResetGyroAngle() {
 frc::Rotation2d DriveSubsystem::GetGyroscopeRotation() {
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
    return frc::Rotation2d(360.0_deg - units::degree_t(m_NavX.GetYaw()));
-  }
+}
+
+void DriveSubsystem::Stop() {
+  std::cout << "Stop \n";
+  m_frontLeft.Stop();
+  m_rearLeft.Stop();
+  m_frontRight.Stop();
+  m_rearRight.Stop();
+}
 
 double DriveSubsystem::GetTurnRate() {
     return -m_NavX.GetRate();
