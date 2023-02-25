@@ -66,7 +66,6 @@ public:
         units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
         bool fieldRelative);
 
-    void Stop();
 
     /**
      * Resets the drive encoders to currently read a position of 0.

@@ -91,6 +91,13 @@ private:
 
   frc2::InstantCommand m_stop{[this] {m_drive.Stop(); }, {&m_drive}};
 
+frc2::InstantCommand m_visionAimOn{ [this] { m_drive.setVisionAim(true); }, { &m_drive } };
+    frc2::InstantCommand m_visionAimOff{ [this] { m_drive.setVisionAim(false); }, { &m_drive } };
+
+  frc2::Trigger alignCenter{ [this] {return m_driverController.GetYButton(); } };
+  frc2::Trigger alignLeft{ [this] {return m_driverController.GetBButton(); } };
+  frc2::Trigger alignRight{ [this] {return m_driverController.GetXButton(); } };
+
     // The chooser for the autonomous routines
     frc::SendableChooser<frc2::Command*> m_chooser;
 
@@ -124,28 +131,8 @@ private:
   };
 
     //start of auto commands
-    std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
     pathplanner::SwerveAutoBuilder autoBuilder;
     static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
-    
-    void ConfigureButtonBindings();
-
-    frc2::InstantCommand m_ZeroHeading{ [this] { m_drive.ZeroHeading(); }, { &m_drive } };
-    frc2::InstantCommand m_limitSpeed{ [this] { m_drive.limitSpeed(); }, { &m_drive } };
-    frc2::InstantCommand m_fullSpeed{ [this] { m_drive.fullSpeed(); }, { &m_drive } };
-    frc2::InstantCommand m_visionAimOn{ [this] { m_drive.setVisionAim(true); }, { &m_drive } };
-    frc2::InstantCommand m_visionAimOff{ [this] { m_drive.setVisionAim(false); }, { &m_drive } };
-    frc2::InstantCommand m_extendIntake{ [this] {m_intake.extended(true); }, {&m_intake} };
-    frc2::InstantCommand m_retractIntake{ [this] {m_intake.extended(false); }, {&m_intake} };
-
-    frc2::Trigger alignCenter{ [this] {return m_driverController.GetYButton(); } };
-    frc2::Trigger alignLeft{ [this] {return m_driverController.GetBButton(); } };
-    frc2::Trigger alignRight{ [this] {return m_driverController.GetXButton(); } };
-
-    //start of auto commands
-    //std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
-    //pathplanner::SwerveAutoBuilder autoBuilder;
-    //static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
 
     frc2::CommandPtr autoNum1;
 

@@ -70,12 +70,6 @@ RobotContainer::RobotContainer() :
     frc::SmartDashboard::PutData(&m_chooser);
     // Configure the button bindings
     ConfigureButtonBindings();
-    
-    autoNum1(autoBuilder.fullAuto(autoPath1)), 
-    autoNum2(autoBuilder.fullAuto(autoPath2)),
-    autoNum3(autoBuilder.fullAuto(autoPath3)),
-    autoNum4(autoBuilder.fullAuto(autoPath4)),
-    autoNum5(autoBuilder.fullAuto(autoPath5))
 
     //eventMap.emplace("marker1", std::make_shared<frc2::PrintCommand>("Passed BAlance1"));
     //eventMap.emplace("balance", std::make_shared<autoBalance>(&m_drive));

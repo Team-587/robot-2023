@@ -148,14 +148,14 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
     m_rearLeft.SetDesiredState(bl);
     m_rearRight.SetDesiredState(br);
 }
-
+/*
 void DriveSubsystem::Stop() {
     Drive(
         units::meters_per_second_t(0), 
         units::meters_per_second_t(0), 
         units::radians_per_second_t(0), 
         true);
-}
+}*/
 
 void DriveSubsystem::SetModuleStates(
     wpi::array<frc::SwerveModuleState, 4> desiredStates) {
