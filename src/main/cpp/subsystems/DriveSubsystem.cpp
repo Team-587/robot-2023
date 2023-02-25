@@ -228,8 +228,8 @@ frc::Pose2d DriveSubsystem::GetPose() {
   return tmpPose;
 }
 
-void DriveSubsystem::limitSpeed() {
-  m_fullSpeed = 0.5;
+void DriveSubsystem::limitSpeed(double speed) {
+  m_fullSpeed = speed;
 }
 
 void DriveSubsystem::fullSpeed() {

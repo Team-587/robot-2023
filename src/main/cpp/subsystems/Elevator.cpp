@@ -44,8 +44,8 @@ Elevator::Elevator():
 
     #endif
 
-    color1.Set(false);
-    color2.Set(false);
+    color1.Set(true);
+    color2.Set(true);
 };
 void Elevator::ToggleColor() {
     currentColor++;

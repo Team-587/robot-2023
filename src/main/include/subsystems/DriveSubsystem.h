@@ -93,7 +93,7 @@ public:
      */
     double GetTurnRate();
     
-    void limitSpeed();
+    void limitSpeed(double speed);
 
     void fullSpeed();
 

@@ -60,7 +60,8 @@ class RobotContainer {
 
   void ConfigureButtonBindings();
   frc2::InstantCommand m_ZeroHeading{[this] {m_drive.ZeroHeading(); }, {&m_drive}};
-  frc2::InstantCommand m_limitSpeed{[this] {m_drive.limitSpeed(); }, {&m_drive}};
+  frc2::InstantCommand m_halfSpeed{[this] {m_drive.limitSpeed(0.5); }, {&m_drive}};
+  frc2::InstantCommand m_quarterSpeed{[this] {m_drive.limitSpeed(0.2); }, {&m_drive}};
   frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(true); }, {&m_intake}};
   frc2::InstantCommand m_runIntake{[this] {m_intake.checkControl(0.25); }, {&m_intake}};
@@ -69,6 +70,7 @@ class RobotContainer {
   frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(false); }, {&m_intake}};
 
   frc2::InstantCommand m_elevatorDown{[this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator}};
+  frc2::InstantCommand m_elevatorLow{[this] {m_elevator.setElevatorPosition(kElevatorLow); }, {&m_elevator}};
   frc2::InstantCommand m_elevatorMid{[this] {m_elevator.setElevatorPosition(kElevatorMid); }, {&m_elevator}};
   frc2::InstantCommand m_elevatorHigh{[this] {m_elevator.setElevatorPosition(kElevatorHigh); }, {&m_elevator}};
   frc2::InstantCommand m_toggleColor{[this] {m_elevator.ToggleColor(); }, {&m_elevator}};
@@ -88,19 +90,25 @@ class RobotContainer {
                                                                     m_stopIntake,
                                                                     m_retractIntake)},
     {"score_high", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, 
+                                                                  frc2::WaitCommand(0.4_s),
                                                                   m_extendIntake, 
+                                                                  frc2::WaitCommand(0.2_s),
                                                                   m_runIntake, 
                                                                   frc2::WaitCommand(0.2_s),
                                                                   m_stopIntake,
                                                                   m_retractIntake,
-                                                                  m_elevatorDown)},
+                                                                  m_elevatorDown,
+                                                                  frc2::WaitCommand(0.4_s))},
     {"score_middle", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorMid, 
+                                                                    frc2::WaitCommand(0.2_s),
                                                                     m_extendIntake,
+                                                                    frc2::WaitCommand(0.2_s),
                                                                     m_runIntake, 
                                                                     frc2::WaitCommand(0.2_s),
                                                                     m_stopIntake,
                                                                     m_retractIntake,
-                                                                    m_elevatorDown)},
+                                                                    m_elevatorDown,
+                                                                    frc2::WaitCommand(0.2_s))},
     {"stop", std::make_shared<frc2::SequentialCommandGroup>(m_stop)}
   };
 
