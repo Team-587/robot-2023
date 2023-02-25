@@ -9,6 +9,7 @@ Intake::Intake() {
     #ifdef INTAKE_VALID
     m_intakeMotor.SetSmartCurrentLimit(30);
     m_intakeMotor.SetSecondaryCurrentLimit(40);
+    m_intakeMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     #endif
 };
 
