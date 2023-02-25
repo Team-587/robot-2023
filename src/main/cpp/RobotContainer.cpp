@@ -153,11 +153,13 @@ void RobotContainer::ConfigureButtonBindings() {
     retractIntakeButton.OnTrue(&m_retractIntake);
     frc2::JoystickButton elevatorDownButton{ &m_coDriverController, frc::XboxController::Button::kA };
     elevatorDownButton.OnTrue(&m_elevatorDown);
-    frc2::JoystickButton elevatorMidButton{ &m_coDriverController, frc::XboxController::Button::kB };
+    frc2::JoystickButton elevatorLowButton{&m_coDriverController, frc::XboxController::Button::kX};
+    elevatorLowButton.OnTrue(&m_elevatorLow);
+    frc2::JoystickButton elevatorMidButton{&m_coDriverController, frc::XboxController::Button::kB};
     elevatorMidButton.OnTrue(&m_elevatorMid);
     frc2::JoystickButton elevatorHighButton{ &m_coDriverController, frc::XboxController::Button::kY };
     elevatorHighButton.OnTrue(&m_elevatorHigh);
-    frc2::JoystickButton toggleColorButton{&m_coDriverController, frc::XboxController::Button::kX};
+    frc2::JoystickButton toggleColorButton{&m_coDriverController, frc::XboxController::Button::kStart};
     toggleColorButton.OnTrue(&m_toggleColor);
 
     //frc2::JoystickButton intakeRunButton{&m_driverController, frc::XboxController::Button::kX};
@@ -172,9 +174,11 @@ void RobotContainer::ConfigureButtonBindings() {
     //Driver buttons
     frc2::JoystickButton startButton{ &m_driverController, frc::XboxController::Button::kStart };
     startButton.OnTrue(&m_ZeroHeading);
-    frc2::JoystickButton LeftBumper{ &m_driverController, frc::XboxController::Button::kLeftBumper };
-    LeftBumper.OnTrue(&m_limitSpeed).OnFalse(&m_fullSpeed);
-    frc2::JoystickButton balancingButton{ &m_driverController, frc::XboxController::Button::kY };
+    frc2::JoystickButton LeftBumper{&m_driverController, frc::XboxController::Button::kLeftBumper};
+    LeftBumper.OnTrue(&m_halfSpeed).OnFalse(&m_fullSpeed);
+    frc2::JoystickButton RightBumper{&m_driverController, frc::XboxController::Button::kRightBumper};
+    RightBumper.OnTrue(&m_quarterSpeed).OnFalse(&m_fullSpeed);
+    frc2::JoystickButton balancingButton{&m_driverController, frc::XboxController::Button::kY};
     //balancingButton.ToggleOnTrue(&m_balancing);
     balancingButton.WhileTrue(&m_balancing);
 

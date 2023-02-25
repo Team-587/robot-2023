@@ -105,8 +105,8 @@ public:
      * @return The turn rate of the robot, in degrees per second
      */
     double GetTurnRate();
-
-    void limitSpeed();
+    
+    void limitSpeed(double speed);
 
     void fullSpeed();
 
