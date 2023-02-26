@@ -48,14 +48,14 @@ void CenterCommand::Execute() {
       ySpeed = 0.0;
      }
     
-    units::radian_t targetYaw = cameraToTarget.Rotation().Z();
+    units::degree_t targetYaw = cameraToTarget.Rotation().Z();
     omegaSpeed = (double)targetYaw > 0 ? -0.1 : 0.1;
 
     std::cout << "Cout statements my beloved 5 " << (double)targetYaw << "\n";
-    //if(abs((double)targetYaw) < .3) {
+    if(abs((double)targetYaw) < .3) {
       
       omegaSpeed = 0.0;
-    //}
+    }
 
     lastX = xSpeed;
     lastY = ySpeed;
@@ -91,6 +91,5 @@ void CenterCommand::End(bool interrupted) { m_pDriveSubsystem->Stop(); }
 // Returns true when the command should end.
 bool CenterCommand::IsFinished() {
   std::cout << "Cout statements my beloved 8\n";
-  return ySpeed == 0.0 && omegaSpeed == 0.0;
-
+  return ySpeed == 0.0 && omegaSpeed == 0.0 && 180 - abs((double)targetYaw) < 2;
 }

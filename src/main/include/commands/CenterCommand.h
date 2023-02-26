@@ -48,4 +48,5 @@ class CenterCommand
     double omegaSpeed;
     double lastX, lastY, lastOmega;
     uint64_t  lastTarget;
+    units::degree_t targetYaw;
 };
