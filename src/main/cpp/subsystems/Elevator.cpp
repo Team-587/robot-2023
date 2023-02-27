@@ -82,9 +82,9 @@ void Elevator::Periodic() {
     setElevatorPosition(destination);
   }
 
-  frc::SmartDashboard::PutNumber("Elev. Destination", destination);
+  //frc::SmartDashboard::PutNumber("Elev. Destination", destination);
   #ifdef ELEVATOR_VALID
-  frc::SmartDashboard::PutNumber("Elev. Position", encoderMotor1.GetPosition());   
+  //frc::SmartDashboard::PutNumber("Elev. Position", encoderMotor1.GetPosition());   
   #endif
 
   if (P != elevatorPID.GetP() || I != elevatorPID.GetI() || D != elevatorPID.GetD()) {

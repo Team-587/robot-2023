@@ -24,12 +24,16 @@
 #include <pathplanner/lib/auto/SwerveAutoBuilder.h>
 #include <pathplanner/lib/commands/FollowPathWithEvents.h>
 #include <frc2/command/CommandPtr.h>
+#include <frc2/command/button/Trigger.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "VisionContainer.h"
 #include "subsystems/Intake.h"
+#include "subsystems/TagVision.h"
 #include "commands/autoBalance.h"
 #include "subsystems/Elevator.h"
+#include "subsystems/PoseEstimatorSubsystem.h"
 #include "commands/IntakeSpeed.h"
 
 /**
@@ -40,25 +44,37 @@
  * commands, and button mappings) should be declared here.
  */
 class RobotContainer {
- public:
-  RobotContainer();
+public:
+    RobotContainer();
 
-  frc2::Command* GetAutonomousCommand();
+    frc2::Command* GetAutonomousCommand();
 
- private:
-  // The driver's controller
-  frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
-  frc::XboxController m_coDriverController{OIConstants::kCoDriverControllerPort};
-  // The robot's subsystems and commands are defined here...
+    VisionContainer* GetVisionCone() { return m_pVisionCone; }
+    void SetVisionCone(VisionContainer* pVisionCone) { m_pVisionCone = pVisionCone; }
+    VisionContainer* GetVisionCube() { return m_pVisionCube; }
+    void SetVisionCube(VisionContainer* pVisionCube) { m_pVisionCube = pVisionCube; }
 
-  // The robot's subsystems
-  DriveSubsystem m_drive;
-  Intake m_intake;
-  Elevator m_elevator;
+    void StartVision();
+    void StopVision();
 
-  // The chooser for the autonomous routines
-  frc::SendableChooser<frc2::Command*> m_chooser;
+    photonlib::PhotonCamera m_camera {CameraNames::CAMERA_APRILTAG_FORWARD};
+    
+    // The robot's subsystems
+    DriveSubsystem m_drive;
+    Intake m_intake;
+    Elevator m_elevator;
+    PoseEstimatorSubsystem m_poseEstimator;
+    
+private:
 
+    // The driver's controller
+    frc::XboxController m_driverController{ OIConstants::kDriverControllerPort };
+    frc::XboxController m_coDriverController{ OIConstants::kCoDriverControllerPort };
+    // The robot's subsystems and commands are defined here...
+
+    // The robot's subsystems
+    //DriveSubsystem m_drive;
+    //Intake m_intake;
   void ConfigureButtonBindings();
   frc2::InstantCommand m_ZeroHeading{[this] {m_drive.ZeroHeading(); }, {&m_drive}};
   frc2::InstantCommand m_halfSpeed{[this] {m_drive.limitSpeed(0.5); }, {&m_drive}};
@@ -81,7 +97,17 @@ class RobotContainer {
 
   frc2::InstantCommand m_stop{[this] {m_drive.Stop(); }, {&m_drive}};
 
-  autoBalance m_balancing{&m_drive};
+frc2::InstantCommand m_visionAimOn{ [this] { m_drive.setVisionAim(true); }, { &m_drive } };
+    frc2::InstantCommand m_visionAimOff{ [this] { m_drive.setVisionAim(false); }, { &m_drive } };
+
+  frc2::Trigger alignCenter{ [this] {return m_driverController.GetYButton(); } };
+  frc2::Trigger alignLeft{ [this] {return m_driverController.GetBButton(); } };
+  frc2::Trigger alignRight{ [this] {return m_driverController.GetXButton(); } };
+
+    // The chooser for the autonomous routines
+    frc::SendableChooser<frc2::Command*> m_chooser;
+
+    autoBalance m_balancing{ &m_drive };
 
   //start of auto commands
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap = {
@@ -116,25 +142,37 @@ class RobotContainer {
     {"stop", std::make_shared<frc2::SequentialCommandGroup>(m_stop)}
   };
 
-  pathplanner::SwerveAutoBuilder autoBuilder;
-  static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
+    //start of auto commands
+    pathplanner::SwerveAutoBuilder autoBuilder;
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath1;
 
-  frc2::CommandPtr autoNum1;
+    frc2::CommandPtr autoNum1;
 
-//auto path 2
-  static std::vector<pathplanner::PathPlannerTrajectory> autoPath2;
+    //auto path 2
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath2;
 
-  frc2::CommandPtr autoNum2;
+    frc2::CommandPtr autoNum2;
 
-  static std::vector<pathplanner::PathPlannerTrajectory> autoPath3;
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath3;
 
-  frc2::CommandPtr autoNum3;
+    frc2::CommandPtr autoNum3;
 
-  static std::vector<pathplanner::PathPlannerTrajectory> autoPath4;
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath4;
 
-  frc2::CommandPtr autoNum4;
+    frc2::CommandPtr autoNum4;
 
-  static std::vector<pathplanner::PathPlannerTrajectory> autoPath5;
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath5;
 
-  frc2::CommandPtr autoNum5;
+    frc2::CommandPtr autoNum5;
+
+    //april tag vision pose estimator
+    //TagVision m_tagVision;
+
+    // Vision and camera thread
+    VisionContainer* m_pVisionCone;
+    VisionContainer* m_pVisionCube;
+
+    //turning pid for vision aim
+    frc2::PIDController m_turningController{ .01, 0, .01 };
+  
 };

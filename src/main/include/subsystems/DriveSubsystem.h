@@ -25,20 +25,29 @@
 #include <units/angle.h>
 #include <units/angular_acceleration.h>
 #include <units/acceleration.h>
+
 #include <AHRS.h>
+#include <frc/estimator/SwerveDrivePoseEstimator.h>
+#include <frc/filter/SlewRateLimiter.h>
 
 #include "Constants.h"
 #include "SwerveModule.h"
+//#include "VisionContainer.h"
+//#include "subsystems/TagVision.h"
 
-class DriveSubsystem : public frc2::SubsystemBase
-{
+class DriveSubsystem: public frc2::SubsystemBase {
 public:
     DriveSubsystem();
+
+    //TagVision m_tagVision;
 
     /**
      * Will be called periodically whenever the CommandScheduler runs.
      */
     void Periodic() override;
+
+
+    frc::SwerveDriveKinematics<4> getKinematics() { return kDriveKinematics; };
 
     // Subsystem methods go here.
 
@@ -54,8 +63,9 @@ public:
      *                      the field.
      */
     void Drive(units::meters_per_second_t xSpeed,
-               units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
-               bool fieldRelative);
+        units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
+        bool fieldRelative);
+
 
     /**
      * Resets the drive encoders to currently read a position of 0.
@@ -67,13 +77,16 @@ public:
      */
     void SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredStates);
 
+    wpi::array<frc::SwerveModuleState, 4> GetModuleStates();
+    frc::SwerveModuleState GetSwerveModuleState(SwerveModule &module);
+
     /**
      * Returns the heading of the robot.
      *
      * @return the robot's heading in degrees, from 180 to 180
      */
     units::degree_t GetHeading() const;
-    
+
     double getCurrentYaw();
 
     double getPitch();
@@ -106,6 +119,9 @@ public:
 
     frc::Pose2d GetPose();
 
+    //sets vision measurements
+    void visionMeasurements(frc::Pose2d pose, units::second_t timestamp);
+
     /**
      * Resets the odometry to the specified pose.
      *
@@ -113,6 +129,10 @@ public:
      */
     void ResetOdometry(frc::Pose2d pose);
 
+    void ResetGyroAngle();
+
+    frc::Rotation2d GetGyroscopeRotation();
+    
     units::meter_t kTrackWidth =
         0.59_m; // Distance between centers of right and left wheels on robot
     units::meter_t kWheelBase =
@@ -122,27 +142,50 @@ public:
         frc::Translation2d(kWheelBase / 2, kTrackWidth / 2),
         frc::Translation2d(kWheelBase / 2, -kTrackWidth / 2),
         frc::Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-        frc::Translation2d(-kWheelBase / 2, -kTrackWidth / 2)};
+        frc::Translation2d(-kWheelBase / 2, -kTrackWidth / 2) };
 
-private:
-    // Components (e.g. motor controllers and sensors) should generally be
-    // declared private and exposed only through public methods.
+    void setVisionAim(bool visionAim) {
+        m_visionAim = visionAim;
+    }
+
+    bool getVisionAim() {
+        return m_visionAim;
+    }
+
+    std::array<frc::SwerveModulePosition, 4> GetOdometryPos() { return odometryPos; };
 
     SwerveModule m_frontLeft;
     SwerveModule m_rearLeft;
     SwerveModule m_frontRight;
     SwerveModule m_rearRight;
 
+private:
+    // Components (e.g. motor controllers and sensors) should generally be
+    // declared private and exposed only through public methods.
+
+    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitX{ 5.5 / 1_s };
+    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitY{ 5.5 / 1_s };
+    frc::SlewRateLimiter<units::scalar> m_SlewRateLimitZ{ 5.5 / 1_s };
+
     double m_fullSpeed = 1.0;
+
+    std::array<frc::SwerveModulePosition, 4> odometryPos{
+        m_frontLeft.GetPosition(),
+        m_frontRight.GetPosition(),
+        m_rearLeft.GetPosition(),
+        m_rearRight.GetPosition()
+    };
 
     // The gyro sensor
     //frc::ADXRS450_Gyro m_gyro;
     //AHRS m_NavX;
-    AHRS m_NavX{frc::SPI::Port::kMXP};
-    
+    AHRS m_NavX{ frc::SPI::Port::kMXP };
+
     // Odometry class for tracking robot pose
     // 4 defines the number of modules
     frc::SwerveDriveOdometry<4> m_odometry;
+    
+    bool m_visionAim;
 
     double initialPitch;
     double initialRoll;

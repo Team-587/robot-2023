@@ -26,7 +26,9 @@ void Robot::RobotPeriodic() {
  * can use it to reset any subsystem information you want to clear when the
  * robot is disabled.
  */
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+  //m_container.StopVision();
+}
 
 void Robot::DisabledPeriodic() {}
 
@@ -53,6 +55,8 @@ void Robot::TeleopInit() {
     m_autonomousCommand->Cancel();
     m_autonomousCommand = nullptr;
   }
+
+  //m_container.StartVision();
 }
 
 /**
