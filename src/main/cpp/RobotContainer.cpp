@@ -179,6 +179,8 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton RightBumper{&m_driverController, frc::XboxController::Button::kRightBumper};
     RightBumper.OnTrue(&m_quarterSpeed).OnFalse(&m_fullSpeed);
     frc2::JoystickButton balancingButton{&m_driverController, frc::XboxController::Button::kY};
+    frc2::JoystickButton elevatorDownButton{&m_driverController, frc::XboxController::Button::kA};
+    elevatorDownButton.OnTrue(&m_elevatorDown);
     //balancingButton.ToggleOnTrue(&m_balancing);
     balancingButton.WhileTrue(&m_balancing);
 

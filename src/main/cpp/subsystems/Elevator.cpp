@@ -5,6 +5,7 @@
 #include "subsystems/Elevator.h"
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/XboxController.h>
 
 
 Elevator::Elevator():
@@ -73,6 +74,13 @@ void Elevator::setElevatorPosition(double position) {
 }
 // This method will be called once per scheduler run
 void Elevator::Periodic() {
+  frc::XboxController m_coDriverController{OIConstants::kCoDriverControllerPort};
+  double manualElevator = m_coDriverController.GetRightY();
+
+  if (fabs(manualElevator) > 0.25) {
+    destination = destination - (manualElevator * 0.1);
+    setElevatorPosition(destination);
+  }
 
   //frc::SmartDashboard::PutNumber("Elev. Destination", destination);
   #ifdef ELEVATOR_VALID

@@ -34,6 +34,7 @@
 #include "commands/autoBalance.h"
 #include "subsystems/Elevator.h"
 #include "subsystems/PoseEstimatorSubsystem.h"
+#include "commands/IntakeSpeed.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -80,9 +81,12 @@ private:
   frc2::InstantCommand m_quarterSpeed{[this] {m_drive.limitSpeed(0.2); }, {&m_drive}};
   frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(true); }, {&m_intake}};
-  frc2::InstantCommand m_runIntake{[this] {m_intake.checkControl(0.25); }, {&m_intake}};
-  frc2::InstantCommand m_runIntakeOpposite{[this] {m_intake.checkControl(-0.25); }, {&m_intake}};
-  frc2::InstantCommand m_stopIntake{[this] {m_intake.checkControl(0.0); }, {&m_intake}};
+  //frc2::InstantCommand m_runIntake{[this] {m_intake.checkControl(0.25); }, {&m_intake}};
+  //frc2::InstantCommand m_runIntakeOpposite{[this] {m_intake.checkControl(-0.25); }, {&m_intake}};
+  //frc2::InstantCommand m_stopIntake{[this] {m_intake.checkControl(0.0); }, {&m_intake}};
+  IntakeSpeed m_runIntake{&m_intake, 0.25};
+  IntakeSpeed m_runIntakeOpposite{&m_intake, -0.25};
+  IntakeSpeed m_stopIntake{&m_intake, 0.0};
   frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(false); }, {&m_intake}};
 
   frc2::InstantCommand m_elevatorDown{[this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator}};
