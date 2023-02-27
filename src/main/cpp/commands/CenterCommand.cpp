@@ -21,10 +21,7 @@ CenterCommand::CenterCommand(DriveSubsystem* pDriveSubsystem,
 void CenterCommand::Initialize() {
   if(m_pCamera->GetPipelineIndex() != m_pipelineIndex) {
     m_pCamera->SetPipelineIndex(m_pipelineIndex);
-
   }
-
-  
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -34,48 +31,75 @@ void CenterCommand::Execute() {
 
   //Runs if the camera detects an AprilTag
   if(result.HasTargets()) {
-    std::cout << "Cout statements my beloved 1\n";
+
+    //std::cout << "Cout statements my beloved 1\n";
     //Sets the variable tagID equal to the fiducial ID number of the apriltag
     photonlib::PhotonTrackedTarget target = result.GetBestTarget();
     //double yaw = target.GetYaw();
     frc::Transform3d cameraToTarget = result.GetBestTarget().GetBestCameraToTarget();
-    std::cout << "Cout statements my beloved 2\n";
-    units::length::meter_t targetY = cameraToTarget.Y();
-    ySpeed = (double)targetY > 0 ? -0.2 : 0.2;
-    std::cout << "Cout statements my beloved 3 " << (double)targetY << "\n";
-     if(abs((double)targetY) < 0.2) {
-      std::cout << "Cout statements my beloved 4\n";
-      ySpeed = 0.0;
-     }
-    
-    units::degree_t targetYaw = cameraToTarget.Rotation().Z();
-    omegaSpeed = (double)targetYaw > 0 ? -0.1 : 0.1;
 
-    std::cout << "Cout statements my beloved 5 " << (double)targetYaw << "\n";
-    if(abs((double)targetYaw) < .3) {
+    
+    //units::degree_t targetYaw = cameraToTarget.Rotation().Z();
+    units::degree_t targetRot = m_pPoseEstimator->GetCurrentPose().Rotation().Degrees();
+    //or
+    units::degree_t driveRot = units::degree_t(abs((double)m_pDriveSubsystem->GetHeading()));
+    omegaSpeed = (double)driveRot > 180 ? -0.1 : 0.1;
+    std::cout << "CenterCommand - targetRot: " << (double)targetRot << "\n";
+    std::cout << "CenterCommand - driveRot: " << (double)driveRot << "\n";
+    if((double)driveRot < 183 && (double)driveRot > 177) {
+    //if(180 - abs((double)driveRot) < 3) {
       
       omegaSpeed = 0.0;
     }
 
-    lastX = xSpeed;
+    //std::cout << "Cout statements my beloved 2\n";
+    units::length::meter_t targetY = cameraToTarget.Y();
+    double targetYaw = target.GetYaw();
+    if((double)driveRot > 180 && targetYaw < 0) {
+      ySpeed = -0.1;
+    } else if((double)driveRot < 180 && targetYaw > 0) {
+      ySpeed = 0.1;
+    } else {
+      ySpeed = 0.0;
+    }
+    //ySpeed = (double)targetYaw > 0 ? 0.1 : -0.1;
+    std::cout << "CenterCommand - targetY: " << (double)targetY << "\n";
+    std::cout << "CenterCommand - targetYaw: " << (double)targetYaw << "\n";
+     if(abs((double)targetYaw) < 3) {
+      //std::cout << "Cout statements my beloved 4\n";
+      ySpeed = 0.0;
+     }
+
+    
+
+    //lastX = xSpeed;
     lastY = ySpeed;
     lastOmega = omegaSpeed;
     lastTarget = GetCurrentTime();
 
+    frc::SmartDashboard::PutNumber("CC - targetYaw", targetYaw);
+    frc::SmartDashboard::PutNumber("CC - driveRot", (double)driveRot);
+    frc::SmartDashboard::PutNumber("cc - ySpeed", ySpeed);
+    frc::SmartDashboard::PutNumber("CC - omegaSpeed", omegaSpeed);
+
     m_pDriveSubsystem->Drive(
-      -units::meters_per_second_t(0),
-      -units::meters_per_second_t(ySpeed),
+      units::meters_per_second_t(0),
+      units::meters_per_second_t(ySpeed),
+      //units::meters_per_second_t(0),
       units::radians_per_second_t(omegaSpeed),
+      //units::radians_per_second_t(0),
       true);
-      std::cout << "Cout statements my beloved 6\n";
+      //std::cout << "Cout statements my beloved 6\n";
   } else if(GetCurrentTime() - lastTarget < 800) {
       m_pDriveSubsystem->Drive(
-      -units::meters_per_second_t(0), 
-      -units::meters_per_second_t(lastY), 
-      -units::radians_per_second_t(lastOmega),
+      units::meters_per_second_t(0), 
+      units::meters_per_second_t(lastY),
+      //units::meters_per_second_t(0), 
+      units::radians_per_second_t(lastOmega),
+      //units::radians_per_second_t(0),
       true);
   } else {
-    std::cout << "Cout statements my beloved 7\n";
+    std::cout << "CenterCommand - No Target\n";
     End(true);
   }
 
@@ -90,6 +114,6 @@ void CenterCommand::End(bool interrupted) { m_pDriveSubsystem->Stop(); }
 
 // Returns true when the command should end.
 bool CenterCommand::IsFinished() {
-  std::cout << "Cout statements my beloved 8\n";
-  return ySpeed == 0.0 && omegaSpeed == 0.0 && 180 - abs((double)targetYaw) < 2;
+  //std::cout << "Cout statements my beloved 8\n";
+  return ySpeed == 0.0 && omegaSpeed == 0.0;
 }

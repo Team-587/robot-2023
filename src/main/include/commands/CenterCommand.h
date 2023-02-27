@@ -10,6 +10,7 @@
 #include <pathplanner/lib/PathPlannerTrajectory.h>
 #include <pathplanner/lib/PathPlanner.h>
 #include <photonlib/PhotonCamera.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/PoseEstimatorSubsystem.h"

@@ -15,7 +15,7 @@ Intake::Intake() {
 
 void Intake::checkControl(double wheelSpeed) {
     #ifdef INTAKE_VALID
-    std::cout << "Intake motor : " << wheelSpeed << "\n";
+    //std::cout << "Intake motor : " << wheelSpeed << "\n";
     m_intakeMotor.Set(wheelSpeed);
     #endif
 }

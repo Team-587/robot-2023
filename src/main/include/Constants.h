@@ -36,7 +36,7 @@ enum VisionPipelineIndex {
     APRILTAG = 0,
     CONE = 10,
     CUBE = 11,
-    REFLECTIVE_GREEN = 12,
+    REFLECTIVE_GREEN = 1,
     REFLECTIVE_RED = 14
 };
 

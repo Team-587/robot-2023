@@ -74,9 +74,9 @@ void Elevator::setElevatorPosition(double position) {
 // This method will be called once per scheduler run
 void Elevator::Periodic() {
 
-  frc::SmartDashboard::PutNumber("Elev. Destination", destination);
+  //frc::SmartDashboard::PutNumber("Elev. Destination", destination);
   #ifdef ELEVATOR_VALID
-  frc::SmartDashboard::PutNumber("Elev. Position", encoderMotor1.GetPosition());   
+  //frc::SmartDashboard::PutNumber("Elev. Position", encoderMotor1.GetPosition());   
   #endif
 
   if (P != elevatorPID.GetP() || I != elevatorPID.GetI() || D != elevatorPID.GetD()) {

@@ -11,20 +11,25 @@ ApproachCommand::ApproachCommand(DriveSubsystem* pDriveSubsystem, photonlib::Pho
   m_pCamera(pCamera),
   m_pPoseEstimator(pPoseEstimator) {
 
+    AddRequirements({ m_pDriveSubsystem, m_pPoseEstimator });
+
   }
+
 
 
 // Called when the command is initially scheduled.
 void ApproachCommand::Initialize() {
+  
+}
+
+// Called repeatedly when this Command is scheduled to run
+void ApproachCommand::Execute() {
   m_pDriveSubsystem->Drive(
     -units::meters_per_second_t(0.1),
     -units::meters_per_second_t(0),
     units::radians_per_second_t(0),
-  true);
+    true);
 }
-
-// Called repeatedly when this Command is scheduled to run
-void ApproachCommand::Execute() {}
 
 // Called once the command ends or is interrupted.
 void ApproachCommand::End(bool interrupted) {}
