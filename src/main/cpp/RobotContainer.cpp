@@ -124,11 +124,6 @@ RobotContainer::RobotContainer() :
 
     m_intake.SetDefaultCommand(frc2::RunCommand(
         [this] {
-            m_intake.checkControl(m_coDriverController.GetLeftY());
-        }, { &m_intake }));
-
-    m_intake.SetDefaultCommand(frc2::RunCommand(
-        [this] {
         if(abs(m_coDriverController.GetLeftY()) < .1) {
             m_intake.checkControl(0);
         } else {
@@ -178,10 +173,11 @@ void RobotContainer::ConfigureButtonBindings() {
     LeftBumper.OnTrue(&m_halfSpeed).OnFalse(&m_fullSpeed);
     frc2::JoystickButton RightBumper{&m_driverController, frc::XboxController::Button::kRightBumper};
     RightBumper.OnTrue(&m_quarterSpeed).OnFalse(&m_fullSpeed);
+    
+    //these two commands conflict with centering commands
+    //frc2::JoystickButton elevatorDownButton{&m_driverController, frc::XboxController::Button::kA};
+    //elevatorDownButton.OnTrue(&m_elevatorDown);
     frc2::JoystickButton balancingButton{&m_driverController, frc::XboxController::Button::kY};
-    frc2::JoystickButton elevatorDownButton{&m_driverController, frc::XboxController::Button::kA};
-    elevatorDownButton.OnTrue(&m_elevatorDown);
-    //balancingButton.ToggleOnTrue(&m_balancing);
     balancingButton.WhileTrue(&m_balancing);
 
     //frc2::JoystickButton rightBumper{ &m_driverController, frc::XboxController::Button::kRightBumper };
@@ -192,17 +188,17 @@ void RobotContainer::ConfigureButtonBindings() {
     //alignRight.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Right").ToPtr());
     //alignLeft.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Left").ToPtr());
     alignCenter.WhileTrue(frc2::SequentialCommandGroup (
-         //MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
-         CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG),
-         ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG)
-    ).ToPtr()
+            //MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
+            CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG),
+            ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG)
+        ).ToPtr()
     );
         
     alignRight.WhileTrue(frc2::SequentialCommandGroup (
-         //MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
-         CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::REFLECTIVE_GREEN),
-         ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::REFLECTIVE_GREEN)
-    ).ToPtr()
+            //MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
+            CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::REFLECTIVE_GREEN),
+            ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::REFLECTIVE_GREEN)
+        ).ToPtr()
     );
 
 }
