@@ -26,7 +26,7 @@ class CenterCommand
     : public frc2::CommandHelper<frc2::CommandBase, CenterCommand> {
  public:
   CenterCommand(DriveSubsystem* pDriveSubsystem,
-  photonlib::PhotonCamera *pCamera, PoseEstimatorSubsystem *pPoseEstimator, int pipelineIndex);
+  photonlib::PhotonCamera *pCamera, PoseEstimatorSubsystem *pPoseEstimator, int pipelineIndex, double speed);
   
 
   void Initialize() override;
@@ -44,6 +44,7 @@ class CenterCommand
     photonlib::PhotonCamera *m_pCamera;
     PoseEstimatorSubsystem *m_pPoseEstimator;
     int m_pipelineIndex;
+    double m_speed;
     double ySpeed;
     double xSpeed;
     double omegaSpeed;

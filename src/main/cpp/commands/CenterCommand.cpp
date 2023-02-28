@@ -6,12 +6,13 @@
 #include <math.h>
 
 CenterCommand::CenterCommand(DriveSubsystem* pDriveSubsystem,
-  photonlib::PhotonCamera *pCamera, PoseEstimatorSubsystem *pPoseEstimator, int pipelineIndex) 
+  photonlib::PhotonCamera *pCamera, PoseEstimatorSubsystem *pPoseEstimator, int pipelineIndex, double speed) 
   // Use addRequirements() here to declare subsystem dependencies. 
   : m_pDriveSubsystem( pDriveSubsystem ), 
     m_pCamera(pCamera),
     m_pPoseEstimator(pPoseEstimator),
-    m_pipelineIndex(pipelineIndex) {
+    m_pipelineIndex(pipelineIndex),
+    m_speed(speed) {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements({ m_pDriveSubsystem, m_pPoseEstimator });
 }
@@ -43,7 +44,7 @@ void CenterCommand::Execute() {
     units::degree_t targetRot = m_pPoseEstimator->GetCurrentPose().Rotation().Degrees();
     //or
     units::degree_t driveRot = units::degree_t(abs((double)m_pDriveSubsystem->GetHeading()));
-    omegaSpeed = (double)driveRot > 180 ? -0.1 : 0.1;
+    omegaSpeed = (double)driveRot > 180 ? -m_speed : m_speed;
     std::cout << "CenterCommand - targetRot: " << (double)targetRot << "\n";
     std::cout << "CenterCommand - driveRot: " << (double)driveRot << "\n";
     if((double)driveRot < 183 && (double)driveRot > 177) {
@@ -56,9 +57,9 @@ void CenterCommand::Execute() {
     units::length::meter_t targetY = cameraToTarget.Y();
     double targetYaw = target.GetYaw();
     if((double)driveRot > 180 && targetYaw < 0) {
-      ySpeed = -0.1;
+      ySpeed = -m_speed;
     } else if((double)driveRot < 180 && targetYaw > 0) {
-      ySpeed = 0.1;
+      ySpeed = m_speed;
     } else {
       ySpeed = 0.0;
     }

@@ -189,15 +189,15 @@ void RobotContainer::ConfigureButtonBindings() {
     //alignLeft.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Left").ToPtr());
     alignCenter.WhileTrue(frc2::SequentialCommandGroup (
             //MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
-            CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG),
-            ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG)
+            CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG, 0.2),
+            ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, 0.2)
         ).ToPtr()
     );
         
     alignRight.WhileTrue(frc2::SequentialCommandGroup (
             //MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
-            CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::REFLECTIVE_GREEN),
-            ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::REFLECTIVE_GREEN)
+            CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::REFLECTIVE_GREEN, 0.2),
+            ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, 0.2)
         ).ToPtr()
     );
 

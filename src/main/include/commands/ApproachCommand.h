@@ -19,19 +19,20 @@
  */
 class ApproachCommand
     : public frc2::CommandHelper<frc2::CommandBase, ApproachCommand> {
- public:
-  ApproachCommand(DriveSubsystem* pDriveSubsystem, photonlib::PhotonCamera *pCamera, PoseEstimatorSubsystem * pPoseEstimator, int pipelineIndex);
+  public:
+    ApproachCommand(DriveSubsystem* pDriveSubsystem, photonlib::PhotonCamera *pCamera, PoseEstimatorSubsystem * pPoseEstimator, double speed);
 
-  void Initialize() override;
+    void Initialize() override;
 
-  void Execute() override;
+    void Execute() override;
 
-  void End(bool interrupted) override;
+    void End(bool interrupted) override;
 
-  bool IsFinished() override;
+    bool IsFinished() override;
 
   private:
-  DriveSubsystem *m_pDriveSubsystem;
-  photonlib::PhotonCamera *m_pCamera;
-  PoseEstimatorSubsystem *m_pPoseEstimator;
+    DriveSubsystem *m_pDriveSubsystem;
+    photonlib::PhotonCamera *m_pCamera;
+    PoseEstimatorSubsystem *m_pPoseEstimator;
+    double m_speed;
 };
