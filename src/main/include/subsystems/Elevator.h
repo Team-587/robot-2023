@@ -38,8 +38,8 @@ class Elevator : public frc2::SubsystemBase {
 
 
   #endif
-  frc2::PIDController elevatorPID{0.0, 0.0, 0.0};
-  double P = 0.0;
+  frc2::PIDController elevatorPID{0.1, 0.0, 0.0};
+  double P = 0.1;
   double I = 0.0;
   double D = 0.0;
   // Components (e.g. motor controllers and sensors) should generally be

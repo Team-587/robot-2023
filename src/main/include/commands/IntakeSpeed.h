@@ -7,6 +7,7 @@
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
 #include "subsystems/Intake.h"
+#include <frc/Timer.h>
 
 /**
  * An example command.
@@ -30,4 +31,5 @@ class IntakeSpeed
 
   Intake *p_intakeSubsystem;
   double m_desiredSpeed;
+  frc::Timer m_timer;
 };
