@@ -10,7 +10,11 @@ IntakeSpeed::IntakeSpeed(Intake* subsystem, double desiredSpeed):p_intakeSubsyst
 }
 
 // Called when the command is initially scheduled.
-void IntakeSpeed::Initialize() {}
+void IntakeSpeed::Initialize() {
+
+   m_timer.Reset();
+   m_timer.Start();
+}
 
 // Called repeatedly when this Command is scheduled to run
 void IntakeSpeed::Execute() {
@@ -24,5 +28,5 @@ void IntakeSpeed::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool IntakeSpeed::IsFinished() {
-  return false;
+   return m_timer.HasElapsed(0.4_s);
 }

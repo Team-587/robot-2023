@@ -142,11 +142,11 @@ RobotContainer::RobotContainer() :
 
 void RobotContainer::ConfigureButtonBindings() {
     //Co driver buttons
-    frc2::JoystickButton extendIntakeButton{ &m_coDriverController, frc::XboxController::Button::kLeftBumper };
-    extendIntakeButton.OnTrue(&m_extendIntake);
-    frc2::JoystickButton retractIntakeButton{ &m_coDriverController, frc::XboxController::Button::kRightBumper };
-    retractIntakeButton.OnTrue(&m_retractIntake);
-    frc2::JoystickButton elevatorDownButton{ &m_coDriverController, frc::XboxController::Button::kA };
+    frc2::JoystickButton extendIntakeButton{&m_coDriverController, frc::XboxController::Button::kLeftBumper};
+    extendIntakeButton.OnTrue(&m_retractIntake);
+    frc2::JoystickButton retractIntakeButton{&m_coDriverController, frc::XboxController::Button::kRightBumper};
+    retractIntakeButton.OnTrue(&m_extendIntake);
+    frc2::JoystickButton elevatorDownButton{&m_coDriverController, frc::XboxController::Button::kA};
     elevatorDownButton.OnTrue(&m_elevatorDown);
     frc2::JoystickButton elevatorLowButton{&m_coDriverController, frc::XboxController::Button::kX};
     elevatorLowButton.OnTrue(&m_elevatorLow);
@@ -173,6 +173,11 @@ void RobotContainer::ConfigureButtonBindings() {
     LeftBumper.OnTrue(&m_halfSpeed).OnFalse(&m_fullSpeed);
     frc2::JoystickButton RightBumper{&m_driverController, frc::XboxController::Button::kRightBumper};
     RightBumper.OnTrue(&m_quarterSpeed).OnFalse(&m_fullSpeed);
+
+    frc2::JoystickButton elevatorDownButtondriver{&m_driverController, frc::XboxController::Button::kA};
+    elevatorDownButtondriver.OnTrue(&m_elevatorDown);
+    //balancingButton.ToggleOnTrue(&m_balancing);
+    balancingButton.WhileTrue(&m_balancing);
     
     //these two commands conflict with centering commands
     //frc2::JoystickButton elevatorDownButton{&m_driverController, frc::XboxController::Button::kA};
