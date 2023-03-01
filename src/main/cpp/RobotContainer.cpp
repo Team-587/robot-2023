@@ -108,8 +108,10 @@ void RobotContainer::ConfigureButtonBindings() {
     elevatorMidButton.OnTrue(&m_elevatorMid);
     frc2::JoystickButton elevatorHighButton{&m_coDriverController, frc::XboxController::Button::kY};
     elevatorHighButton.OnTrue(&m_elevatorHigh);
-    frc2::JoystickButton toggleColorButton{&m_coDriverController, frc::XboxController::Button::kStart};
+    frc2::JoystickButton toggleColorButton{&m_coDriverController, frc::XboxController::Button::kBack};
     toggleColorButton.OnTrue(&m_toggleColor);
+    frc2::JoystickButton toggleElevatorShelf{&m_coDriverController, frc::XboxController::Button::kStart};
+    toggleElevatorShelf.OnTrue(&m_elevatorShelf);
 
     //frc2::JoystickButton intakeRunButton{&m_driverController, frc::XboxController::Button::kX};
     //intakeRunButton.OnTrue(&m_runIntake);

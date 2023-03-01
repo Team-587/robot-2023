@@ -17,6 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
+          "stop",
           "score_high"
         ],
         "executionBehavior": "parallel",
@@ -30,12 +31,12 @@
         "y": 4.579086423130112
       },
       "prevControl": {
-        "x": 5.320415172955113,
-        "y": 4.566448673797917
+        "x": 5.322899938391867,
+        "y": 4.508007409939192
       },
       "nextControl": {
-        "x": 7.196854735589812,
-        "y": 4.590505591267593
+        "x": 7.253950576277221,
+        "y": 4.647601431955001
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -45,7 +46,7 @@
       "stopEvent": {
         "names": [
           "stop",
-          "intake_piece"
+          "just_intake"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -72,6 +73,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
+          "stop",
           "score_middle"
         ],
         "executionBehavior": "parallel",
@@ -81,26 +83,26 @@
     },
     {
       "anchorPoint": {
-        "x": 6.328997957141214,
-        "y": 3.391492936832028
+        "x": 6.511704647340919,
+        "y": 3.7112296446815116
       },
       "prevControl": {
-        "x": 6.990516793032725,
-        "y": 4.594254456634776
+        "x": 5.780877886542099,
+        "y": 4.830308122154706
       },
       "nextControl": {
-        "x": 6.077776258116619,
-        "y": 2.934726211332765
+        "x": 5.780877886542099,
+        "y": 4.830308122154706
       },
-      "holonomicAngle": 0,
-      "isReversal": false,
+      "holonomicAngle": -24.775140568831823,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
         "names": [
           "stop",
-          "intake_piece"
+          "just_intake"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -113,8 +115,8 @@
         "y": 2.9689837157452095
       },
       "prevControl": {
-        "x": 4.627541904656459,
-        "y": 3.083175397120026
+        "x": 5.758039550267135,
+        "y": 2.9118878750578014
       },
       "nextControl": null,
       "holonomicAngle": 178.99491399474581,
@@ -135,5 +137,18 @@
   "maxVelocity": 3.0,
   "maxAcceleration": null,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.6981818181817948,
+      "names": [
+        "intake_piece"
+      ]
+    },
+    {
+      "position": 2.6472727272727337,
+      "names": [
+        "intake_piece"
+      ]
+    }
+  ]
 }

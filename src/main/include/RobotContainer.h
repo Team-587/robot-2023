@@ -77,6 +77,7 @@ class RobotContainer {
   frc2::InstantCommand m_elevatorLow{[this] {m_elevator.setElevatorPosition(kElevatorLow); }, {&m_elevator}};
   frc2::InstantCommand m_elevatorMid{[this] {m_elevator.setElevatorPosition(kElevatorMid); }, {&m_elevator}};
   frc2::InstantCommand m_elevatorHigh{[this] {m_elevator.setElevatorPosition(kElevatorHigh); }, {&m_elevator}};
+  frc2::InstantCommand m_elevatorShelf{[this] {m_elevator.setElevatorPosition(kElevatorShelf); }, {&m_elevator}};
   frc2::InstantCommand m_toggleColor{[this] {m_elevator.ToggleColor(); }, {&m_elevator}};
 
   frc2::InstantCommand m_stop{[this] {m_drive.Stop(); }, {&m_drive}};
@@ -85,14 +86,17 @@ class RobotContainer {
 
   //start of auto commands
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap = {
-    {"marker1", std::make_shared<frc2::PrintCommand>("Passed BAlance1")},
+    {"marker1", std::make_shared<frc2::PrintCommand>("Passed marker")},
     {"balance", std::make_shared<autoBalance>(&m_drive)},
     {"wait_1sec", std::make_shared<frc2::WaitCommand>(1.0_s)},
-    {"intake_piece", std::make_shared<frc2::SequentialCommandGroup>(m_extendIntake,
-                                                                    m_runIntakeOpposite,
+    {"just_intake", std::make_shared<frc2::SequentialCommandGroup>(m_runIntakeOpposite,
+                                                                    m_retractIntake)},
+    {"intake_piece", std::make_shared<frc2::SequentialCommandGroup>(m_extendIntake
+                                                                    //m_runIntakeOpposite
                                                                     //frc2::WaitCommand(0.2_s),
                                                                     //m_stopIntake,
-                                                                    m_retractIntake)},
+                                                                    //m_retractIntake
+                                                                    )},
     {"score_high", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, 
                                                                   frc2::WaitCommand(1.6_s),
                                                                   m_extendIntake, 
