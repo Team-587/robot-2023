@@ -75,6 +75,13 @@ RobotContainer::RobotContainer() :
     //eventMap.emplace("balance", std::make_shared<autoBalance>(&m_drive));
     //eventMap.emplace("wait_1sec", std::make_shared<frc2::WaitCommand>(1.0_s));
     //eventMap.emplace("extend_intake", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, m_extendIntake));
+    for (int i = 0; i < kLength; i++) {
+        //Set the value
+        m_ledBuffer[i].SetRGB(0 ,255, 0);
+    }
+    m_led.SetLength(kLength);
+    m_led.SetData(m_ledBuffer);
+    m_led.Start();
 
     m_chooser.SetDefaultOption("Right Score", autoNum2.get());
     m_chooser.AddOption("Right Charge Station", autoNum1.get());
@@ -177,7 +184,7 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton elevatorDownButtondriver{&m_driverController, frc::XboxController::Button::kA};
     elevatorDownButtondriver.OnTrue(&m_elevatorDown);
     //balancingButton.ToggleOnTrue(&m_balancing);
-    balancingButton.WhileTrue(&m_balancing);
+    //balancingButton.WhileTrue(&m_balancing);
     
     //these two commands conflict with centering commands
     //frc2::JoystickButton elevatorDownButton{&m_driverController, frc::XboxController::Button::kA};

@@ -25,6 +25,7 @@
 #include <pathplanner/lib/commands/FollowPathWithEvents.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/Trigger.h>
+#include <frc/AddressableLED.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
@@ -71,7 +72,10 @@ private:
     frc::XboxController m_driverController{ OIConstants::kDriverControllerPort };
     frc::XboxController m_coDriverController{ OIConstants::kCoDriverControllerPort };
     // The robot's subsystems and commands are defined here...
-
+    static constexpr int kLength = 62; // number of leds in rings
+    std::array<frc::AddressableLED::LEDData, kLength> m_ledBuffer;
+  // Must be a PWM header, not MXP or DIO
+  frc::AddressableLED m_led{0};
     // The robot's subsystems
     //DriveSubsystem m_drive;
     //Intake m_intake;
