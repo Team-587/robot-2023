@@ -15,6 +15,8 @@ class Intake : public frc2::SubsystemBase {
  public:
   Intake();
   void checkControl(double wheelSpeed);
+  void autoSpeed(double speed);
+  void setAuto(bool val);
   void extended(bool extend);
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -29,5 +31,6 @@ class Intake : public frc2::SubsystemBase {
   frc::DoubleSolenoid m_intakeSolenoid {frc::PneumaticsModuleType::CTREPCM, kIntakeSolenoid, kIntakeSolenoid1};
   #endif
 
-
+  double m_speed = 0.0;
+  bool in_auto = false;
 };

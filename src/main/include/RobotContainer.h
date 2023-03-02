@@ -53,7 +53,9 @@ class RobotContainer {
 
   // The robot's subsystems
   DriveSubsystem m_drive;
+public:
   Intake m_intake;
+private:
   Elevator m_elevator;
 
   // The chooser for the autonomous routines
@@ -65,12 +67,12 @@ class RobotContainer {
   frc2::InstantCommand m_quarterSpeed{[this] {m_drive.limitSpeed(0.2); }, {&m_drive}};
   frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(false); }, {&m_intake}};
-  //frc2::InstantCommand m_runIntake{[this] {m_intake.checkControl(0.25); }, {&m_intake}};
-  //frc2::InstantCommand m_runIntakeOpposite{[this] {m_intake.checkControl(-0.25); }, {&m_intake}};
-  //frc2::InstantCommand m_stopIntake{[this] {m_intake.checkControl(0.0); }, {&m_intake}};
-  IntakeSpeed m_runIntake{&m_intake, 0.50};
-  IntakeSpeed m_runIntakeOpposite{&m_intake, -0.50};
-  IntakeSpeed m_stopIntake{&m_intake, 0.0};
+  frc2::InstantCommand m_runIntake{[this] {m_intake.autoSpeed(0.5); }, {&m_intake}};
+  frc2::InstantCommand m_runIntakeOpposite{[this] {m_intake.autoSpeed(-0.5); }, {&m_intake}};
+  frc2::InstantCommand m_stopIntake{[this] {m_intake.autoSpeed(0.0); }, {&m_intake}};
+  //IntakeSpeed m_runIntake{&m_intake, 0.50};
+  //IntakeSpeed m_runIntakeOpposite{&m_intake, -0.50};
+  //IntakeSpeed m_stopIntake{&m_intake, 0.0};
   frc2::InstantCommand m_retractIntake{[this] {m_intake.extended(true); }, {&m_intake}};
 
   frc2::InstantCommand m_elevatorDown{[this] {m_elevator.setElevatorPosition(kElevatorDown); }, {&m_elevator}};
@@ -89,10 +91,12 @@ class RobotContainer {
     {"marker1", std::make_shared<frc2::PrintCommand>("Passed marker")},
     {"balance", std::make_shared<autoBalance>(&m_drive)},
     {"wait_1sec", std::make_shared<frc2::WaitCommand>(1.0_s)},
-    {"just_intake", std::make_shared<frc2::SequentialCommandGroup>(m_runIntakeOpposite,
-                                                                    m_retractIntake)},
-    {"intake_piece", std::make_shared<frc2::SequentialCommandGroup>(m_extendIntake
-                                                                    //m_runIntakeOpposite
+    {"just_intake", std::make_shared<frc2::SequentialCommandGroup>(frc2::WaitCommand(0.5_s),
+                                                                   m_stopIntake,
+                                                                   m_retractIntake
+                                                                  )},
+    {"intake_piece", std::make_shared<frc2::SequentialCommandGroup>(m_extendIntake,
+                                                                    m_runIntakeOpposite
                                                                     //frc2::WaitCommand(0.2_s),
                                                                     //m_stopIntake,
                                                                     //m_retractIntake
@@ -102,8 +106,8 @@ class RobotContainer {
                                                                   m_extendIntake, 
                                                                   frc2::WaitCommand(0.3_s),
                                                                   m_runIntake, 
-                                                                  //frc2::WaitCommand(0.2_s),
-                                                                  //m_stopIntake,
+                                                                  frc2::WaitCommand(0.4_s),
+                                                                  m_stopIntake,
                                                                   m_retractIntake,
                                                                   m_elevatorDown,
                                                                   frc2::WaitCommand(0.8_s))},
@@ -112,8 +116,8 @@ class RobotContainer {
                                                                     m_extendIntake,
                                                                     frc2::WaitCommand(0.3_s),
                                                                     m_runIntake, 
-                                                                    //frc2::WaitCommand(0.2_s),
-                                                                    //m_stopIntake,
+                                                                    frc2::WaitCommand(0.4_s),
+                                                                    m_stopIntake,
                                                                     m_retractIntake,
                                                                     m_elevatorDown,
                                                                     frc2::WaitCommand(0.4_s))},

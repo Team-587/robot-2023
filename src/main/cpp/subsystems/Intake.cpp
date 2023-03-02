@@ -14,10 +14,17 @@ Intake::Intake() {
 };
 
 void Intake::checkControl(double wheelSpeed) {
-    #ifdef INTAKE_VALID
-    //std::cout << "Intake motor : " << wheelSpeed << "\n";
-    m_intakeMotor.Set(wheelSpeed);
-    #endif
+    if (in_auto) return;
+
+    m_speed = wheelSpeed;
+}
+
+void Intake::autoSpeed(double speed){
+   m_speed = speed;
+}
+
+void Intake::setAuto(bool val){
+   in_auto = val;
 }
 
 void Intake::extended(bool extend) {
@@ -33,4 +40,9 @@ void Intake::extended(bool extend) {
 }
 
 // This method will be called once per scheduler run
-void Intake::Periodic() {}
+void Intake::Periodic() {
+    #ifdef INTAKE_VALID
+    //std::cout << "Intake motor : " << m_speed << "\n";
+    m_intakeMotor.Set(m_speed);
+    #endif
+}
