@@ -151,9 +151,9 @@ namespace Camerapos {
 }
 
 namespace CameraNames {
-    const std::string CAMERA_1 = "HD_Pro_Webcam_C920";
+    const std::string CAMERA_1 = "Microsoft_LifeCam_HD-3000";
     const std::string CAMERA_2 = "OV5647";
-    const std::string CAMERA_APRILTAG_FORWARD = "HD_Pro_Webcam_C920";
+    const std::string CAMERA_APRILTAG_FORWARD = "Microsoft_LifeCam_HD-3000";
 }
 
 namespace FieldElementsMeasurement {

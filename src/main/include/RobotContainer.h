@@ -105,9 +105,9 @@ private:
 frc2::InstantCommand m_visionAimOn{ [this] { m_drive.setVisionAim(true); }, { &m_drive } };
     frc2::InstantCommand m_visionAimOff{ [this] { m_drive.setVisionAim(false); }, { &m_drive } };
 
-  frc2::Trigger alignCenter{ [this] {return m_driverController.GetYButton(); } };
-  frc2::Trigger alignLeft{ [this] {return m_driverController.GetBButton(); } };
-  frc2::Trigger alignRight{ [this] {return m_driverController.GetXButton(); } };
+  //frc2::Trigger alignApril{ [this] {return m_driverController.GetYButton(); } };
+  frc2::Trigger alignApril{ [this] {return m_driverController.GetBButton(); } };
+  frc2::Trigger alignCone{ [this] {return m_driverController.GetXButton(); } };
 
     // The chooser for the autonomous routines
     frc::SendableChooser<frc2::Command*> m_chooser;

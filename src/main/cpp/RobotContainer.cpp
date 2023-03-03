@@ -137,11 +137,12 @@ RobotContainer::RobotContainer() :
             m_intake.checkControl(m_coDriverController.GetLeftY());
         }
         },{&m_intake}));
-
+/*
     m_poseEstimator.SetDefaultCommand(frc2::RunCommand(
         [this] { m_poseEstimator.Update(); },
         { &m_poseEstimator }
     ));
+*/
     //m_camera.SetPipelineIndex(2);
 }
 
@@ -201,17 +202,17 @@ void RobotContainer::ConfigureButtonBindings() {
     //alignCenter.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Center").ToPtr());
     //alignRight.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Right").ToPtr());
     //alignLeft.WhileTrue(AlignToTarget(&m_drive, &m_camera, &m_poseEstimator, "Left").ToPtr());
-    alignCenter.WhileTrue(frc2::SequentialCommandGroup (
+    alignApril.WhileTrue(frc2::SequentialCommandGroup (
             //MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
             CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::APRILTAG, 0.2),
-            ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, 0.2)
+            ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, 0.1)
         ).ToPtr()
     );
         
-    alignRight.WhileTrue(frc2::SequentialCommandGroup (
+    alignCone.WhileTrue(frc2::SequentialCommandGroup (
             //MoveToTargetCommand(&m_drive, &m_camera, &m_poseEstimator, "Center"),
             CenterCommand(&m_drive, &m_camera, &m_poseEstimator, VisionPipelineIndex::REFLECTIVE_GREEN, 0.2),
-            ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, 0.2)
+            ApproachCommand(&m_drive, &m_camera, &m_poseEstimator, 0.1)
         ).ToPtr()
     );
 

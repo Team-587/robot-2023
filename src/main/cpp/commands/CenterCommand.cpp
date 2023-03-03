@@ -44,7 +44,8 @@ void CenterCommand::Execute() {
     units::degree_t targetRot = m_pPoseEstimator->GetCurrentPose().Rotation().Degrees();
     //or
     units::degree_t driveRot = units::degree_t(abs((double)m_pDriveSubsystem->GetHeading()));
-    omegaSpeed = (double)driveRot > 180 ? -m_speed : m_speed;
+    //omegaSpeed = (double)driveRot > 180 ? -m_speed : m_speed;
+    omegaSpeed = (double)driveRot > 180 ? -0.1 : 0.1;
     std::cout << "CenterCommand - targetRot: " << (double)targetRot << "\n";
     std::cout << "CenterCommand - driveRot: " << (double)driveRot << "\n";
     if((double)driveRot < 183 && (double)driveRot > 177) {
@@ -57,9 +58,11 @@ void CenterCommand::Execute() {
     units::length::meter_t targetY = cameraToTarget.Y();
     double targetYaw = target.GetYaw();
     if((double)driveRot > 180 && targetYaw < 0) {
-      ySpeed = -m_speed;
+      //ySpeed = -m_speed;
+      ySpeed = -0.1;
     } else if((double)driveRot < 180 && targetYaw > 0) {
-      ySpeed = m_speed;
+      //ySpeed = m_speed;
+      ySpeed = 0.1;
     } else {
       ySpeed = 0.0;
     }
