@@ -31,7 +31,8 @@ std::vector<PathPlannerTrajectory> RobotContainer::autoPath1 = PathPlanner::load
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", {PathConstraints(2.0_mps, 2.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::loadPathGroup("auto3", {PathConstraints(2.0_mps, 2.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath4 = PathPlanner::loadPathGroup("auto4", {PathConstraints(2.0_mps, 2.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath5 = PathPlanner::loadPathGroup("auto5", {PathConstraints(1.5_mps, 1.5_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath5 = PathPlanner::loadPathGroup("auto5", {PathConstraints(3.0_mps, 3.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath6 = PathPlanner::loadPathGroup("auto6", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 
 
 RobotContainer::RobotContainer(): 
@@ -51,7 +52,8 @@ RobotContainer::RobotContainer():
    autoNum2(autoBuilder.fullAuto(autoPath2)),
    autoNum3(autoBuilder.fullAuto(autoPath3)),
    autoNum4(autoBuilder.fullAuto(autoPath4)),
-   autoNum5(autoBuilder.fullAuto(autoPath5))
+   autoNum5(autoBuilder.fullAuto(autoPath5)),
+   autoNum6(autoBuilder.fullAuto(autoPath6))
 
 {
 
@@ -65,6 +67,7 @@ RobotContainer::RobotContainer():
     m_chooser.AddOption("Left Score", autoNum3.get());
     m_chooser.AddOption("Left Charge Station", autoNum4.get());
     m_chooser.AddOption("Center Start", autoNum5.get());
+    m_chooser.AddOption("Auto Path 6", autoNum6.get());
 
    frc::SmartDashboard::PutData(&m_chooser);
   // Configure the button bindings
@@ -132,6 +135,9 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton balancingButton{&m_driverController, frc::XboxController::Button::kY};
     frc2::JoystickButton elevatorDownButtondriver{&m_driverController, frc::XboxController::Button::kA};
     elevatorDownButtondriver.OnTrue(&m_elevatorDown);
+    frc2::JoystickButton elevatorAndIntakeInitialStateButtondriver{&m_driverController, frc::XboxController::Button::kX};
+    elevatorAndIntakeInitialStateButtondriver.OnTrue(&m_elevatorDown);
+    elevatorAndIntakeInitialStateButtondriver.OnTrue(&m_retractIntake);
     //balancingButton.ToggleOnTrue(&m_balancing);
     balancingButton.WhileTrue(&m_balancing);
     

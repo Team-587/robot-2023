@@ -104,7 +104,7 @@ private:
     {"score_high", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, 
                                                                   frc2::WaitCommand(1.6_s),
                                                                   m_extendIntake, 
-                                                                  frc2::WaitCommand(0.3_s),
+                                                                  frc2::WaitCommand(0.6_s),
                                                                   m_runIntake, 
                                                                   frc2::WaitCommand(0.4_s),
                                                                   m_stopIntake,
@@ -145,4 +145,8 @@ private:
   static std::vector<pathplanner::PathPlannerTrajectory> autoPath5;
 
   frc2::CommandPtr autoNum5;
+
+  static std::vector<pathplanner::PathPlannerTrajectory> autoPath6;
+
+  frc2::CommandPtr autoNum6;
 };
