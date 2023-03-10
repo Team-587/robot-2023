@@ -13,6 +13,7 @@ autoBalance::autoBalance(DriveSubsystem* subsystem):p_driveSubsystem{subsystem}{
 
 // Called when the command is initially scheduled.
 void autoBalance::Initialize() {
+  headerPID.EnableContinuousInput(-180, 180);
   frc::SmartDashboard::PutData("BalPid", &pitchPID);
   frc::SmartDashboard::PutData("RotPid", &headerPID);
   //p_driveSubsystem->bypassDrive(true);

@@ -18,7 +18,7 @@
       "stopEvent": {
         "names": [
           "stop",
-          "score_high"
+          "score_middle"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -35,14 +35,14 @@
         "y": 2.9488370405312243
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": -112.28581904800836,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "balance"
+          "face_forward"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",

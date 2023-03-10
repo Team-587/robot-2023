@@ -31,6 +31,7 @@
 #include "commands/autoBalance.h"
 #include "subsystems/Elevator.h"
 #include "commands/IntakeSpeed.h"
+#include "commands/faceForward.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -85,11 +86,13 @@ private:
   frc2::InstantCommand m_stop{[this] {m_drive.Stop(); }, {&m_drive}};
 
   autoBalance m_balancing{&m_drive};
+  faceForward m_faceForward{&m_drive};
 
   //start of auto commands
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap = {
     {"marker1", std::make_shared<frc2::PrintCommand>("Passed marker")},
     {"balance", std::make_shared<autoBalance>(&m_drive)},
+    {"face_forward", std::make_shared<faceForward>(&m_drive)},
     {"wait_1sec", std::make_shared<frc2::WaitCommand>(1.0_s)},
     {"just_intake", std::make_shared<frc2::SequentialCommandGroup>(frc2::WaitCommand(0.5_s),
                                                                    m_stopIntake,
@@ -112,15 +115,15 @@ private:
                                                                   m_elevatorDown,
                                                                   frc2::WaitCommand(0.4_s))},
     {"score_middle", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorMid, 
-                                                                    frc2::WaitCommand(1.0_s),
-                                                                    m_extendIntake,
                                                                     frc2::WaitCommand(0.3_s),
+                                                                    /*m_extendIntake,
+                                                                    frc2::WaitCommand(0.2_s),*/
                                                                     m_runIntake, 
-                                                                    frc2::WaitCommand(0.4_s),
+                                                                    frc2::WaitCommand(0.2_s),
                                                                     m_stopIntake,
-                                                                    m_retractIntake,
+                                                                    //m_retractIntake,
                                                                     m_elevatorDown,
-                                                                    frc2::WaitCommand(0.4_s))},
+                                                                    frc2::WaitCommand(0.1_s))},
     {"stop", std::make_shared<frc2::SequentialCommandGroup>(m_stop)}
   };
 
