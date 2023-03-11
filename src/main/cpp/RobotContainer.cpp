@@ -61,7 +61,8 @@ RobotContainer::RobotContainer() :
     autoNum2(autoBuilder.fullAuto(autoPath2)),
     autoNum3(autoBuilder.fullAuto(autoPath3)),
     autoNum4(autoBuilder.fullAuto(autoPath4)),
-    autoNum5(autoBuilder.fullAuto(autoPath5)) {
+    autoNum5(autoBuilder.fullAuto(autoPath5)),
+    autoNum6(autoBuilder.fullAuto(autoPath6)) {
 
     eventMap.emplace("marker1", std::make_shared<frc2::PrintCommand>("Passed Marker 1"));
     m_chooser.SetDefaultOption("Slot 2", autoNum2.get());

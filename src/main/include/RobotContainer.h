@@ -178,9 +178,9 @@ private:
 
     frc2::CommandPtr autoNum5;
 
-  static std::vector<pathplanner::PathPlannerTrajectory> autoPath6;
+    static std::vector<pathplanner::PathPlannerTrajectory> autoPath6;
 
-  frc2::CommandPtr autoNum6;
+    frc2::CommandPtr autoNum6;
 
   //april tag vision pose estimator
     //TagVision m_tagVision;
