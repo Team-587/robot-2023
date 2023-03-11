@@ -53,6 +53,8 @@ SwerveModule::SwerveModule(int driveMotorChannel, int turningMotorChannel,
   m_turningPIDController.EnableContinuousInput(
       -std::numbers::pi, std::numbers::pi);
 
+  m_driveMotor.BurnFlash();
+  m_turningMotor.BurnFlash();
   //frc::SmartDashboard::PutNumber(m_name + "P", turnP);
   //frc::SmartDashboard::PutNumber(m_name + "I", turnI);
 }

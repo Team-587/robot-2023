@@ -16,10 +16,10 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class autoBalance
-    : public frc2::CommandHelper<frc2::CommandBase, autoBalance> {
+class faceForward
+    : public frc2::CommandHelper<frc2::CommandBase, faceForward> {
  public:
-  autoBalance(DriveSubsystem* subsystem);
+  faceForward(DriveSubsystem* subsystem);
 
   void Initialize() override;
 
@@ -30,7 +30,6 @@ class autoBalance
   bool IsFinished() override;
 
   DriveSubsystem *p_driveSubsystem;
-  frc2::PIDController pitchPID{.011, 0.0, 0.0};
   frc2::PIDController headerPID{.02, 0.0, 0.0};
 
 };

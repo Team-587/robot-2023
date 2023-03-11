@@ -22,11 +22,11 @@ Elevator::Elevator():
     encoderMotor1.SetPositionConversionFactor((std::numbers::pi * 1.751)/12.0);
     encoderMotor1.SetPosition(0);
 
-    PID_motor1.SetP(.1);
+    PID_motor1.SetP(.054);
     PID_motor1.SetI(0);
     PID_motor1.SetD(0);
     PID_motor1.SetFF(0);
-    PID_motor1.SetOutputRange(-0.25, 0.25);
+    PID_motor1.SetOutputRange(-0.6, 0.85);
     m_elevatorMotor1.SetOpenLoopRampRate(0.5);
     m_elevatorMotor2.SetOpenLoopRampRate(0.5);
     m_elevatorMotor1.SetSmartCurrentLimit(60);

@@ -34,11 +34,12 @@
 using namespace DriveConstants;
 using namespace pathplanner;
 
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath1 = PathPlanner::loadPathGroup("auto1", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::loadPathGroup("auto3", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath4 = PathPlanner::loadPathGroup("auto4", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath5 = PathPlanner::loadPathGroup("auto5", {PathConstraints(2.0_mps, 2.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath1 = PathPlanner::loadPathGroup("auto1", {PathConstraints(2.0_mps, 2.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", {PathConstraints(2.0_mps, 2.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::loadPathGroup("auto3", {PathConstraints(2.0_mps, 2.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath4 = PathPlanner::loadPathGroup("auto4", {PathConstraints(2.0_mps, 2.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath5 = PathPlanner::loadPathGroup("auto5", {PathConstraints(3.0_mps, 3.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath6 = PathPlanner::loadPathGroup("auto6", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 
 
 RobotContainer::RobotContainer() :
@@ -83,11 +84,12 @@ RobotContainer::RobotContainer() :
     m_led.SetData(m_ledBuffer);
     m_led.Start();
 
-    m_chooser.SetDefaultOption("Right Score", autoNum2.get());
-    m_chooser.AddOption("Right Charge Station", autoNum1.get());
-    m_chooser.AddOption("Left Score", autoNum3.get());
-    m_chooser.AddOption("Left Charge Station", autoNum4.get());
+    m_chooser.SetDefaultOption("Wall Score", autoNum2.get());
+    m_chooser.AddOption("Wall Charge Station", autoNum1.get());
+    m_chooser.AddOption("HP Score", autoNum3.get());
+    m_chooser.AddOption("HP Charge Station", autoNum4.get());
     m_chooser.AddOption("Center Start", autoNum5.get());
+    m_chooser.AddOption("Auto Path 6", autoNum6.get());
 
    frc::SmartDashboard::PutData(&m_chooser);
 
@@ -186,6 +188,9 @@ void RobotContainer::ConfigureButtonBindings() {
 
     frc2::JoystickButton elevatorDownButtondriver{&m_driverController, frc::XboxController::Button::kA};
     elevatorDownButtondriver.OnTrue(&m_elevatorDown);
+    frc2::JoystickButton elevatorAndIntakeInitialStateButtondriver{&m_driverController, frc::XboxController::Button::kX};
+    elevatorAndIntakeInitialStateButtondriver.OnTrue(&m_elevatorDown);
+    elevatorAndIntakeInitialStateButtondriver.OnTrue(&m_retractIntake);
     //balancingButton.ToggleOnTrue(&m_balancing);
     //balancingButton.WhileTrue(&m_balancing);
     
