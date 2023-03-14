@@ -3,7 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/Intake.h"
+#include <frc/XboxController.h>
 #include <iostream>
+#include "Constants.h"
 
 Intake::Intake() {
     #ifdef INTAKE_VALID
@@ -15,8 +17,13 @@ Intake::Intake() {
 
 void Intake::checkControl(double wheelSpeed) {
     if (in_auto) return;
+    frc::XboxController m_coDriverController{OIConstants::kCoDriverControllerPort};
 
-    m_speed = wheelSpeed;
+    if(m_coDriverController.GetRawAxis(3) > 0.5) {
+        m_speed = -0.1;
+    } else {
+        m_speed = wheelSpeed;
+    }
 }
 
 void Intake::autoSpeed(double speed){

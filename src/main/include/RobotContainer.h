@@ -68,8 +68,9 @@ private:
   frc2::InstantCommand m_quarterSpeed{[this] {m_drive.limitSpeed(0.2); }, {&m_drive}};
   frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(false); }, {&m_intake}};
-  frc2::InstantCommand m_runIntake{[this] {m_intake.autoSpeed(0.5); }, {&m_intake}};
+  frc2::InstantCommand m_runIntake{[this] {m_intake.autoSpeed(0.8); }, {&m_intake}};
   frc2::InstantCommand m_runIntakeOpposite{[this] {m_intake.autoSpeed(-0.5); }, {&m_intake}};
+  frc2::InstantCommand m_runIntakeOppositeFast{[this] {m_intake.autoSpeed(-1.0); }, {&m_intake}};
   frc2::InstantCommand m_stopIntake{[this] {m_intake.autoSpeed(0.0); }, {&m_intake}};
   //IntakeSpeed m_runIntake{&m_intake, 0.50};
   //IntakeSpeed m_runIntakeOpposite{&m_intake, -0.50};
@@ -98,8 +99,9 @@ private:
                                                                    m_stopIntake,
                                                                    m_retractIntake
                                                                   )},
-    {"intake_piece", std::make_shared<frc2::SequentialCommandGroup>(m_extendIntake,
-                                                                    m_runIntakeOpposite
+    {"intake_piece", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorLow,
+                                                                    m_extendIntake,
+                                                                    m_runIntakeOppositeFast
                                                                     //frc2::WaitCommand(0.2_s),
                                                                     //m_stopIntake,
                                                                     //m_retractIntake
@@ -107,29 +109,29 @@ private:
     {"score_high", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, 
                                                                   frc2::WaitCommand(0.7_s),
                                                                   m_extendIntake, 
-                                                                  frc2::WaitCommand(0.7_s),
+                                                                  frc2::WaitCommand(0.6_s),
                                                                   m_runIntake, 
                                                                   frc2::WaitCommand(0.5_s),
                                                                   m_stopIntake,
                                                                   m_retractIntake,
-                                                                  m_elevatorDown,
+                                                                  m_elevatorLow,
                                                                   frc2::WaitCommand(0.4_s))},
     {"score_high_cube", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorHigh, 
                                                                   frc2::WaitCommand(0.4_s),
                                                                   m_extendIntake, 
                                                                   frc2::WaitCommand(0.1_s),
-                                                                  m_runIntake, 
+                                                                  m_runIntakeOpposite, 
                                                                   frc2::WaitCommand(0.3_s),
                                                                   m_stopIntake,
                                                                   m_retractIntake,
                                                                   m_elevatorDown,
                                                                   frc2::WaitCommand(0.4_s))},
-    {"score_middle", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorMid, 
-                                                                    frc2::WaitCommand(0.3_s),
+    {"score_middle", std::make_shared<frc2::SequentialCommandGroup>(/*m_elevatorMid, 
+                                                                    frc2::WaitCommand(0.3_s),*/
                                                                     /*m_extendIntake,
                                                                     frc2::WaitCommand(0.2_s),*/
                                                                     m_runIntake, 
-                                                                    frc2::WaitCommand(0.2_s),
+                                                                    frc2::WaitCommand(0.5_s),
                                                                     m_stopIntake,
                                                                     //m_retractIntake,
                                                                     m_elevatorDown,
