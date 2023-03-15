@@ -144,9 +144,9 @@ namespace Camerapos {
     //constexpr auto goal_height_meters = units::meter_t{  }; //Value for FreeFall
     constexpr units::radian_t cam_angle_degrees = 20_deg;
 
-    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_X = 12.5_in;
+    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_X = 12_in;
     constexpr units::meter_t CAMERA_APRILTAG_FORWARD_Y = 0_in;
-    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_Z = 7_in;
+    constexpr units::meter_t CAMERA_APRILTAG_FORWARD_Z = 7.5_in;
 
 }
 
