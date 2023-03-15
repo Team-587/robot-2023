@@ -40,7 +40,7 @@ void autoBalance::Execute() {
   //std::cout << " Initial Pitch: " << initialPitch;
   //std::cout << " Drive Output: " << driveOutput << "\n";
   
-  if (fabs(currentPitch - initialPitch) > 20.0) {
+  if (fabs(currentPitch - initialPitch) > 45.0) {
     //std::cout << "Waiting";
     driveOutput = 0;
     //p_driveSubsystem->Drive((units::velocity::meters_per_second_t)0, (units::velocity::meters_per_second_t)0, (units::angular_velocity::radians_per_second_t)0, true);
