@@ -29,7 +29,7 @@ using namespace pathplanner;
 
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath1 = PathPlanner::loadPathGroup("auto1", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::loadPathGroup("auto3", {PathConstraints(3.0_mps, 3.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::loadPathGroup("auto3", {PathConstraints(3.0_mps, 3.0_mps_sq), PathConstraints(1.3_mps, 1.3_mps_sq), PathConstraints(3.0_mps, 3.0_mps_sq), PathConstraints(3.0_mps, 3.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath4 = PathPlanner::loadPathGroup("auto4", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath5 = PathPlanner::loadPathGroup("auto5", {PathConstraints(2.0_mps, 2.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath6 = PathPlanner::loadPathGroup("auto6", {PathConstraints(2.0_mps, 2.0_mps_sq)});
@@ -115,6 +115,7 @@ void RobotContainer::ConfigureButtonBindings() {
     toggleColorButton.OnTrue(&m_toggleColor);
     frc2::JoystickButton toggleElevatorShelf{&m_coDriverController, frc::XboxController::Button::kStart};
     toggleElevatorShelf.OnTrue(&m_elevatorShelf);
+    //frc2::JoystickButton zeroElevatorHeading{&m_coDriverController, frc::XboxController::Button::kRightStick};
 
     //frc2::JoystickButton intakeRunButton{&m_driverController, frc::XboxController::Button::kX};
     //intakeRunButton.OnTrue(&m_runIntake);
@@ -125,13 +126,14 @@ void RobotContainer::ConfigureButtonBindings() {
 
 
 
+
 //Driver buttons
     frc2::JoystickButton startButton{&m_driverController, frc::XboxController::Button::kStart};
     startButton.OnTrue(&m_ZeroHeading);
     frc2::JoystickButton LeftBumper{&m_driverController, frc::XboxController::Button::kLeftBumper};
-    LeftBumper.OnTrue(&m_halfSpeed).OnFalse(&m_fullSpeed);
+    LeftBumper.OnTrue(&m_quarterSpeed).OnFalse(&m_fullSpeed);
     frc2::JoystickButton RightBumper{&m_driverController, frc::XboxController::Button::kRightBumper};
-    RightBumper.OnTrue(&m_quarterSpeed).OnFalse(&m_fullSpeed);
+    RightBumper.OnTrue(&m_halfSpeed).OnFalse(&m_fullSpeed);
     frc2::JoystickButton balancingButton{&m_driverController, frc::XboxController::Button::kY};
     frc2::JoystickButton elevatorDownButtondriver{&m_driverController, frc::XboxController::Button::kA};
     elevatorDownButtondriver.OnTrue(&m_elevatorDown);

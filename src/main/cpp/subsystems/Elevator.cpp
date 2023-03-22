@@ -72,6 +72,9 @@ void Elevator::setElevatorPosition(double position) {
     PID_motor1.SetReference(destination, rev::CANSparkMax::ControlType::kPosition);
     #endif
 }
+
+void Elevator::zeroElevatorHead() {}
+
 // This method will be called once per scheduler run
 void Elevator::Periodic() {
   frc::XboxController m_coDriverController{OIConstants::kCoDriverControllerPort};
@@ -79,6 +82,11 @@ void Elevator::Periodic() {
 
   if (fabs(manualElevator) > 0.25) {
     destination = destination - (manualElevator * 0.1);
+    if (destination < 0 ) {
+        destination = 0;
+    } else if (destination > kElevatorMax) {
+        destination = kElevatorMax;
+    }
     setElevatorPosition(destination);
   }
 

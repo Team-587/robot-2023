@@ -18,6 +18,8 @@ class Elevator : public frc2::SubsystemBase {
 
  void setElevatorPosition(double position);
 
+ void zeroElevatorHead();
+
   void Periodic() override;
 
   void ToggleColor();
