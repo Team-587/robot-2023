@@ -23,8 +23,8 @@ RgbColor green(0, colorSaturation, 0);
 RgbColor blue(0, 0, colorSaturation);
 RgbColor white(colorSaturation);
 RgbColor black(0);
-//RgbColor yellow(85, 83, 7);
-RgbColor yellow(78,72,17);
+RgbColor yellow(185, 83, 7);
+//RgbColor yellow(78,72,40);
 RgbColor purple(57, 7, 85);
 
 /*
