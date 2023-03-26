@@ -69,6 +69,7 @@ private:
   frc2::InstantCommand m_fullSpeed{[this] {m_drive.fullSpeed(); }, {&m_drive}};
   frc2::InstantCommand m_extendIntake{[this] {m_intake.extended(false); }, {&m_intake}};
   frc2::InstantCommand m_runIntake{[this] {m_intake.autoSpeed(0.8); }, {&m_intake}};
+  frc2::InstantCommand m_runIntakeidlecube{[this] {m_intake.autoSpeed(0.20); }, {&m_intake}};
   frc2::InstantCommand m_runIntakeOpposite{[this] {m_intake.autoSpeed(-0.5); }, {&m_intake}};
   frc2::InstantCommand m_runIntakeOppositeFast{[this] {m_intake.autoSpeed(-1.0); }, {&m_intake}};
   frc2::InstantCommand m_stopIntake{[this] {m_intake.autoSpeed(0.0); }, {&m_intake}};
@@ -95,8 +96,12 @@ private:
     {"balance", std::make_shared<autoBalance>(&m_drive)},
     {"face_forward", std::make_shared<faceForward>(&m_drive)},
     {"wait_1sec", std::make_shared<frc2::WaitCommand>(1.0_s)},
-    {"just_intake", std::make_shared<frc2::SequentialCommandGroup>(frc2::WaitCommand(0.6_s),
+    {"just_intake", std::make_shared<frc2::SequentialCommandGroup>(frc2::WaitCommand(0.7_s),
                                                                    m_stopIntake,
+                                                                   m_retractIntake
+                                                                  )},
+    {"just_intake_cube", std::make_shared<frc2::SequentialCommandGroup>(frc2::WaitCommand(0.6_s),
+                                                                   m_runIntakeidlecube,
                                                                    m_retractIntake
                                                                   )},
     {"intake_piece", std::make_shared<frc2::SequentialCommandGroup>(m_elevatorLow,
@@ -147,7 +152,7 @@ private:
                                                                     frc2::WaitCommand(0.3_s),*/
                                                                     /*m_extendIntake,
                                                                     frc2::WaitCommand(0.2_s),*/
-                                                                    m_runIntake, 
+                                                                    m_runIntakeOppositeFast, 
                                                                     frc2::WaitCommand(0.5_s),
                                                                     m_stopIntake,
                                                                     //m_retractIntake,
