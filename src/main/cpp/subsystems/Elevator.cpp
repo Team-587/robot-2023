@@ -13,7 +13,9 @@ Elevator::Elevator():
     color2(1)
 #ifdef ELEVATOR_VALID
     ,encoderMotor1(m_elevatorMotor1.GetEncoder()),
-    PID_motor1(m_elevatorMotor1.GetPIDController())
+    PID_motor1(m_elevatorMotor1.GetPIDController()),
+    forwardSwitch(m_elevatorMotor1.GetForwardLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen)),
+    reverseSwitch(m_elevatorMotor1.GetReverseLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen))
 #endif
 {
     #ifdef ELEVATOR_VALID
@@ -37,10 +39,10 @@ Elevator::Elevator():
     m_elevatorMotor2.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     frc::SmartDashboard::PutData("ElevatorPID", &elevatorPID);
-    rev::SparkMaxLimitSwitch forwardSwitch = m_elevatorMotor1.GetForwardLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen);
+    // forwardSwitch = m_elevatorMotor1.GetForwardLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen);
     forwardSwitch.EnableLimitSwitch(true);
 
-    rev::SparkMaxLimitSwitch reverseSwitch = m_elevatorMotor1.GetReverseLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen);
+    // reverseSwitch = m_elevatorMotor1.GetReverseLimitSwitch(rev::SparkMaxLimitSwitch::Type::kNormallyOpen);
     reverseSwitch.EnableLimitSwitch(true);
 
     #endif
@@ -88,6 +90,13 @@ void Elevator::Periodic() {
         destination = kElevatorMax;
     }
     setElevatorPosition(destination);
+  }
+
+  if (reverseSwitch.Get()) {
+    if (destination == 0) {
+        std::cout << "Destination zero , " << encoderMotor1.GetPosition() << std::endl;
+        encoderMotor1.SetPosition(0.0);
+    }
   }
 
   frc::SmartDashboard::PutNumber("Elev. Destination", destination);

@@ -36,7 +36,8 @@ class Elevator : public frc2::SubsystemBase {
   rev::SparkMaxRelativeEncoder encoderMotor1;
   rev::SparkMaxPIDController PID_motor1;
 
-
+  rev::SparkMaxLimitSwitch forwardSwitch;
+  rev::SparkMaxLimitSwitch reverseSwitch;
 
 
   #endif
