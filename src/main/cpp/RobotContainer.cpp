@@ -31,9 +31,9 @@ std::vector<PathPlannerTrajectory> RobotContainer::autoPath1 = PathPlanner::load
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::loadPathGroup("auto3", {PathConstraints(3.0_mps, 3.0_mps_sq)});//, PathConstraints(1.3_mps, 1.3_mps_sq), PathConstraints(3.0_mps, 3.0_mps_sq), PathConstraints(3.0_mps, 3.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath4 = PathPlanner::loadPathGroup("auto4", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath5 = PathPlanner::loadPathGroup("auto5", {PathConstraints(3.0_mps, 3.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath5 = PathPlanner::loadPathGroup("auto5", {PathConstraints(2.0_mps, 2.0_mps_sq),PathConstraints(1.0_mps, 1.0_mps_sq),PathConstraints(2.0_mps, 2.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath6 = PathPlanner::loadPathGroup("auto6", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath7 = PathPlanner::loadPathGroup("Tims Path", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 
 RobotContainer::RobotContainer(): 
   // Initialize all of your commands and subsystems here
@@ -53,7 +53,8 @@ RobotContainer::RobotContainer():
    autoNum3(autoBuilder.fullAuto(autoPath3)),
    autoNum4(autoBuilder.fullAuto(autoPath4)),
    autoNum5(autoBuilder.fullAuto(autoPath5)),
-   autoNum6(autoBuilder.fullAuto(autoPath6))
+   autoNum6(autoBuilder.fullAuto(autoPath6)),
+   autoNum7(autoBuilder.fullAuto(autoPath7))
 
 {
 
@@ -68,6 +69,7 @@ RobotContainer::RobotContainer():
     m_chooser.AddOption("HP Charge Station", autoNum4.get());
     m_chooser.AddOption("Center Start", autoNum5.get());
     m_chooser.AddOption("Auto Path 6", autoNum6.get());
+    m_chooser.AddOption("Tims magic", autoNum7.get());
 
    frc::SmartDashboard::PutData(&m_chooser);
   // Configure the button bindings

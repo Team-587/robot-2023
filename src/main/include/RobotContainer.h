@@ -186,4 +186,9 @@ private:
   static std::vector<pathplanner::PathPlannerTrajectory> autoPath6;
 
   frc2::CommandPtr autoNum6;
+
+  static std::vector<pathplanner::PathPlannerTrajectory> autoPath7;
+
+  frc2::CommandPtr autoNum7;
+  
 };
