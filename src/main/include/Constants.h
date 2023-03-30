@@ -28,7 +28,7 @@
 constexpr double kElevatorDown = 0.0;
 constexpr double kElevatorLow = 2.1;
 constexpr double kElevatorMid = 17.5;
-constexpr double kElevatorHigh = 26.0;
+constexpr double kElevatorHigh = 25.5;
 constexpr double kElevatorShelf = 23.3;
 constexpr double kElevatorMax = kElevatorHigh + 1.0;
 
