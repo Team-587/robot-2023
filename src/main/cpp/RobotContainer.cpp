@@ -31,7 +31,7 @@ std::vector<PathPlannerTrajectory> RobotContainer::autoPath1 = PathPlanner::load
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath2 = PathPlanner::loadPathGroup("auto2", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath3 = PathPlanner::loadPathGroup("auto3", {PathConstraints(3.0_mps, 3.0_mps_sq)});//, PathConstraints(1.3_mps, 1.3_mps_sq), PathConstraints(3.0_mps, 3.0_mps_sq), PathConstraints(3.0_mps, 3.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath4 = PathPlanner::loadPathGroup("auto4", {PathConstraints(3.0_mps, 3.0_mps_sq)});
-std::vector<PathPlannerTrajectory> RobotContainer::autoPath5 = PathPlanner::loadPathGroup("auto5", {PathConstraints(2.0_mps, 2.0_mps_sq),PathConstraints(1.0_mps, 1.0_mps_sq),PathConstraints(2.0_mps, 2.0_mps_sq)});
+std::vector<PathPlannerTrajectory> RobotContainer::autoPath5 = PathPlanner::loadPathGroup("auto5", {PathConstraints(1.0_mps, 1.0_mps_sq),PathConstraints(1.0_mps, 1.0_mps_sq),PathConstraints(2.0_mps, 2.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath6 = PathPlanner::loadPathGroup("auto6", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 std::vector<PathPlannerTrajectory> RobotContainer::autoPath7 = PathPlanner::loadPathGroup("Tims Path", {PathConstraints(3.0_mps, 3.0_mps_sq)});
 

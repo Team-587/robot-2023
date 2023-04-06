@@ -52,16 +52,17 @@ Elevator::Elevator():
 };
 void Elevator::ToggleColor() {
     currentColor++;
-    if (currentColor > 2) {
+    if (currentColor > 1) {
         currentColor = 0;
     }
-    if (currentColor == 0 ) {
-        color1.Set(false);
-        color2.Set(false);
-    } else if ( currentColor == 1) {
+    // if (currentColor == 0 ) {
+    //     color1.Set(false);
+    //     color2.Set(false);
+    // }
+     if ( currentColor == 0) {
         color1.Set(true);
         color2.Set(false);
-    } else if (currentColor == 2) {
+    } else if (currentColor == 1) {
         color2.Set(true);
         color1.Set(false);
     } 
