@@ -90,6 +90,8 @@ private:
   autoBalance m_balancing{&m_drive};
   faceForward m_faceForward{&m_drive};
 
+  frc2::PIDController headerPID{.02, 0.0, 0.0};
+  
   //start of auto commands
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap = {
     {"marker1", std::make_shared<frc2::PrintCommand>("Passed marker")},

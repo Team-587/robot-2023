@@ -80,10 +80,27 @@ RobotContainer::RobotContainer():
   // Turning is controlled by the X axis of the right stick.
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
+
+        double rotation = m_driverController.GetRightX();
+        double currentYaw = m_driverController.getCurrentYaw();
+
+        if (m_driverController.GetRawButton(frc::XboxController::Button::kY)) {
+          rotation = headerPID.Calculate(currentYaw, 0);
+
+        } else if (m_driverController.GetRawButton(frc::XboxController::Button::kB)) {
+          rotation = headerPID.Calculate(currentYaw, -90);
+
+        } else if (m_driverController.GetRawButton(frc::XboxController::Button::kA)) {
+          rotation = headerPID.Calculate(currentYaw, 180);
+
+        } else if (m_driverController.GetRawButton(frc::XboxController::Button::kX)) {
+          rotation = headerPID.Calculate(currentYaw, 90);
+        }
+
         m_drive.Drive(
             -units::meters_per_second_t(m_driverController.GetLeftY()),
             -units::meters_per_second_t(m_driverController.GetLeftX()),
-            -units::radians_per_second_t(m_driverController.GetRightX()), true);
+            -units::radians_per_second_t(rotation), true);
       },
       {&m_drive}));
 
@@ -129,14 +146,14 @@ void RobotContainer::ConfigureButtonBindings() {
 
 
 
-//Driver buttons
+    //Driver buttons
     frc2::JoystickButton startButton{&m_driverController, frc::XboxController::Button::kStart};
     startButton.OnTrue(&m_ZeroHeading);
     frc2::JoystickButton LeftBumper{&m_driverController, frc::XboxController::Button::kLeftBumper};
     LeftBumper.OnTrue(&m_quarterSpeed).OnFalse(&m_fullSpeed);
     frc2::JoystickButton RightBumper{&m_driverController, frc::XboxController::Button::kRightBumper};
     RightBumper.OnTrue(&m_halfSpeed).OnFalse(&m_fullSpeed);
-    frc2::JoystickButton balancingButton{&m_driverController, frc::XboxController::Button::kY};
+    /*frc2::JoystickButton balancingButton{&m_driverController, frc::XboxController::Button::kY};
     frc2::JoystickButton elevatorDownButtondriver{&m_driverController, frc::XboxController::Button::kA};
     elevatorDownButtondriver.OnTrue(&m_elevatorDown);
     frc2::JoystickButton elevatorAndIntakeInitialStateButtondriver{&m_driverController, frc::XboxController::Button::kX};
@@ -144,7 +161,7 @@ void RobotContainer::ConfigureButtonBindings() {
     elevatorAndIntakeInitialStateButtondriver.OnTrue(&m_retractIntake);
     //balancingButton.ToggleOnTrue(&m_balancing);
     balancingButton.WhileTrue(&m_balancing);
-    
+    */
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
