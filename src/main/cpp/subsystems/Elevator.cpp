@@ -82,6 +82,18 @@ void Elevator::zeroElevatorHead() {}
 void Elevator::Periodic() {
   frc::XboxController m_coDriverController{OIConstants::kCoDriverControllerPort};
   double manualElevator = m_coDriverController.GetRightY();
+  double checkLeftTrigger = m_coDriverController.GetLeftTriggerAxis();
+  double checkRightTrigger = m_coDriverController.GetRightTriggerAxis();
+
+  if (checkLeftTrigger > 0.7) {
+    color1.Set(true);
+    color2.Set(false);
+  } 
+  if (checkRightTrigger > 0.7) {
+    color1.Set(false);
+    color2.Set(true);
+  } 
+
 
   if (fabs(manualElevator) > 0.25) {
     destination = destination - (manualElevator * 0.1);

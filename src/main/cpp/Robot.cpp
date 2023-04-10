@@ -10,6 +10,8 @@
 
 void Robot::RobotInit() {
   //frc::CameraServer::StartAutomaticCapture();
+
+  frc::SmartDashboard::PutData("SpinPid", &m_container.headerPID);
 }
 
 /**

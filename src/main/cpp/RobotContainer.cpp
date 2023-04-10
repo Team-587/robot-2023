@@ -74,6 +74,7 @@ RobotContainer::RobotContainer():
    frc::SmartDashboard::PutData(&m_chooser);
   // Configure the button bindings
   ConfigureButtonBindings();
+  headerPID.EnableContinuousInput(-180, 180);
 
   // Set up default drive command
   // The left stick controls translation of the robot.
@@ -82,8 +83,10 @@ RobotContainer::RobotContainer():
       [this] {
 
         double rotation = m_driverController.GetRightX();
-        double currentYaw = m_driverController.getCurrentYaw();
+        double currentYaw = m_drive.getCurrentYaw();
+        double rightTriggerValue = (m_driverController.GetRightTriggerAxis() * -.8) + 1.0;
 
+  
         if (m_driverController.GetRawButton(frc::XboxController::Button::kY)) {
           rotation = headerPID.Calculate(currentYaw, 0);
 
@@ -96,10 +99,14 @@ RobotContainer::RobotContainer():
         } else if (m_driverController.GetRawButton(frc::XboxController::Button::kX)) {
           rotation = headerPID.Calculate(currentYaw, 90);
         }
+        else
+        {
+            rotation = rotation * rightTriggerValue;
+        }
 
         m_drive.Drive(
-            -units::meters_per_second_t(m_driverController.GetLeftY()),
-            -units::meters_per_second_t(m_driverController.GetLeftX()),
+            -units::meters_per_second_t(m_driverController.GetLeftY()* rightTriggerValue),
+            -units::meters_per_second_t(m_driverController.GetLeftX()* rightTriggerValue),
             -units::radians_per_second_t(rotation), true);
       },
       {&m_drive}));
@@ -130,8 +137,8 @@ void RobotContainer::ConfigureButtonBindings() {
     elevatorMidButton.OnTrue(&m_elevatorMid);
     frc2::JoystickButton elevatorHighButton{&m_coDriverController, frc::XboxController::Button::kY};
     elevatorHighButton.OnTrue(&m_elevatorHigh);
-    frc2::JoystickButton toggleColorButton{&m_coDriverController, frc::XboxController::Button::kBack};
-    toggleColorButton.OnTrue(&m_toggleColor);
+    //frc2::JoystickButton toggleColorButton{&m_coDriverController, frc::XboxController::Button::kBack};
+    //toggleColorButton.OnTrue(&m_toggleColor);
     frc2::JoystickButton toggleElevatorShelf{&m_coDriverController, frc::XboxController::Button::kStart};
     toggleElevatorShelf.OnTrue(&m_elevatorShelf);
     //frc2::JoystickButton zeroElevatorHeading{&m_coDriverController, frc::XboxController::Button::kRightStick};

@@ -10,6 +10,7 @@
 #include <units/velocity.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <iostream>
+#include <frc/XboxController.h>
 
 
 #include "Constants.h"
@@ -60,6 +61,8 @@ void DriveSubsystem::Periodic() {
   //std::cout << "Drive Periodic positions (" << (double)m_frontLeft.GetPosition().distance << "," 
   //          << (double)m_frontRight.GetPosition().distance << "," << (double)m_rearLeft.GetPosition().distance 
   //          << "," << (double)m_rearRight.GetPosition().distance << ")";
+  
+
   m_odometry.Update(m_NavX.GetRotation2d(), //frc::Rotation2d(GetHeading()), 
                     {m_frontLeft.GetPosition(),m_frontRight.GetPosition(), m_rearLeft.GetPosition(), m_rearRight.GetPosition()});
   if (imuValid == false) {
@@ -100,6 +103,7 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            units::meters_per_second_t ySpeed,
                            units::radians_per_second_t rot,
                            bool fieldRelative) {
+  //frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
   
   
   if ((double)xSpeed < 0.1 && (double)xSpeed > -0.1){
@@ -112,9 +116,17 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
     rot = (units::radians_per_second_t)0.0;
   }
 
-  xSpeed = xSpeed * m_fullSpeed;
-  ySpeed = ySpeed * m_fullSpeed;
-  rot = rot * m_fullSpeed;
+  // xSpeed = xSpeed * m_fullSpeed;
+  // ySpeed = ySpeed * m_fullSpeed;
+  // rot = rot * m_fullSpeed;
+
+  //double rightTriggerValue = (m_driverController.GetRightTriggerAxis() * -.8) + 1.0;
+
+  //xSpeed = xSpeed * rightTriggerValue;
+  //ySpeed = ySpeed * rightTriggerValue;
+  //rot = rot * rightTriggerValue;
+   
+
 
   frc::SmartDashboard::PutNumber("xSpeed", (double)xSpeed);  
   frc::SmartDashboard::PutNumber("ySpeed", (double)ySpeed);
