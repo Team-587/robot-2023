@@ -27,7 +27,7 @@ class Intake : public frc2::SubsystemBase {
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
   #ifdef INTAKE_VALID
-  rev::CANSparkMax m_intakeMotor {DriveConstants::kIntakeMotor, rev::CANSparkMaxLowLevel::MotorType::kBrushed};
+  rev::CANSparkMax m_intakeMotor {DriveConstants::kIntakeMotor, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
   frc::DoubleSolenoid m_intakeSolenoid {frc::PneumaticsModuleType::CTREPCM, kIntakeSolenoid, kIntakeSolenoid1};
   #endif
 

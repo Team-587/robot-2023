@@ -53,7 +53,7 @@ constexpr int kFrontRightAbsoluteEncoderPort = 23;
 constexpr int kRearLeftAbsoluteEncoderPort = 22;
 constexpr int kRearRightAbsoluteEncoderPort = 24;
 
-constexpr int kIntakeMotor = 30;
+constexpr int kIntakeMotor = 34;
 
 constexpr int kElevatorMotor1 = 31;
 constexpr int kElevatorMotor2 = 32;
