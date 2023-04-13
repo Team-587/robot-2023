@@ -87,6 +87,13 @@ private:
 
   frc2::InstantCommand m_stop{[this] {m_drive.Stop(); }, {&m_drive}};
 
+//frc2::InstantCommand m_coRumbleLeft{[this] {m_coDriverController.SetRumble(m_coDriverController.kLeftRumble, 1); }, {&m_elevator}};
+//frc2::InstantCommand m_coRumbleRight{[this] {m_coDriverController.SetRumble(m_coDriverController.kRightRumble, 1); }, {&m_elevator}};
+
+//frc2::InstantCommand m_driverRumbleLeft{[this] {m_driverController.SetRumble(m_driverController.kLeftRumble, 1); }, {&m_elevator}};
+//frc2::InstantCommand m_driverRumbleRight{[this] {m_driverController.SetRumble(m_driverController.kRightRumble, 1); }, {&m_elevator}};
+
+
   autoBalance m_balancing{&m_drive};
   faceForward m_faceForward{&m_drive};
 public:

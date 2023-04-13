@@ -18,9 +18,11 @@
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/SwerveControllerCommand.h>
 #include <frc2/command/button/JoystickButton.h>
+#include <frc2/command/button/Trigger.h>
 #include <units/angle.h>
 #include <units/velocity.h>
 #include <math.h>
+#include <frc/DigitalInput.h>
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
 
@@ -84,7 +86,7 @@ RobotContainer::RobotContainer():
 
         double rotation = m_driverController.GetRightX();
         double currentYaw = m_drive.getCurrentYaw();
-        double rightTriggerValue = (m_driverController.GetRightTriggerAxis() * -.8) + 1.0;
+        double rightTriggerValue = (m_driverController.GetRightTriggerAxis() * -.65) + 1.0;
 
   
         if (m_driverController.GetRawButton(frc::XboxController::Button::kY)) {
@@ -149,7 +151,11 @@ void RobotContainer::ConfigureButtonBindings() {
     //intakeStopButton.OnTrue(&m_stopIntake);
     //frc2::JoystickButton intakeReverseButton{&m_driverController, frc::XboxController::Button::kB};
     //intakeReverseButton.OnTrue(&m_runIntakeOpposite);
-
+    frc::DigitalInput pieceDetector{2};
+    frc2::Trigger pieceTrigger([&pieceDetector] { return pieceDetector.Get(); });
+//pieceTrigger.OnTrue( m_coDriverController.SetRumble(m_coDriverController.kLeftRumble, 1));
+   // pieceTrigger.OnTrue(&m_coRumbleRight).OnFalse(&m_coRumbleLeft);
+    //pieceTrigger.OnTrue(&m_driverRumbleRight).OnFalse(&m_driverRumbleLeft);
 
 
 
@@ -169,6 +175,9 @@ void RobotContainer::ConfigureButtonBindings() {
     //balancingButton.ToggleOnTrue(&m_balancing);
     balancingButton.WhileTrue(&m_balancing);
     */
+
+
+
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
